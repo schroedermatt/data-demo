@@ -1,8 +1,10 @@
 package org.msse.demo.mockdata.customer;
 
 import net.datafaker.Faker;
-import org.msse.demo.mockdata.customer.Customer;
+import org.msse.demo.mockdata.address.AddressFaker;
+import org.msse.demo.mockdata.email.EmailFaker;
 import org.msse.demo.mockdata.faker.BaseFaker;
+import org.msse.demo.mockdata.phone.PhoneFaker;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,15 @@ public class CustomerFaker extends BaseFaker {
   private static final LocalDate DATE_1900 = LocalDate.of(1900, 1, 1);
   private static final LocalDate DATE_1980 = LocalDate.of(1980, 1, 1);
 
-  public CustomerFaker(Faker faker) {
+  private final AddressFaker addressFaker;
+  private final EmailFaker emailFaker;
+  private final PhoneFaker phoneFaker;
+
+  public CustomerFaker(Faker faker, AddressFaker addressFaker, EmailFaker emailFaker, PhoneFaker phoneFaker) {
     super(faker);
+    this.addressFaker = addressFaker;
+    this.emailFaker = emailFaker;
+    this.phoneFaker = phoneFaker;
   }
 
   public Customer generate() {
@@ -46,6 +55,20 @@ public class CustomerFaker extends BaseFaker {
             faker.name().title(),
             birthDate.format(ISO_LOCAL_DATE),
             customerBeginDate.format(ISO_LOCAL_DATE)
+    );
+  }
+
+  public FullCustomer generateFull() {
+    return generateFull(null);
+  }
+
+  public FullCustomer generateFull(String customerId) {
+    Customer customer = generate(customerId);
+    return new FullCustomer(
+            customer,
+            addressFaker.generate(customer.id()),
+            emailFaker.generate(customer.id()),
+            phoneFaker.generate(customer.id())
     );
   }
 }

@@ -2,8 +2,8 @@ package org.msse.demo.mockdata.address;
 
 public record Address(
         String id,
-        String customerId,
-        String formatCode,
+        String customerid,
+        String formatcode,
         String type,
         String line1,
         String line2,
@@ -11,4 +11,4 @@ public record Address(
         String state,
         String zip5,
         String zip4,
-        String countryCd) {}
+        String countrycd) {}

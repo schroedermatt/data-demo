@@ -18,6 +18,8 @@ repositories {
 
 dependencies {
 	implementation project(':mockdata')
+	implementation project(':postgres')
+
 	implementation 'org.springframework.boot:spring-boot-starter'
 }
 

@@ -2,9 +2,9 @@ package org.msse.demo.mockdata.phone;
 
 public record Phone(
         String id,
-        String customerId,
-        String phoneTypeCD,
-        String primaryInd,
+        String customerid,
+        String phonetypecd,
+        String primaryind,
         String timezone,
-        String extNbr,
+        String extnbr,
         String number) {}
