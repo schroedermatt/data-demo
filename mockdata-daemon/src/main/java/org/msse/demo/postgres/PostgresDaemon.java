@@ -1,4 +1,4 @@
-package org.msse.demo.daemon;
+package org.msse.demo.postgres;
 
 import lombok.extern.slf4j.Slf4j;
 import org.msse.demo.mockdata.customer.CustomerService;
@@ -26,7 +26,7 @@ public class PostgresDaemon {
 
   // every 5 seconds
   @Scheduled(cron = "*/5 * * * * *")
-  public void generateCustomer() {
+  public void createCustomers() {
     customerService.createCustomer();
   }
 }

@@ -24,4 +24,4 @@ Run `./down.sh` to tear down the environment, including the local docker volumes
 
 If you're struggling to find the postgres tables in `pgadmin`, the screenshot below illustrates the path to the tables in the sidebar.
 
-![pgadmin](./assets/pgadmin.png)
+![pgadmin](assets/pgadmin.png)
