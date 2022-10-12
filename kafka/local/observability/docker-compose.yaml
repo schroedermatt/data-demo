@@ -1,0 +1,27 @@
+version: '3.8'
+
+networks:
+  default:
+    external: true
+    name: dev-local
+
+services:
+  # When it launches, Conduktor Platform will be available on http://localhost:8080
+  # User: admin@conduktor.io
+  # Pass: admin
+  conduktor:
+    image: conduktor/conduktor-platform:latest
+    container_name: conduktor
+    hostname: conduktor
+    ports:
+      - '8080:80'
+    environment:
+      KAFKA_BOOTSTRAP_SERVER: broker-1:9092,broker-2:9092,broker-3:9092
+      KAFKA_SCHEMA_REGISTRY: schema-registry:8081
+    depends_on:
+      broker-1:
+        condition: service_healthy
+      broker-2:
+        condition: service_healthy
+      broker-3:
+        condition: service_healthy
