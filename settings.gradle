@@ -1,0 +1,4 @@
+rootProject.name = 'msse-data-demo'
+
+include 'mockdata'
+include 'mockdata-api'
