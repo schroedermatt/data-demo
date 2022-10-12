@@ -1,4 +1,6 @@
-rootProject.name = 'msse-data-demo'
+rootProject.name = 'data-demo'
 
 include 'mockdata'
 include 'mockdata-api'
+include 'mockdata-daemon'
+include 'postgres'

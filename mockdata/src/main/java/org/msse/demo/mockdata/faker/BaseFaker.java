@@ -69,7 +69,7 @@ public class BaseFaker {
     return faker.regexify("[$ABCD][A-Z][A-Z][A-Z0-9]");
   }
 
-  public String randomID() {
+  public String randomgetId() {
     return faker.number().digits(9);
   }
 }

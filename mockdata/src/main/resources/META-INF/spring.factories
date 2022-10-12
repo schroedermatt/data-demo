@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    org.msse.demo.mockdata.config.FakerConfig
+    org.msse.demo.mockdata.faker.FakerConfig

@@ -1,4 +1,4 @@
-package org.msse.demo.mockdata.domain;
+package org.msse.demo.mockdata.address;
 
 public record Address(
         String id,

@@ -1,4 +1,4 @@
-package org.msse.demo.mockdata.config;
+package org.msse.demo.mockdata.faker;
 
 import net.datafaker.Faker;
 import org.springframework.context.annotation.Bean;

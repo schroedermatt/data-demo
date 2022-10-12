@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # postgres database
+  postgres:
+    image: postgres:14.1-alpine
+    container_name: postgres
+    hostname: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      # state will be retained unless "-v" is used when tearing things down (docker-compose down -v)
+      - db:/var/lib/postgresql/data
+      # initialize the tables necessary for mockdata
+      - ./init/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    restart: always
+
+  # postgres administration tool to interact with database
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    hostname: pgadmin4
+    ports:
+      - "5433:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@email.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    volumes:
+      # override servers.json file with ours that is already pointed at our postgres instance
+      - ./init/servers.json:/pgadmin4/servers.json
+    restart: always
+
+volumes:
+  db:
+    driver: local

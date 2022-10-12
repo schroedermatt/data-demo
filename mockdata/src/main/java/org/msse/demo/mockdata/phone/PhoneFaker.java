@@ -1,7 +1,7 @@
-package org.msse.demo.mockdata.faker;
+package org.msse.demo.mockdata.phone;
 
 import net.datafaker.Faker;
-import org.msse.demo.mockdata.domain.Phone;
+import org.msse.demo.mockdata.faker.BaseFaker;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class PhoneFaker extends BaseFaker {
 
   public Phone generate(String customerId) {
     return new Phone(
-            randomID(),
+            randomgetId(),
             customerId,
             faker.options().nextElement(List.of("RESID", "UNLST", "BUS", "FAX", "CELL", "U")),
             faker.options().nextElement(List.of("U", "Y", "N")),

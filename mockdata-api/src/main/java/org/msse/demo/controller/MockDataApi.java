@@ -1,15 +1,19 @@
 package org.msse.demo.controller;
 
-import org.msse.demo.domain.CustomerResponse;
-import org.msse.demo.mockdata.domain.Customer;
-import org.msse.demo.mockdata.faker.AddressFaker;
-import org.msse.demo.mockdata.faker.CustomerFaker;
-import org.msse.demo.mockdata.faker.EmailFaker;
-import org.msse.demo.mockdata.faker.PhoneFaker;
+import lombok.extern.slf4j.Slf4j;
+import org.msse.demo.customer.CustomerMapperImpl;
+import org.msse.demo.customer.CustomerRepository;
+import org.msse.demo.customer.CustomerResponse;
+import org.msse.demo.mockdata.address.AddressFaker;
+import org.msse.demo.mockdata.customer.Customer;
+import org.msse.demo.mockdata.customer.CustomerFaker;
+import org.msse.demo.mockdata.email.EmailFaker;
+import org.msse.demo.mockdata.phone.PhoneFaker;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @Profile("mockdata")
 public class MockDataApi {
@@ -19,16 +23,26 @@ public class MockDataApi {
   private final PhoneFaker phoneFaker;
   private final CustomerFaker customerFaker;
 
-  public MockDataApi(AddressFaker addressFaker, EmailFaker emailFaker, PhoneFaker phoneFaker, CustomerFaker customerFaker) {
+  private final CustomerMapperImpl customerMapper;
+  private final CustomerRepository customerRepository;
+
+  public MockDataApi(AddressFaker addressFaker, EmailFaker emailFaker, PhoneFaker phoneFaker, CustomerFaker customerFaker, CustomerMapperImpl customerMapper, CustomerRepository customerRepository) {
     this.addressFaker = addressFaker;
     this.emailFaker = emailFaker;
     this.phoneFaker = phoneFaker;
     this.customerFaker = customerFaker;
+
+    this.customerMapper = customerMapper;
+    this.customerRepository = customerRepository;
   }
 
   @PostMapping(path = "customers")
   public CustomerResponse generateCustomer() {
     Customer customer = customerFaker.generate();
+
+    log.info("Customer Generated - ID={}", customer.id());
+
+    customerRepository.save(customerMapper.mapToEntity(customer));
 
     return new CustomerResponse(
             customer,

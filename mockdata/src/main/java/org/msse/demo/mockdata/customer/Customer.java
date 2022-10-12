@@ -1,4 +1,4 @@
-package org.msse.demo.mockdata.domain;
+package org.msse.demo.mockdata.customer;
 
 public record Customer(
         String id,
@@ -10,5 +10,5 @@ public record Customer(
         String fullname,
         String suffix,
         String title,
-        String birthDate,
-        String joinDate) {}
+        String birthdt,
+        String joindt) {}

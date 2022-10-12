@@ -1,7 +1,7 @@
-package org.msse.demo.mockdata.faker;
+package org.msse.demo.mockdata.email;
 
 import net.datafaker.Faker;
-import org.msse.demo.mockdata.domain.Email;
+import org.msse.demo.mockdata.faker.BaseFaker;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class EmailFaker extends BaseFaker {
 
   public Email generate(String customerId) {
     return new Email(
-            randomID(),
+            randomgetId(),
             customerId,
             faker.name().username() + "@" + faker.options().nextElement(DOMAINS) + ".com"
     );

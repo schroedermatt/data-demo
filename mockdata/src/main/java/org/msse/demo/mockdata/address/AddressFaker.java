@@ -1,7 +1,8 @@
-package org.msse.demo.mockdata.faker;
+package org.msse.demo.mockdata.address;
 
 import net.datafaker.Faker;
-import org.msse.demo.mockdata.domain.Address;
+import org.msse.demo.mockdata.address.Address;
+import org.msse.demo.mockdata.faker.BaseFaker;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class AddressFaker extends BaseFaker {
     String stateAbbr = faker.address().stateAbbr();
 
     return new Address(
-            randomID(),
+            randomgetId(),
             customerId,
             faker.options().nextElement(ADDRESS_FORMAT_CODES),
             faker.options().nextElement(ADDRESS_TYPE_CODES),

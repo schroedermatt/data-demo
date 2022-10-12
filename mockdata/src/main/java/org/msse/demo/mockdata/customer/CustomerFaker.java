@@ -1,7 +1,8 @@
-package org.msse.demo.mockdata.faker;
+package org.msse.demo.mockdata.customer;
 
 import net.datafaker.Faker;
-import org.msse.demo.mockdata.domain.Customer;
+import org.msse.demo.mockdata.customer.Customer;
+import org.msse.demo.mockdata.faker.BaseFaker;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class CustomerFaker extends BaseFaker {
     String lastName = faker.name().lastName();
 
     return new Customer(
-            customerId == null ? randomID() : null,
+            customerId == null ? randomgetId() : null,
             faker.options().nextElement(List.of("IND", "FAM", "FREE", "PREMIUM")),
             faker.options().nextElement(List.of("U", "N", "F", "M")),
             firstName,

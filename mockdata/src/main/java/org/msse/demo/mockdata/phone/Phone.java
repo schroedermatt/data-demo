@@ -1,4 +1,4 @@
-package org.msse.demo.mockdata.domain;
+package org.msse.demo.mockdata.phone;
 
 public record Phone(
         String id,

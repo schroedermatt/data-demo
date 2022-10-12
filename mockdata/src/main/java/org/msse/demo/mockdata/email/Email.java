@@ -1,4 +1,4 @@
-package org.msse.demo.mockdata.domain;
+package org.msse.demo.mockdata.email;
 
 public record Email(
         String id,
