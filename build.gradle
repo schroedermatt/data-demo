@@ -1,0 +1,30 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.16.9"
+    }
+}
+
+apply plugin: 'docker-compose'
+
+dockerCompose {
+    // ./gradlew postgresComposeUp|postgresComposeDown|postgresComposeDownForced
+    postgres {
+        useComposeFiles = ['./postgres/local/docker-compose.yml']
+    }
+    // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
+    kafka {
+        useComposeFiles = ['./kafka/local/cluster/docker-compose.yml']
+    }
+}
+
+task dockerCreateNetwork(type: Exec) {
+    workingDir "$projectDir/kafka/local/bin"
+    commandLine 'sh', './network.sh'
+}
+
+// ensure the docker network is created
+postgresComposeUp.dependsOn dockerCreateNetwork
+kafkaComposeUp.dependsOn dockerCreateNetwork

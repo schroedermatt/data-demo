@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Profile("mockdata")
 public class AddressFaker extends BaseFaker {
 
   private static final List<String> ADDRESS_FORMAT_CODES = List.of("US", "MX", "CA", "EU");

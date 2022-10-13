@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
-@Profile({"mockdata","postgres"})
+@Profile("postgres")
 public class PostgresDaemon {
 
   private final CustomerService customerService;

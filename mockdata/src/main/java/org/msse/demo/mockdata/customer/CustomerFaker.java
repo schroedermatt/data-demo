@@ -15,7 +15,6 @@ import static java.time.LocalDate.now;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Service
-@Profile("mockdata")
 public class CustomerFaker extends BaseFaker {
   private static final LocalDate DATE_1900 = LocalDate.of(1900, 1, 1);
   private static final LocalDate DATE_1980 = LocalDate.of(1980, 1, 1);

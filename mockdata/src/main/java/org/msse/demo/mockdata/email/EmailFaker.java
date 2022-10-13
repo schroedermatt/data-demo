@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Profile("mockdata")
 public class EmailFaker extends BaseFaker {
   private static final List<String> DOMAINS = List.of("gmail", "outlook", "aol", "yahoo", "icloud", "protonmail", "zoho", "yandex", "gmx", "mail");
 

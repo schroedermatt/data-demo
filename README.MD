@@ -38,19 +38,32 @@ https://stedolan.github.io/jq/download/
 
 ## Getting Started
 
-### PostgreSQL
+1. Start ancillary services (PostgreSQL, Kafka, etc)
 
-From the `postgres/local` directory, run `./up.sh`. Check out the [postgres readme](./postgres/local/README.MD) for more details on what this will start up and how you can connect.
+```bash
+# `docker-compose` gradle plugin is used to start services
 
-Run the mockdata-api ONLY -
+# POSTGRESQL
+./gradlew postgresComposeUp
+./gradlew postgresComposeDown
+./gradlew postgresComposeDownForced
+
+# KAFKA
+./gradlew kafkaComposeUp
+./gradlew kafkaComposeDown
+./gradlew kafkaComposeDownForced
+```
+
+2. Run the mockdata-api ONLY
 
 ```bash
 ./gradlew :mockdata-api:bootRunMockData
 ```
 
-Sample request -
+3. Send a sample request
 
 ```bash
+# remove jq if you don't have it installed, jq will just help format the response nicely in your terminal
 curl -X POST localhost:8080/customers | jq
 ```
 

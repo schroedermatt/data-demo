@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@Profile({"mockdata","postgres"})
+@Profile("postgres")
 public class PostgreSQLCustomerService implements CustomerService {
     private final CustomerFaker customerFaker;
 

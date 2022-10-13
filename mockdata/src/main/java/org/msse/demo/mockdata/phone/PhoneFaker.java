@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Profile("mockdata")
 public class PhoneFaker extends BaseFaker {
 
   public PhoneFaker(Faker faker) {
