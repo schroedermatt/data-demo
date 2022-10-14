@@ -48,7 +48,7 @@ https://stedolan.github.io/jq/download/
 ./gradlew postgresComposeDown
 ./gradlew postgresComposeDownForced
 
-# KAFKA
+# KAFKA -- only needed if running the connector
 ./gradlew kafkaComposeUp
 ./gradlew kafkaComposeDown
 ./gradlew kafkaComposeDownForced
