@@ -1,0 +1,79 @@
+title { label: "Data-Demo Entity-Relationship Diagram (condensed)", size: "20" }
+
+###
+# Available Colors from Erwiz:
+###
+# red #fcecec
+# blue #ececfc
+# green #d0e0d0
+# yellow #fbfbdb
+# orange #eee0a0
+
+###
+# Entities
+###
+# Entities are declared in '[' ... ']'. All attributes after the entity header
+# up until the end of the file (or the next entity declaration) correspond
+# to this entity.
+#
+# "*" indicated primary key
+# "+" indicated foreign key
+
+###
+
+[customer] {bgcolor: "#d0e0d0"}
+*id
+type
+gender
+fname
+mname
+lname
+fullname
+suffix
+title
+birthdt
+joindt
+
+[address] {bgcolor: "#d0e0d0"}
+*id
++customerid
+formatcode
+type
+line1
+line2
+citynm
+state
+zip5
+zip4
+countrycd
+
+[email] {bgcolor: "#ececfc"}
+*id
++customerid
+email
+
+[phone] {bgcolor: "#ececfc"}
+*id
++customerid
+phonetypecd
+primaryind
+timezone
+extnbr
+number
+
+# Relationships
+###
+# Each relationship must be between exactly two entities, which need not
+# be distinct. Each entity in the relationship has exactly one of four
+# possible cardinalities:
+#
+# Cardinality    Syntax
+# 0 or 1         ?
+# exactly 1      1
+# 0 or more      *
+# 1 or more      +
+###
+
+customer    +--+ address
+customer    +--+ phone
+customer    +--+ email
