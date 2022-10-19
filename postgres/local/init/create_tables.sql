@@ -44,3 +44,40 @@ CREATE TABLE phone (
     number VARCHAR(50),
     FOREIGN KEY (customerId) REFERENCES customer (id)
 );
+
+CREATE TABLE artist (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(50),
+    genre VARCHAR(50)
+);
+
+CREATE TABLE event (
+    id VARCHAR(50) PRIMARY KEY,
+    artistid VARCHAR(50),
+    venue VARCHAR(50),
+    capacity VARCHAR(50),
+    eventdate VARCHAR(50),
+    eventtime VARCHAR(50),
+
+    FOREIGN KEY (artistid) REFERENCES artist (id)
+);
+
+CREATE TABLE ticket (
+    id VARCHAR(50) PRIMARY KEY,
+    customerid VARCHAR(50),
+    eventid VARCHAR(50),
+    price DECIMAL,
+
+    FOREIGN KEY (customerid) REFERENCES customer (id),
+    FOREIGN KEY (eventid) REFERENCES event (id)
+);
+
+CREATE TABLE stream (
+    id VARCHAR(50) PRIMARY KEY,
+    customerid VARCHAR(50),
+    artistid VARCHAR(50),
+    streamtime VARCHAR(50),
+
+    FOREIGN KEY (customerid) REFERENCES customer (id),
+    FOREIGN KEY (artistid) REFERENCES artist (id)
+);

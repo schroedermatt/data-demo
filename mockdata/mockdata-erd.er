@@ -47,12 +47,12 @@ zip5
 zip4
 countrycd
 
-[email] {bgcolor: "#ececfc"}
+[email] {bgcolor: "#d0e0d0"}
 *id
 +customerid
 email
 
-[phone] {bgcolor: "#ececfc"}
+[phone] {bgcolor: "#d0e0d0"}
 *id
 +customerid
 phonetypecd
