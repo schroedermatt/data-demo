@@ -41,7 +41,7 @@ public class PostgreSQLCustomerService implements CustomerService {
     public FullCustomer createCustomer(String customerId) {
         FullCustomer customer = customerFaker.generateFull(customerId);
 
-        log.info("Saving Customer to PostgreSQL - ID={}", customer.customer().id());
+        log.info("Saving Customer ({}) to PostgreSQL", customer.customer().id());
 
         customerRepository.save(customerMapper.mapToEntity(customer.customer()));
         addressRepository.save(addressMapper.mapToEntity(customer.address(), customer.customer()));
@@ -49,5 +49,10 @@ public class PostgreSQLCustomerService implements CustomerService {
         phoneRepository.save(phoneMapper.mapToEntity(customer.phone(), customer.customer()));
 
         return customer;
+    }
+
+    @Override
+    public long customerCount() {
+        return customerRepository.count();
     }
 }

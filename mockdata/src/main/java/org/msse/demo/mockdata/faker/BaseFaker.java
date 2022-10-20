@@ -10,12 +10,14 @@ import java.time.temporal.TemporalAmount;
 public class BaseFaker {
 
   protected final Faker faker;
+
   public BaseFaker(Faker faker) {
     this.faker = faker;
   }
 
   //
   // SHARED UTILITIES
+
   //
 
   DateTimeFormatter MONTH_DAY_ONLY = DateTimeFormatter.ofPattern("MMdd");
@@ -71,5 +73,9 @@ public class BaseFaker {
 
   public String randomId() {
     return faker.number().digits(9);
+  }
+
+  public int randomNumberBetween(int min, int max) {
+    return faker.number().numberBetween(min, max);
   }
 }

@@ -1,0 +1,6 @@
+initial-load:
+  customers: 100
+  artists: 200
+  events: 500
+  tickets: 1000
+  streams: 2000

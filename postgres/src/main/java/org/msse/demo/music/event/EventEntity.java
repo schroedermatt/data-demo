@@ -16,7 +16,7 @@ public class EventEntity {
     @Id
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "artistid")
     private ArtistEntity artist;
 

@@ -21,10 +21,13 @@ import org.msse.demo.music.stream.StreamRepository;
 import org.msse.demo.music.ticket.TicketMapper;
 import org.msse.demo.music.ticket.TicketRepository;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @Slf4j
 @Service
 @Profile("postgres")
@@ -64,6 +67,16 @@ public class PostgreSQLMusicService implements MusicService {
     }
 
     @Override
+    public long artistCount() {
+        return artistRepository.count();
+    }
+
+    @Override
+    public Optional<Event> createEvent() {
+        return createEvent(findRandomArtistId().get());
+    }
+
+    @Override
     public Optional<Event> createEvent(String artistId) {
         Optional<ArtistEntity> existingArtist = artistRepository.findById(artistId);
 
@@ -80,6 +93,16 @@ public class PostgreSQLMusicService implements MusicService {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public long eventCount() {
+        return eventRepository.count();
+    }
+
+    @Override
+    public Optional<Ticket> bookTicket() {
+        return bookTicket(findRandomEventId().get(), findRandomCustomerId().get());
     }
 
     @Override
@@ -108,6 +131,16 @@ public class PostgreSQLMusicService implements MusicService {
     }
 
     @Override
+    public long ticketCount() {
+        return ticketRepository.count();
+    }
+
+    @Override
+    public Optional<Stream> streamArtist() {
+        return streamArtist(findRandomArtistId().get(), findRandomCustomerId().get());
+    }
+
+    @Override
     public Optional<Stream> streamArtist(String artistId, String customerId) {
         Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerId);
 
@@ -127,6 +160,46 @@ public class PostgreSQLMusicService implements MusicService {
             }
         } else {
             log.info("Customer ({}) does not exist. Stream creation cancelled.", customerId);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public long streamCount() {
+        return streamRepository.count();
+    }
+
+    // Utilities to find a random entity in PostgreSQL
+
+    public Optional<String> findRandomCustomerId() {
+        int randomPage = musicFaker.artistFaker().randomNumberBetween(0, (int) customerRepository.count() - 1);
+        Page<CustomerEntity> randomCustomer = customerRepository.findAll(PageRequest.of(randomPage, 1));
+
+        if (randomCustomer.hasContent()) {
+            return Optional.of(randomCustomer.getContent().get(0).getId());
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<String> findRandomEventId() {
+        int randomPage = musicFaker.eventFaker().randomNumberBetween(0, (int) eventRepository.count() - 1);
+        Page<EventEntity> randomEvent = eventRepository.findAll(PageRequest.of(randomPage, 1));
+
+        if (randomEvent.hasContent()) {
+            return Optional.of(randomEvent.getContent().get(0).getId());
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<String> findRandomArtistId() {
+        int randomPage = musicFaker.artistFaker().randomNumberBetween(0, (int) artistRepository.count() - 1);
+        Page<ArtistEntity> randomArtist = artistRepository.findAll(PageRequest.of(randomPage, 1));
+
+        if (randomArtist.hasContent()) {
+            return Optional.of(randomArtist.getContent().get(0).getId());
         }
 
         return Optional.empty();
