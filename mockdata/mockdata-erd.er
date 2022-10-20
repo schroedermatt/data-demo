@@ -21,7 +21,7 @@ title { label: "Data-Demo Entity-Relationship Diagram (condensed)", size: "20" }
 
 ###
 
-[customer] {bgcolor: "#d0e0d0"}
+[customer] {bgcolor: "#ececfc"}
 *id
 type
 gender
@@ -34,7 +34,7 @@ title
 birthdt
 joindt
 
-[address] {bgcolor: "#d0e0d0"}
+[address] {bgcolor: "#ececfc"}
 *id
 +customerid
 formatcode
@@ -47,12 +47,12 @@ zip5
 zip4
 countrycd
 
-[email] {bgcolor: "#d0e0d0"}
+[email] {bgcolor: "#ececfc"}
 *id
 +customerid
 email
 
-[phone] {bgcolor: "#d0e0d0"}
+[phone] {bgcolor: "#ececfc"}
 *id
 +customerid
 phonetypecd
@@ -60,6 +60,31 @@ primaryind
 timezone
 extnbr
 number
+
+[artist] {bgcolor: "#d0e0d0"}
+*id
+name
+genre
+
+[event] {bgcolor: "#d0e0d0"}
+*id
++artistid
+venue
+capacity
+eventdate
+eventtime
+
+[stream] {bgcolor: "#d0e0d0"}
+*id
++customerid
++artistid
+streamtime
+
+[ticket] {bgcolor: "#d0e0d0"}
+*id
++customerid
++eventid
+price
 
 # Relationships
 ###
@@ -74,6 +99,11 @@ number
 # 1 or more      +
 ###
 
-customer    +--+ address
-customer    +--+ phone
-customer    +--+ email
+customer    1--+ address
+customer    1--+ phone
+customer    1--+ email
+artist      1--* event
+event       1--* ticket
+customer    1--* ticket
+artist      1--* stream
+customer    1--* stream

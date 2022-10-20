@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableConfigurationProperties(value = { InitialLoadProperties.class })
 @PropertySources({
-		@PropertySource("classpath:application.yaml"),
 		// loaded from postgres module
 		@PropertySource("classpath:application-postgres.yaml")
 })

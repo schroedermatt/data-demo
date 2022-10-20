@@ -25,11 +25,6 @@ task dockerCreateNetwork(type: Exec) {
     commandLine 'sh', './network.sh'
 }
 
-task generateERD(type: Exec) {
-    workingDir "$projectDir/mockdata/bin"
-    commandLine 'sh', './generate.sh'
-}
-
 //task fullComposeUp {
 //    dependsOn 'postgresComposeUp'
 //    dependsOn 'kafkaComposeUp'

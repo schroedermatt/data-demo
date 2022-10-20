@@ -81,5 +81,45 @@ Run the mockdata-api AND the mockdata-daemon -
 ./gradlew :mockdata-daemon:bootRunMockData
 ```
 
+## Stream Processing Scenarios
 
+The following scenarios can be accomplished using the data within this project.
 
+1) Draw the topology.
+2) Implement the topology.
+
+### MOST STREAMED ARTISTS
+
+Context: A customer streams (listens to) an artist.
+
+Goals:
+- Find the top 3 streamed artists across all customers.
+- Find the top 3 streamed artists for each customer.
+- BONUS) Group the customers that have the same top streamed artist.
+
+### SOLD OUT EVENT
+
+Context: Artists have events and customers book tickets to an event. Each event has a capacity (max tickets).
+
+Goals:
+- Alert when an event is within 10% of max capacity.
+- Alert when an event is sold out.
+- BONUS) Alert the event artist's top streamers when an event is created.
+
+### SUGGESTED EVENTS - GENRE
+
+Context: Customers stream artists and each artist has a genre.
+
+Goals:
+- Alert customer when an event is created in their most streamed genre.
+- BONUS) Alert customer when popular* events are created in their most streamed genre.
+   - *popular: within 10% max capacity
+
+### SUGGESTED EVENTS - LOCATION
+
+Context: Customers have an address that indicates their location.
+
+Goals:
+- Find all tickets purchased by customers in each zipcode.
+- BONUS) Alert customer when customers in their zipcode are buying tickets to a popular* event. 
+   - *popular: within 10% max capacity
