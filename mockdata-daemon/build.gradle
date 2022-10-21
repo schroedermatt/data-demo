@@ -18,21 +18,8 @@ dependencies {
 task bootRunMockData {
 	bootRun.configure {
 		systemProperty "spring.profiles.active", 'mockdata,postgres'
-	}
-}
-
-task bootRunMockDataPostgres {
-	bootRun.configure {
-		systemProperty "spring.profiles.active", 'mockdata,postgres'
-	}
-}
-
-task bootRunMockDataKafka {
-	bootRun.configure {
-		systemProperty "spring.profiles.active", 'mockdata,kafka'
+		// systemProperty "spring.profiles.active", 'mockdata,kafka'
 	}
 }
 
 bootRunMockData.finalizedBy bootRun
-bootRunMockDataPostgres.finalizedBy bootRun
-bootRunMockDataKafka.finalizedBy bootRun

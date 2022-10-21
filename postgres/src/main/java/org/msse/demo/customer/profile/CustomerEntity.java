@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "com.msse.demo.customer")
+@Table(name = "customer")
 public class CustomerEntity {
     @Id
     private String id;
