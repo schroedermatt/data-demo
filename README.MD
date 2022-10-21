@@ -106,6 +106,14 @@ Goals:
 - Alert when an event is sold out.
 - BONUS) Alert the event artist's top streamers when an event is created.
 
+### MUST SEE VENUE
+
+Context: Artists have events at a venue.
+
+Goals:
+- Find the venue that has hosted the most events.
+- Find the venue that has hosted the most customers.
+
 ### SUGGESTED EVENTS - GENRE
 
 Context: Customers stream artists and each artist has a genre.

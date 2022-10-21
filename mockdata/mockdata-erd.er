@@ -22,69 +22,75 @@ title { label: "Data-Demo Entity-Relationship Diagram (condensed)", size: "20" }
 ###
 
 [customer] {bgcolor: "#ececfc"}
-*id
-type
-gender
-fname
-mname
-lname
-fullname
-suffix
-title
-birthdt
-joindt
+    *id
+    type
+    gender
+    fname
+    mname
+    lname
+    fullname
+    suffix
+    title
+    birthdt
+    joindt
 
 [address] {bgcolor: "#ececfc"}
-*id
-+customerid
-formatcode
-type
-line1
-line2
-citynm
-state
-zip5
-zip4
-countrycd
+    *id
+    +customerid
+    formatcode
+    type
+    line1
+    line2
+    citynm
+    state
+    zip5
+    zip4
+    countrycd
 
 [email] {bgcolor: "#ececfc"}
-*id
-+customerid
-email
+    *id
+    +customerid
+    email
 
 [phone] {bgcolor: "#ececfc"}
-*id
-+customerid
-phonetypecd
-primaryind
-timezone
-extnbr
-number
+    *id
+    +customerid
+    phonetypecd
+    primaryind
+    timezone
+    extnbr
+    number
 
 [artist] {bgcolor: "#d0e0d0"}
-*id
-name
-genre
+    *id
+    name
+    genre
+
+[venue] {bgcolor: "#d0e0d0"}
+    *id
+    +addressid
+    name
+    maxcapacity
 
 [event] {bgcolor: "#d0e0d0"}
-*id
-+artistid
-venue
-capacity
-eventdate
-eventtime
+    *id
+    +artistid
+    venue
+    capacity
+    eventdate
+    eventtime
 
 [stream] {bgcolor: "#d0e0d0"}
-*id
-+customerid
-+artistid
-streamtime
+    *id
+    +customerid
+    +artistid
+    streamtime
 
 [ticket] {bgcolor: "#d0e0d0"}
-*id
-+customerid
-+eventid
-price
+    *id
+    +customerid
+    +eventid
+    price
 
 # Relationships
 ###
@@ -107,3 +113,5 @@ event       1--* ticket
 customer    1--* ticket
 artist      1--* stream
 customer    1--* stream
+venue       1--* event
+venue       1--* address

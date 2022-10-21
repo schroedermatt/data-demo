@@ -2,6 +2,8 @@ package org.msse.demo.music;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.msse.demo.customer.address.AddressEntity;
+import org.msse.demo.customer.address.AddressRepository;
 import org.msse.demo.customer.profile.CustomerEntity;
 import org.msse.demo.customer.profile.CustomerRepository;
 import org.msse.demo.mockdata.music.MusicFakerFactory;
@@ -10,6 +12,7 @@ import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
 import org.msse.demo.mockdata.music.stream.Stream;
 import org.msse.demo.mockdata.music.ticket.Ticket;
+import org.msse.demo.mockdata.music.venue.Venue;
 import org.msse.demo.music.artist.ArtistEntity;
 import org.msse.demo.music.artist.ArtistMapper;
 import org.msse.demo.music.artist.ArtistRepository;
@@ -20,6 +23,9 @@ import org.msse.demo.music.stream.StreamMapper;
 import org.msse.demo.music.stream.StreamRepository;
 import org.msse.demo.music.ticket.TicketMapper;
 import org.msse.demo.music.ticket.TicketRepository;
+import org.msse.demo.music.venue.VenueEntity;
+import org.msse.demo.music.venue.VenueMapper;
+import org.msse.demo.music.venue.VenueRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +39,9 @@ import java.util.Optional;
 @Profile("postgres")
 @RequiredArgsConstructor
 public class PostgreSQLMusicService implements MusicService {
+    private final AddressRepository addressRepository;
+    private final CustomerRepository customerRepository;
+
     private final MusicFakerFactory musicFaker;
     private final ArtistMapper artistMapper;
     private final ArtistRepository artistRepository;
@@ -42,7 +51,8 @@ public class PostgreSQLMusicService implements MusicService {
     private final StreamRepository streamRepository;
     private final TicketMapper ticketMapper;
     private final TicketRepository ticketRepository;
-    private final CustomerRepository customerRepository;
+    private final VenueMapper venueMapper;
+    private final VenueRepository venueRepository;
 
     @Override
     public Artist createArtist() {
@@ -72,24 +82,66 @@ public class PostgreSQLMusicService implements MusicService {
     }
 
     @Override
-    public Optional<Event> createEvent() {
-        return createEvent(findRandomArtistId().get());
+    public Optional<Venue> createVenue() {
+        // todo - setup a new venue address
+
+        return createVenue(
+                findRandomAddressId().get()
+        );
     }
 
     @Override
-    public Optional<Event> createEvent(String artistId) {
-        Optional<ArtistEntity> existingArtist = artistRepository.findById(artistId);
+    public Optional<Venue> createVenue(String addressId) {
+        Optional<AddressEntity> existingAddress = addressRepository.findById(addressId);
 
-        if (existingArtist.isPresent()) {
-            Event event = musicFaker.eventFaker().generate(artistId);
+        if (existingAddress.isPresent()) {
+            Venue venue = musicFaker.venueFaker().generate(addressId);
 
-            log.info("Saving Event ({}) for Artist ({}) to PostgreSQL", event.id(), artistId);
+            log.info("Saving Venue ({}) at Address ({}) to PostgreSQL", venue.id(), addressId);
 
-            eventRepository.save(eventMapper.mapToEntity(event, existingArtist.get()));
+            venueRepository.save(venueMapper.mapToEntity(venue, existingAddress.get()));
 
-            return Optional.of(event);
+            return Optional.of(venue);
         } else {
-            log.info("Artist ({}) does not exist. Event creation cancelled.", artistId);
+            log.info("Address ({}) does not exist. Venue creation cancelled.", addressId);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public long venueCount() {
+        return venueRepository.count();
+    }
+
+    @Override
+    public Optional<Event> createEvent() {
+        return createEvent(
+                findRandomArtistId().get(),
+                findRandomVenueId().get()
+        );
+    }
+
+    @Override
+    public Optional<Event> createEvent(String artistId, String venueId) {
+        Optional<ArtistEntity> existingArtist = artistRepository.findById(artistId);
+        Optional<VenueEntity> existingVenue = venueRepository.findById(venueId);
+
+        if (existingVenue.isPresent()) {
+            VenueEntity venue = existingVenue.get();
+
+            if (existingArtist.isPresent()) {
+                Event event = musicFaker.eventFaker().generate(artistId, venueId, venue.getMaxcapacity());
+
+                log.info("Saving Event ({}) at Venue ({}) for Artist ({}) to PostgreSQL", event.id(), venue.getId(), artistId);
+
+                eventRepository.save(eventMapper.mapToEntity(event, existingArtist.get(), venue));
+
+                return Optional.of(event);
+            } else {
+                log.info("Artist ({}) does not exist. Event creation cancelled.", artistId);
+            }
+        } else {
+            log.info("Venue ({}) does not exist. Event creation cancelled.", venueId);
         }
 
         return Optional.empty();
@@ -172,12 +224,36 @@ public class PostgreSQLMusicService implements MusicService {
 
     // Utilities to find a random entity in PostgreSQL
 
+    // todo - move to customer service
+    public Optional<String> findRandomAddressId() {
+        int randomPage = musicFaker.artistFaker().randomNumberBetween(0, (int) addressRepository.count() - 1);
+        Page<AddressEntity> randomAddress = addressRepository.findAll(PageRequest.of(randomPage, 1));
+
+        if (randomAddress.hasContent()) {
+            return Optional.of(randomAddress.getContent().get(0).getId());
+        }
+
+        return Optional.empty();
+    }
+
+    // todo - move to customer service
     public Optional<String> findRandomCustomerId() {
         int randomPage = musicFaker.artistFaker().randomNumberBetween(0, (int) customerRepository.count() - 1);
         Page<CustomerEntity> randomCustomer = customerRepository.findAll(PageRequest.of(randomPage, 1));
 
         if (randomCustomer.hasContent()) {
             return Optional.of(randomCustomer.getContent().get(0).getId());
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<String> findRandomVenueId() {
+        int randomPage = musicFaker.venueFaker().randomNumberBetween(0, (int) venueCount() - 1);
+        Page<VenueEntity> randomVenue = venueRepository.findAll(PageRequest.of(randomPage, 1));
+
+        if (randomVenue.hasContent()) {
+            return Optional.of(randomVenue.getContent().get(0).getId());
         }
 
         return Optional.empty();

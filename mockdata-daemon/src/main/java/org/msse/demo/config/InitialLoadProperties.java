@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record InitialLoadProperties(
         long artists,
         long customers,
+        long venues,
         long events,
         long tickets,
         long streams

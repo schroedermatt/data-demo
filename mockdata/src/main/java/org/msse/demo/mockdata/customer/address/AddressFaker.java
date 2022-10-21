@@ -10,20 +10,29 @@ import java.util.List;
 public class AddressFaker extends BaseFaker {
 
   private static final List<String> ADDRESS_FORMAT_CODES = List.of("US", "MX", "CA", "EU");
-  private static final List<String> ADDRESS_TYPE_CODES = List.of("RESID", "BRANCH");
+  private static final String RESID_TYPE_CODE = "RESID";
+  private static final String VENUE_TYPE_CODE = "VENUE";
 
   public AddressFaker(Faker faker) {
     super(faker);
   }
 
-  public Address generate(String customerId) {
+  public Address generateCustomerAddress(String customerId) {
+    return generateAddress(customerId, RESID_TYPE_CODE);
+  }
+
+  public Address generateVenueAddress(String customerId) {
+    return generateAddress(customerId, VENUE_TYPE_CODE);
+  }
+
+  private Address generateAddress(String customerId, String addressType) {
     String stateAbbr = faker.address().stateAbbr();
 
     return new Address(
             randomId(),
             customerId,
             faker.options().nextElement(ADDRESS_FORMAT_CODES),
-            faker.options().nextElement(ADDRESS_TYPE_CODES),
+            addressType,
             faker.address().mailBox(),
             faker.address().streetAddress(),
             faker.address().cityName(),

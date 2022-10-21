@@ -65,7 +65,7 @@ public class CustomerFaker extends BaseFaker {
     Customer customer = generate(customerId);
     return new FullCustomer(
             customer,
-            addressFaker.generate(customer.id()),
+            addressFaker.generateCustomerAddress(customer.id()),
             emailFaker.generate(customer.id()),
             phoneFaker.generate(customer.id())
     );

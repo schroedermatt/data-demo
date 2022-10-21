@@ -4,6 +4,7 @@ import org.msse.demo.mockdata.music.artist.ArtistFaker;
 import org.msse.demo.mockdata.music.event.EventFaker;
 import org.msse.demo.mockdata.music.stream.StreamFaker;
 import org.msse.demo.mockdata.music.ticket.TicketFaker;
+import org.msse.demo.mockdata.music.venue.VenueFaker;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,4 +12,5 @@ import org.springframework.stereotype.Service;
 public record MusicFakerFactory(ArtistFaker artistFaker,
                                 EventFaker eventFaker,
                                 StreamFaker streamFaker,
-                                TicketFaker ticketFaker) {}
+                                TicketFaker ticketFaker,
+                                VenueFaker venueFaker) {}

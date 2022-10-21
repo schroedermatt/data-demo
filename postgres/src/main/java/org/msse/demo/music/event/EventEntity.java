@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.msse.demo.music.artist.ArtistEntity;
+import org.msse.demo.music.venue.VenueEntity;
 
 import javax.persistence.*;
 
@@ -20,8 +21,10 @@ public class EventEntity {
     @JoinColumn(name = "artistid")
     private ArtistEntity artist;
 
-    private String venue;
-    private String capacity;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "venueid")
+    private VenueEntity venue;
+
+    private Integer capacity;
     private String eventdate;
-    private String eventtime;
 }

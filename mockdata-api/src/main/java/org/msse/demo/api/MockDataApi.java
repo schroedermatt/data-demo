@@ -7,10 +7,13 @@ import org.msse.demo.mockdata.customer.FullCustomer;
 import org.msse.demo.mockdata.music.MusicService;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
+import org.msse.demo.mockdata.music.event.EventRequest;
 import org.msse.demo.mockdata.music.stream.Stream;
 import org.msse.demo.mockdata.music.stream.StreamRequest;
 import org.msse.demo.mockdata.music.ticket.Ticket;
 import org.msse.demo.mockdata.music.ticket.TicketRequest;
+import org.msse.demo.mockdata.music.venue.Venue;
+import org.msse.demo.music.venue.VenueEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +45,16 @@ public class MockDataApi {
     return ResponseEntity.status(HttpStatus.CREATED).body(savedArtist);
   }
 
-  @PostMapping(path = "artists/{artistId}/events")
-  public ResponseEntity<Event> generateArtistEvent(@PathVariable String artistId) {
-    return musicService.createEvent(artistId)
+  @PostMapping(path = "venues")
+  public ResponseEntity<Venue> generateVenue() {
+    return musicService.createVenue()
+            .map(venue -> ResponseEntity.status(HttpStatus.CREATED).body(venue))
+            .orElseGet(() -> ResponseEntity.badRequest().build());
+  }
+
+  @PostMapping(path = "events")
+  public ResponseEntity<Event> generateArtistEvent(@RequestBody EventRequest eventRequest) {
+    return musicService.createEvent(eventRequest.artistid(), eventRequest.venueid())
             .map(savedEvent -> ResponseEntity.status(HttpStatus.CREATED).body(savedEvent))
             .orElseGet(() -> ResponseEntity.badRequest().build());
   }

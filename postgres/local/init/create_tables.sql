@@ -51,15 +51,24 @@ CREATE TABLE artist (
     genre VARCHAR(50)
 );
 
+CREATE TABLE venue (
+    id VARCHAR(50) PRIMARY KEY,
+    addressid VARCHAR(50),
+    name VARCHAR(50),
+    maxcapacity INTEGER,
+
+    FOREIGN KEY (addressid) REFERENCES address (id)
+);
+
 CREATE TABLE event (
     id VARCHAR(50) PRIMARY KEY,
     artistid VARCHAR(50),
-    venue VARCHAR(50),
-    capacity VARCHAR(50),
+    venueid VARCHAR(50),
+    capacity INTEGER,
     eventdate VARCHAR(50),
-    eventtime VARCHAR(50),
 
-    FOREIGN KEY (artistid) REFERENCES artist (id)
+    FOREIGN KEY (artistid) REFERENCES artist (id),
+    FOREIGN KEY (venueid) REFERENCES venue (id)
 );
 
 CREATE TABLE ticket (

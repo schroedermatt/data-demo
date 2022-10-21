@@ -16,7 +16,7 @@ public class AddressEntity {
     @Id
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customerid")
     private CustomerEntity customer;
 

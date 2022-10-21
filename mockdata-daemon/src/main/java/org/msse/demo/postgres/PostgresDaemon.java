@@ -30,6 +30,7 @@ public class PostgresDaemon {
 
     loadCustomers();
     loadArtists();
+    loadVenues();
     loadEvents();
     loadTickets();
     loadStreams();
@@ -80,6 +81,21 @@ public class PostgresDaemon {
       log.info("Generating {} artists ({} already exist).", newArtists, existingArtists);
       for (long i = 0; i < newArtists; i++) {
         musicService.createArtist();
+      }
+    }
+  }
+
+  private void loadVenues() {
+    long desiredVenues = initialLoadProperties.venues();
+    long existingVenues = musicService.eventCount();
+
+    if (existingVenues >= desiredVenues) {
+      log.info("{} venues already exist ({} desired). Skipping initial load.", existingVenues, desiredVenues);
+    } else {
+      long newVenues = desiredVenues - existingVenues;
+      log.info("Generating {} venues ({} already exist).", newVenues, existingVenues);
+      for (long i = 0; i < newVenues; i++) {
+        musicService.createVenue();
       }
     }
   }
