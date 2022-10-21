@@ -60,7 +60,7 @@ public class CustomerFaker extends BaseFaker {
   }
 
   public FullCustomer generateFull() {
-    return generateFull(null);
+    return generateFull(randomId());
   }
 
   public FullCustomer generateFull(String customerId) {

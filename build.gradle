@@ -34,8 +34,8 @@ task fullComposeUp {
 }
 
 task fullComposeDown {
-    dependsOn 'postgresComposeDownForce'
-    dependsOn 'kafkaComposeDownForce'
+    dependsOn 'postgresComposeDownForced'
+    dependsOn 'kafkaComposeDownForced'
 }
 
 // ensure the docker network is created

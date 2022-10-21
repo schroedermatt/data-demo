@@ -4,6 +4,8 @@ import org.msse.demo.config.InitialLoadProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -28,6 +30,15 @@ public class MockDataDaemon {
 	public static void main(String[] args) {
 		SpringApplication.run(MockDataDaemon.class, args);
 	}
+
+	@Profile("postgres")
+	@Configuration
+	@EnableAutoConfiguration(exclude = {
+			RedisAutoConfiguration.class,
+			RedisRepositoriesAutoConfiguration.class
+	})
+	public class PostgresProfileConfiguration {}
+
 
 	@Profile("kafka")
 	@EnableAutoConfiguration(exclude = {

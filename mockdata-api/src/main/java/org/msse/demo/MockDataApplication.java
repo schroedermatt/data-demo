@@ -3,6 +3,8 @@ package org.msse.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -24,13 +26,21 @@ public class MockDataApplication {
 		SpringApplication.run(MockDataApplication.class, args);
 	}
 
+	@Profile("postgres")
+	@Configuration
+	@EnableAutoConfiguration(exclude = {
+			RedisAutoConfiguration.class,
+			RedisRepositoriesAutoConfiguration.class
+	})
+	public class PostgresProfileConfiguration {}
+
 	@Profile("kafka")
+	@Configuration
 	@EnableAutoConfiguration(exclude = {
 			DataSourceAutoConfiguration.class,
 			DataSourceTransactionManagerAutoConfiguration.class,
 			HibernateJpaAutoConfiguration.class
 	})
-	@Configuration
 	@EnableConfigurationProperties(value = { KafkaConfig.Cluster.class, KafkaConfig.Topics.class })
 	public class KafkaProfileConfiguration {}
 }
