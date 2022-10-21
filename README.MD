@@ -105,11 +105,11 @@ The following scenarios can be accomplished using the data within this project.
 
 ### MOST STREAMED ARTISTS
 
-Context: A customer streams (listens to) an artist.
+Context: A com.msse.demo.customer streams (listens to) an artist.
 
 Goals:
 - Find the top 3 streamed artists across all customers.
-- Find the top 3 streamed artists for each customer.
+- Find the top 3 streamed artists for each com.msse.demo.customer.
 - BONUS) Group the customers that have the same top streamed artist.
 
 ### SOLD OUT EVENT
@@ -134,8 +134,8 @@ Goals:
 Context: Customers stream artists and each artist has a genre.
 
 Goals:
-- Alert customer when an event is created in their most streamed genre.
-- BONUS) Alert customer when popular* events are created in their most streamed genre.
+- Alert com.msse.demo.customer when an event is created in their most streamed genre.
+- BONUS) Alert com.msse.demo.customer when popular* events are created in their most streamed genre.
    - *popular: within 10% max capacity
 
 ### SUGGESTED EVENTS - LOCATION
@@ -144,5 +144,5 @@ Context: Customers have an address that indicates their location.
 
 Goals:
 - Find all tickets purchased by customers in each zipcode.
-- BONUS) Alert customer when customers in their zipcode are buying tickets to a popular* event. 
+- BONUS) Alert com.msse.demo.customer when customers in their zipcode are buying tickets to a popular* event. 
    - *popular: within 10% max capacity

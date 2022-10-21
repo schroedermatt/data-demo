@@ -1,5 +1,6 @@
 package org.msse.demo.mockdata.customer.profile;
 
+import lombok.Getter;
 import net.datafaker.Faker;
 import org.msse.demo.mockdata.customer.FullCustomer;
 import org.msse.demo.mockdata.customer.address.AddressFaker;
@@ -15,6 +16,7 @@ import static java.time.LocalDate.now;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Service
+@Getter
 public class CustomerFaker extends BaseFaker {
   private static final LocalDate DATE_1900 = LocalDate.of(1900, 1, 1);
   private static final LocalDate DATE_1980 = LocalDate.of(1980, 1, 1);
@@ -31,7 +33,7 @@ public class CustomerFaker extends BaseFaker {
   }
 
   public Customer generate() {
-    return generate(null);
+    return generate(randomId());
   }
 
   public Customer generate(String customerId) {
@@ -43,7 +45,7 @@ public class CustomerFaker extends BaseFaker {
     String lastName = faker.name().lastName();
 
     return new Customer(
-            customerId == null ? randomId() : null,
+            customerId,
             faker.options().nextElement(List.of("IND", "FAM", "FREE", "PREMIUM")),
             faker.options().nextElement(List.of("U", "N", "F", "M")),
             firstName,

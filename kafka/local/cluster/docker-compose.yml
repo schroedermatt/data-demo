@@ -13,6 +13,7 @@ volumes:
   bk3: {}
   c1_kafka_data: {}
   c1_kafka_secrets: {}
+  cache: {}
 
 services:
   zookeeper:
@@ -225,6 +226,51 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       KAFKA_OPTS: -javaagent:/opt/jmx_prometheus/jmx_prometheus_javaagent.jar=7071:/opt/jmx_prometheus/connect-config.yml
 
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+#   # --save 20 1 instructs the server to save 1 or more writes every 20 seconds to disk in case the server restarts
+    command: redis-server --save 20 1 --loglevel warning # --requirepass redis-cache
+    volumes:
+      - cache:/data
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "6380:8081"
+
+  kpow:
+    image: factorhouse/kpow-ce
+    container_name: kpow
+    hostname: kpow
+    ports:
+      - "3000:3000"
+    environment:
+      BOOTSTRAP: broker-1:9092,broker-2:9092,broker-3:9092
+      CONNECT_REST_URL: http://connect-1:8083
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+#      SCHEMA_REGISTRY_AUTH=USER_INFO
+#      SCHEMA_REGISTRY_USER=admin
+#      SCHEMA_REGISTRY_PASSWORD=admin
+    depends_on:
+      broker-1:
+        condition: service_healthy
+      broker-2:
+        condition: service_healthy
+      broker-3:
+        condition: service_healthy
+      connect-1:
+        condition: service_healthy
+
   # When it launches, Conduktor Platform will be available on http://localhost:8080
   # User: admin@conduktor.io
   # Pass: admin
@@ -236,7 +282,8 @@ services:
 #      - '9091:80'
 #    environment:
 #      KAFKA_BOOTSTRAP_SERVER: broker-1:9092,broker-2:9092,broker-3:9092
-#      KAFKA_SCHEMA_REGISTRY: http://schema-registry:8081
+#      RUN_MODE: nano
+#      # KAFKA_SCHEMA_REGISTRY: http://schema-registry:8081
 #    depends_on:
 #      broker-1:
 #        condition: service_healthy

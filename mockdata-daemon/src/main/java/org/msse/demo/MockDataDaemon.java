@@ -13,7 +13,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties(value = { InitialLoadProperties.class })
 @PropertySources({
 		// loaded from postgres module
-		@PropertySource("classpath:application-postgres.yaml")
+		@PropertySource("classpath:application-postgres.yaml"),
+		// loaded from kafka module
+		@PropertySource("classpath:application-kafka.yaml")
 })
 public class MockDataDaemon {
 	public static void main(String[] args) {

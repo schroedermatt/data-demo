@@ -224,7 +224,7 @@ public class PostgreSQLMusicService implements MusicService {
 
     // Utilities to find a random entity in PostgreSQL
 
-    // todo - move to customer service
+    // todo - move to com.msse.demo.customer service
     public Optional<String> findRandomAddressId() {
         int randomPage = musicFaker.artistFaker().randomNumberBetween(0, (int) addressRepository.count() - 1);
         Page<AddressEntity> randomAddress = addressRepository.findAll(PageRequest.of(randomPage, 1));
@@ -236,7 +236,7 @@ public class PostgreSQLMusicService implements MusicService {
         return Optional.empty();
     }
 
-    // todo - move to customer service
+    // todo - move to com.msse.demo.customer service
     public Optional<String> findRandomCustomerId() {
         int randomPage = musicFaker.artistFaker().randomNumberBetween(0, (int) customerRepository.count() - 1);
         Page<CustomerEntity> randomCustomer = customerRepository.findAll(PageRequest.of(randomPage, 1));

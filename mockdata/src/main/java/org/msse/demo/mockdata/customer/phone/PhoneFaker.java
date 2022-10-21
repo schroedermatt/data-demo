@@ -13,9 +13,13 @@ public class PhoneFaker extends BaseFaker {
     super(faker);
   }
 
-  public org.msse.demo.mockdata.customer.phone.Phone generate(String customerId) {
-    return new org.msse.demo.mockdata.customer.phone.Phone(
-            randomId(),
+  public Phone generate(String customerId) {
+    return generate(randomId(), customerId);
+  }
+
+  public Phone generate(String phoneId, String customerId) {
+    return new Phone(
+            phoneId,
             customerId,
             faker.options().nextElement(List.of("RESID", "UNLST", "BUS", "FAX", "CELL", "U")),
             faker.options().nextElement(List.of("U", "Y", "N")),

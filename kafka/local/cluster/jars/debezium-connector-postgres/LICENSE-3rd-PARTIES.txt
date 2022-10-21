@@ -1296,7 +1296,7 @@ whether or not they are linked directly with the Library itself.
 link a "work that uses the Library" with the Library to produce a
 work containing portions of the Library, and distribute that work
 under terms of your choice, provided that the terms permit
-modification of the work for the customer's own use and reverse
+modification of the work for the com.msse.demo.customer's own use and reverse
 engineering for debugging such modifications.
 
   You must give prominent notice with each copy of the work that the
@@ -1777,7 +1777,7 @@ linked directly with the Library itself.
 6. As an exception to the Sections above, you may also compile or link a
 "work that uses the Library" with the Library to produce a work containing
 portions of the Library, and distribute that work under terms of your choice,
-provided that the terms permit modification of the work for the customer's
+provided that the terms permit modification of the work for the com.msse.demo.customer's
 own use and reverse engineering for debugging such modifications.
 
 You must give prominent notice with each copy of the work that the Library is
@@ -2042,7 +2042,7 @@ Written Offer for Source Code
     a. within three (3) years of the date you received the Oracle product
        that included the binary that is the subject of your request, or
     b. in the case of code licensed under the GPL v3 for as long as Oracle
-       offers spare parts or customer support for that product model.
+       offers spare parts or com.msse.demo.customer support for that product model.
 
 =====
 

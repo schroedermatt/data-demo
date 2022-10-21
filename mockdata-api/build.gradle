@@ -3,12 +3,13 @@ plugins {
 
 	id "io.freefair.lombok" version "6.5.1"
 	id 'org.springframework.boot' version '2.7.1'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 dependencies {
 	implementation project(':mockdata')
 	implementation project(':postgres')
+	implementation project(':kafka')
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -17,9 +18,35 @@ dependencies {
 }
 
 task bootRunMockData {
+	springBoot {
+		mainClass = 'org.msse.demo.MockDataPostgresApplication'
+	}
+
 	bootRun.configure {
 		systemProperty "spring.profiles.active", 'mockdata,postgres'
 	}
 }
 
+task bootRunMockDataPostgres {
+	springBoot {
+		mainClass = 'org.msse.demo.MockDataPostgresApplication'
+	}
+
+	bootRun.configure {
+		systemProperty "spring.profiles.active", 'mockdata,postgres'
+	}
+}
+
+task bootRunMockDataKafka {
+	springBoot {
+		mainClass = 'org.msse.demo.MockDataKafkaApplication'
+	}
+
+	bootRun.configure {
+		systemProperty "spring.profiles.active", 'mockdata,kafka'
+	}
+}
+
 bootRunMockData.finalizedBy bootRun
+bootRunMockDataPostgres.finalizedBy bootRun
+bootRunMockDataKafka.finalizedBy bootRun
