@@ -5,18 +5,16 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.msse.demo.mockdata.customer.address.Address;
-import org.msse.demo.mockdata.customer.email.Email;
-import org.msse.demo.mockdata.customer.phone.Phone;
-import org.msse.demo.mockdata.customer.profile.Customer;
 import org.msse.demo.serdes.JsonSerializer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Profile("kafka")
 @Configuration
 @RequiredArgsConstructor
 public class KafkaConfig {
@@ -33,24 +31,10 @@ public class KafkaConfig {
     }
 
     @Bean
-    public Producer<String, Customer> customerProducer() {
+    public Producer<String, Object> genericJsonProducer() {
         return new KafkaProducer<>(producerConfigs());
     }
 
-    @Bean
-    public Producer<String, Address> addressProducerFactory() {
-        return new KafkaProducer<>(producerConfigs());
-    }
-
-    @Bean
-    public Producer<String, Phone> phoneProducerFactory() {
-        return new KafkaProducer<>(producerConfigs());
-    }
-
-    @Bean
-    public Producer<String, Email> emailProducerFactory() {
-        return new KafkaProducer<>(producerConfigs());
-    }
 
     @ConfigurationProperties(prefix = "kafka.cluster")
     public record Cluster(

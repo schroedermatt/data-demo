@@ -1,9 +1,11 @@
 package org.msse.demo.music;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.msse.demo.KafkaConfig;
-import org.msse.demo.mockdata.music.MusicFakerFactory;
 import org.msse.demo.mockdata.music.MusicService;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
@@ -21,81 +23,154 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class KafkaMusicService implements MusicService {
 
-    private final MusicFakerFactory musicFakerFactory;
-    private final KafkaConfig kafkaConfig;
+    private final MusicCache musicCache;
+    private final KafkaConfig.Topics topics;
+    private final Producer<String, Object> kafkaProducer;
 
     @Override
+    @SneakyThrows
     public Artist createArtist() {
-        return null;
+        Artist artist = musicCache.createArtist();
+
+        log.info("Producing Artist ({}) to Kafka", artist.id());
+        send(topics.artists(), artist.id(), artist);
+
+        return artist;
     }
 
     @Override
     public Artist createArtist(String artistId) {
-        return null;
+        Artist artist = musicCache.createArtist(artistId);
+
+        log.info("Producing Artist ({}) to Kafka", artist.id());
+        send(topics.artists(), artist.id(), artist);
+
+        return artist;
     }
 
     @Override
     public long artistCount() {
-        return 0;
+        return musicCache.artistCount();
     }
 
     @Override
     public Optional<Venue> createVenue() {
-        return Optional.empty();
+        Optional<Venue> venue = musicCache.createVenue();
+
+        venue.ifPresent(value -> {
+            log.info("Producing Venue ({}) at Address ({}) to Kafka", value.id(), value.addressid());
+            send(topics.venues(), value.id(), value);
+        });
+
+        return venue;
     }
 
     @Override
     public Optional<Venue> createVenue(String addressId) {
-        return Optional.empty();
+        Optional<Venue> venue = musicCache.createVenue(addressId);
+
+        venue.ifPresent(value -> {
+            log.info("Producing Venue ({}) at Address ({}) to Kafka", value.id(), value.addressid());
+            send(topics.venues(), value.id(), value);
+        });
+
+        return venue;
     }
 
     @Override
     public long venueCount() {
-        return 0;
+        return musicCache.venueCount();
     }
 
     @Override
     public Optional<Event> createEvent() {
-        return Optional.empty();
+        Optional<Event> event = musicCache.createEvent();
+
+        event.ifPresent(value -> {
+            log.info("Producing Event ({}) at Venue ({}) for Artist ({}) to Kafka", value.id(), value.venueid(), value.artistid());
+            send(topics.events(), value.id(), value);
+        });
+
+        return event;
     }
 
     @Override
     public Optional<Event> createEvent(String artistId, String venueId) {
-        return Optional.empty();
+        Optional<Event> event = musicCache.createEvent(artistId, venueId);
+
+        event.ifPresent(value -> {
+            log.info("Producing Event ({}) at Venue ({}) for Artist ({}) to Kafka", value.id(), value.venueid(), value.artistid());
+            send(topics.events(), value.id(), value);
+        });
+
+        return event;
     }
 
     @Override
     public long eventCount() {
-        return 0;
+        return musicCache.eventCount();
     }
 
     @Override
     public Optional<Ticket> bookTicket() {
-        return Optional.empty();
+        Optional<Ticket> ticket = musicCache.bookTicket();
+
+        ticket.ifPresent(value -> {
+            log.info("Producing Ticket ({}) for Customer ({}) to Event ({}) to Kafka", value.id(), value.customerid(), value.eventid());
+            send(topics.tickets(), value.id(), value);
+        });
+
+        return ticket;
     }
 
     @Override
     public Optional<Ticket> bookTicket(String eventId, String customerId) {
-        return Optional.empty();
+        Optional<Ticket> ticket = musicCache.bookTicket(eventId, customerId);
+
+        ticket.ifPresent(value -> {
+            log.info("Producing Ticket ({}) for Customer ({}) to Event ({}) to Kafka", value.id(), value.customerid(), value.eventid());
+            send(topics.tickets(), value.id(), value);
+        });
+
+        return ticket;
     }
 
     @Override
     public long ticketCount() {
-        return 0;
+        return musicCache.ticketCount();
     }
 
     @Override
     public Optional<Stream> streamArtist() {
-        return Optional.empty();
+        Optional<Stream> stream = musicCache.streamArtist();
+
+        stream.ifPresent(value -> {
+            log.info("Producing Stream ({}) for Artist ({}) from Customer ({}) to Kafka", value.id(), value.artistid(), value.customerid());
+            send(topics.streams(), value.id(), value);
+        });
+
+        return stream;
     }
 
     @Override
     public Optional<Stream> streamArtist(String artistId, String customerId) {
-        return Optional.empty();
+        Optional<Stream> stream = musicCache.streamArtist(artistId, customerId);
+
+        stream.ifPresent(value -> {
+            log.info("Producing Stream ({}) for Artist ({}) from Customer ({}) to Kafka", value.id(), value.artistid(), value.customerid());
+            send(topics.streams(), value.id(), value);
+        });
+
+        return stream;
     }
 
     @Override
     public long streamCount() {
-        return 0;
+        return musicCache.streamCount();
+    }
+
+    @SneakyThrows
+    private void send(String topic, String key, Object value) {
+        kafkaProducer.send(new ProducerRecord<>(topic, key, value)).get();
     }
 }

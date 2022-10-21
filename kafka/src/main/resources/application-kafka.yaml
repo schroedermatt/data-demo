@@ -18,3 +18,10 @@ kafka:
     events: data-demo-events
     tickets: data-demo-tickets
     streams: data-demo-streams
+
+logging:
+  level:
+    org:
+      apache:
+        kafka:
+          clients: WARN

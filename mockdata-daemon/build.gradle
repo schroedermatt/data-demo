@@ -1,19 +1,9 @@
 plugins {
-	id 'java'
+	id("java-conventions")
 
 	id "io.freefair.lombok" version "6.5.1"
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-}
-
-group = 'org.msse.demo'
-version = '0.0.1-SNAPSHOT'
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-repositories {
-	mavenCentral()
 }
 
 dependencies {

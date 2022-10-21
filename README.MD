@@ -57,12 +57,18 @@ https://stedolan.github.io/jq/download/
 # POSTGRESQL
 ./gradlew postgresComposeUp
 ./gradlew postgresComposeDown
-./gradlew postgresComposeDownForced
+./gradlew postgresComposeDownForce
 
 # KAFKA -- only needed if running the connector
 ./gradlew kafkaComposeUp
 ./gradlew kafkaComposeDown
-./gradlew kafkaComposeDownForced
+./gradlew kafkaComposeDownForce
+
+
+# EVERYTHING -- helpful if running Postgres with Connector publishing to Kafka
+./gradlew fullComposeUp
+./gradlew fullComposeDown
+./gradlew fullComposeDownForce
 ```
 
 2. Run the mockdata-api ONLY

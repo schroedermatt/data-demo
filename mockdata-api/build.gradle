@@ -18,30 +18,18 @@ dependencies {
 }
 
 task bootRunMockData {
-	springBoot {
-		mainClass = 'org.msse.demo.MockDataPostgresApplication'
-	}
-
 	bootRun.configure {
 		systemProperty "spring.profiles.active", 'mockdata,postgres'
 	}
 }
 
 task bootRunMockDataPostgres {
-	springBoot {
-		mainClass = 'org.msse.demo.MockDataPostgresApplication'
-	}
-
 	bootRun.configure {
 		systemProperty "spring.profiles.active", 'mockdata,postgres'
 	}
 }
 
 task bootRunMockDataKafka {
-	springBoot {
-		mainClass = 'org.msse.demo.MockDataKafkaApplication'
-	}
-
 	bootRun.configure {
 		systemProperty "spring.profiles.active", 'mockdata,kafka'
 	}

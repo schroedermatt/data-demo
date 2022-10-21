@@ -27,31 +27,43 @@ public class KafkaDaemon {
   @PostConstruct
   public void init() {
     log.info("KAFKA DAEMON ENABLED - Beginning initial load...");
-
     loadCustomers();
-//    loadArtists();
-//    loadVenues();
-//    loadEvents();
-//    loadTickets();
-//    loadStreams();
+    loadArtists();
+    loadVenues();
+    loadEvents();
+    loadTickets();
+    loadStreams();
   }
 
   // every 10 seconds
-  @Scheduled(cron = "*/10 * * * * *")
+  @Scheduled(cron = "*/2 * * * * *")
   public void createCustomers() {
     customerService.createCustomer();
   }
 
-    // every 2 seconds
-//  @Scheduled(cron = "*/2 * * * * *")
-//  public void streamArtist() {
-//    musicService.streamArtist();
-//  }
-    // every 5 seconds
-//  @Scheduled(cron = "*/5 * * * * *")
-//  public void bookTicket() {
-//    musicService.bookTicket();
-//  }
+  // every 2 seconds
+  @Scheduled(cron = "*/2 * * * * *")
+  public void streamArtist() {
+    musicService.streamArtist();
+  }
+
+  // every 5 seconds
+  @Scheduled(cron = "*/5 * * * * *")
+  public void bookTicket() {
+    musicService.bookTicket();
+  }
+
+  // every 20 seconds
+  @Scheduled(cron = "*/20 * * * * *")
+  public void createEvent() {
+    musicService.createEvent();
+  }
+
+  // every 20 seconds
+  @Scheduled(cron = "*/60 * * * * *")
+  public void createVenue() {
+    musicService.createVenue();
+  }
 
   private void loadCustomers() {
     long desiredCustomers = initialLoadProperties.customers();

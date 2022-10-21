@@ -58,7 +58,7 @@ public class PostgreSQLMusicService implements MusicService {
     public Artist createArtist() {
         Artist artist = musicFaker.artistFaker().generate();
 
-        log.info("Saving Artist to PostgreSQL - ID={}", artist.id());
+        log.info("Saving Artist ({}) to PostgreSQL", artist.id());
 
         artistRepository.save(artistMapper.mapToEntity(artist));
 
@@ -69,7 +69,7 @@ public class PostgreSQLMusicService implements MusicService {
     public Artist createArtist(String artistId) {
         Artist artist = musicFaker.artistFaker().generate(artistId);
 
-        log.info("Saving Artist to PostgreSQL - ID={}", artist.id());
+        log.info("Saving Artist ({}) to PostgreSQL", artist.id());
 
         artistRepository.save(artistMapper.mapToEntity(artist));
 

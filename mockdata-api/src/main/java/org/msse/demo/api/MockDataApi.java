@@ -29,9 +29,7 @@ public class MockDataApi {
 
   @PostMapping(path = "customers")
   public ResponseEntity<FullCustomer> generateCustomer() {
-    log.info("hey");
     FullCustomer savedCustomer = customerService.createCustomer();
-    log.info("ho");
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedCustomer);
   }
