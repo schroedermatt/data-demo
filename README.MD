@@ -1,5 +1,16 @@
 # MSSE DATA DEMO
 
+This project will start up a local environment and generate data of the following types.
+
+- Customer
+- Address
+- Email
+- Phone
+- Artist
+- Event
+- Stream
+- Ticket
+- Venue
 
 ## Environment Prerequisites
 
@@ -66,6 +77,10 @@ https://stedolan.github.io/jq/download/
 # remove jq if you don't have it installed, jq will just help format the response nicely in your terminal
 curl -X POST localhost:8080/customers | jq
 ```
+
+For the full request collection, import the [Insomnia Collection](./assets/DataDemo_Insomnia_2022-10-20.json).
+
+---
 
 Run the mockdata-api AND the mockdata-daemon -
 
