@@ -1,5 +1,7 @@
 package org.msse.demo.mockdata.customer.address;
 
+import java.io.Serializable;
+
 public record Address(
         String id,
         String customerid,
@@ -11,4 +13,4 @@ public record Address(
         String state,
         String zip5,
         String zip4,
-        String countrycd) {}
+        String countrycd) implements Serializable {}

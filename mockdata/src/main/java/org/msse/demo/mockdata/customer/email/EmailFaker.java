@@ -14,9 +14,13 @@ public class EmailFaker extends BaseFaker {
     super(faker);
   }
 
-  public org.msse.demo.mockdata.customer.email.Email generate(String customerId) {
+  public Email generate(String customerId) {
+    return generate(randomId(), customerId);
+  }
+
+  public Email generate(String emailId, String customerId) {
     return new org.msse.demo.mockdata.customer.email.Email(
-            randomId(),
+            emailId,
             customerId,
             faker.name().username() + "@" + faker.options().nextElement(DOMAINS) + ".com"
     );

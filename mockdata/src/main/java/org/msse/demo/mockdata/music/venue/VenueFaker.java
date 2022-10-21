@@ -15,8 +15,12 @@ public class VenueFaker extends BaseFaker {
   }
 
   public Venue generate(String addressId) {
+    return generate(randomId(), addressId);
+  }
+
+  public Venue generate(String venueId, String addressId) {
     return new Venue(
-            randomId(),
+            venueId,
             addressId,
             faker.company().name() + faker.options().nextElement(VENUE_SUFFIX),
             faker.number().numberBetween(2, 50000)

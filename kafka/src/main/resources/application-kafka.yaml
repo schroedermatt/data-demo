@@ -1,0 +1,27 @@
+spring:
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+
+kafka:
+  cluster:
+    bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
+  topics:
+    customers: data-demo-customers
+    addresses: data-demo-addresses
+    phones: data-demo-phones
+    emails: data-demo-emails
+    artists: data-demo-artists
+    venues: data-demo-venues
+    events: data-demo-events
+    tickets: data-demo-tickets
+    streams: data-demo-streams
+
+logging:
+  level:
+    org:
+      apache:
+        kafka:
+          clients: WARN

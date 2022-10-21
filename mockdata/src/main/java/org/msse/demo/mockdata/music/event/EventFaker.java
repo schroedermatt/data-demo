@@ -13,8 +13,12 @@ public class EventFaker extends BaseFaker {
   }
 
   public Event generate(String artistId, String venueId, int venueMaxCapacity) {
+    return generate(randomId(), artistId, venueId, venueMaxCapacity);
+  }
+
+  public Event generate(String eventId, String artistId, String venueId, int venueMaxCapacity) {
     return new Event(
-            randomId(),
+            eventId,
             artistId,
             venueId,
             faker.number().numberBetween(50, venueMaxCapacity),

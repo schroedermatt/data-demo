@@ -34,7 +34,7 @@ public class PostgreSQLCustomerService implements CustomerService {
 
     @Override
     public FullCustomer createCustomer() {
-        return createCustomer(null);
+        return createCustomer(customerFaker.randomId());
     }
 
     @Override

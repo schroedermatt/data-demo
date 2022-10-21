@@ -14,8 +14,12 @@ public class StreamFaker extends BaseFaker {
   }
 
   public Stream generate(String customerId, String artistid) {
+    return generate(randomId(), customerId, artistid);
+  }
+
+  public Stream generate(String streamId, String customerId, String artistid) {
     return new Stream(
-            randomId(),
+            streamId,
             customerId,
             artistid,
             Instant.now().toString()

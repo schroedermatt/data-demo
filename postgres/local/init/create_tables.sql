@@ -24,6 +24,7 @@ CREATE TABLE address (
     zip5 VARCHAR(50),
     zip4 VARCHAR(50),
     countrycd VARCHAR(50),
+
     FOREIGN KEY (customerId) REFERENCES customer (id)
 );
 
@@ -31,6 +32,7 @@ CREATE TABLE email (
     id VARCHAR(50) PRIMARY KEY,
     customerid VARCHAR(50),
     email VARCHAR(50),
+
     FOREIGN KEY (customerId) REFERENCES customer (id)
 );
 
@@ -42,6 +44,7 @@ CREATE TABLE phone (
     timezone VARCHAR(50),
     extnbr VARCHAR(50),
     number VARCHAR(50),
+
     FOREIGN KEY (customerId) REFERENCES customer (id)
 );
 

@@ -1,5 +1,7 @@
 package org.msse.demo.mockdata.customer.profile;
 
+import java.io.Serializable;
+
 public record Customer(
         String id,
         String type,
@@ -11,4 +13,4 @@ public record Customer(
         String suffix,
         String title,
         String birthdt,
-        String joindt) {}
+        String joindt) implements Serializable {}

@@ -1,4 +1,4 @@
-package org.msse.demo.postgres;
+package org.msse.demo.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.msse.demo.config.InitialLoadProperties;
@@ -12,13 +12,13 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
-@Profile("postgres")
-public class PostgresDaemon {
+@Profile("kafka")
+public class KafkaDaemon {
   private final InitialLoadProperties initialLoadProperties;
   private final CustomerService customerService;
   private final MusicService musicService;
 
-  public PostgresDaemon(InitialLoadProperties initialLoadProperties, CustomerService customerService, MusicService musicService) {
+  public KafkaDaemon(InitialLoadProperties initialLoadProperties, CustomerService customerService, MusicService musicService) {
     this.initialLoadProperties = initialLoadProperties;
     this.customerService = customerService;
     this.musicService = musicService;
@@ -26,8 +26,7 @@ public class PostgresDaemon {
 
   @PostConstruct
   public void init() {
-    log.info("POSTGRES DAEMON ENABLED - Beginning initial load...");
-
+    log.info("KAFKA DAEMON ENABLED - Beginning initial load...");
     loadCustomers();
     loadArtists();
     loadVenues();
@@ -37,7 +36,7 @@ public class PostgresDaemon {
   }
 
   // every 10 seconds
-  @Scheduled(cron = "*/10 * * * * *")
+  @Scheduled(cron = "*/2 * * * * *")
   public void createCustomers() {
     customerService.createCustomer();
   }
@@ -52,6 +51,18 @@ public class PostgresDaemon {
   @Scheduled(cron = "*/5 * * * * *")
   public void bookTicket() {
     musicService.bookTicket();
+  }
+
+  // every 20 seconds
+  @Scheduled(cron = "*/20 * * * * *")
+  public void createEvent() {
+    musicService.createEvent();
+  }
+
+  // every 20 seconds
+  @Scheduled(cron = "*/60 * * * * *")
+  public void createVenue() {
+    musicService.createVenue();
   }
 
   private void loadCustomers() {

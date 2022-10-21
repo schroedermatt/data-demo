@@ -1,5 +1,7 @@
 package org.msse.demo.mockdata.customer.phone;
 
+import java.io.Serializable;
+
 public record Phone(
         String id,
         String customerid,
@@ -7,4 +9,4 @@ public record Phone(
         String primaryind,
         String timezone,
         String extnbr,
-        String number) {}
+        String number) implements Serializable {}

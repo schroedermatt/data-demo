@@ -16,7 +16,10 @@ dockerCompose {
     }
     // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
     kafka {
-        useComposeFiles = ['./kafka/local/cluster/docker-compose.yml']
+        useComposeFiles = [
+                './kafka/local/cluster/docker-compose.yml',
+                './kafka/local/cluster/redis/docker-compose.yml'
+        ]
     }
 }
 
@@ -25,17 +28,17 @@ task dockerCreateNetwork(type: Exec) {
     commandLine 'sh', './network.sh'
 }
 
-//task fullComposeUp {
-//    dependsOn 'postgresComposeUp'
-//    dependsOn 'kafkaComposeUp'
-//}
-//
-//task fullComposeDown {
-//    dependsOn 'postgresComposeDownForce'
-//    dependsOn 'kafkaComposeDownForce'
-//}
+task fullComposeUp {
+    dependsOn 'postgresComposeUp'
+    dependsOn 'kafkaComposeUp'
+}
+
+task fullComposeDown {
+    dependsOn 'postgresComposeDownForced'
+    dependsOn 'kafkaComposeDownForced'
+}
 
 // ensure the docker network is created
 postgresComposeUp.dependsOn dockerCreateNetwork
 kafkaComposeUp.dependsOn dockerCreateNetwork
-// fullComposeUp.dependsOn dockerCreateNetwork
+fullComposeUp.dependsOn dockerCreateNetwork

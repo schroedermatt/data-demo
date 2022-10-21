@@ -18,18 +18,22 @@ public class AddressFaker extends BaseFaker {
   }
 
   public Address generateCustomerAddress(String customerId) {
-    return generateAddress(customerId, RESID_TYPE_CODE);
+    return generateCustomerAddress(randomId(), customerId);
+  }
+
+  public Address generateCustomerAddress(String addressId, String customerId) {
+    return generateAddress(addressId, customerId, RESID_TYPE_CODE);
   }
 
   public Address generateVenueAddress(String customerId) {
-    return generateAddress(customerId, VENUE_TYPE_CODE);
+    return generateAddress(randomId(), customerId, VENUE_TYPE_CODE);
   }
 
-  private Address generateAddress(String customerId, String addressType) {
+  private Address generateAddress(String addressId, String customerId, String addressType) {
     String stateAbbr = faker.address().stateAbbr();
 
     return new Address(
-            randomId(),
+            addressId,
             customerId,
             faker.options().nextElement(ADDRESS_FORMAT_CODES),
             addressType,

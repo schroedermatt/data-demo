@@ -21,7 +21,7 @@ title { label: "Data-Demo Entity-Relationship Diagram (condensed)", size: "20" }
 
 ###
 
-[customer] {bgcolor: "#ececfc"}
+[com.msse.demo.customer] {bgcolor: "#ececfc"}
     *id
     type
     gender
@@ -105,13 +105,13 @@ title { label: "Data-Demo Entity-Relationship Diagram (condensed)", size: "20" }
 # 1 or more      +
 ###
 
-customer    1--+ address
-customer    1--+ phone
-customer    1--+ email
+com.msse.demo.customer    1--+ address
+com.msse.demo.customer    1--+ phone
+com.msse.demo.customer    1--+ email
 artist      1--* event
 event       1--* ticket
-customer    1--* ticket
+com.msse.demo.customer    1--* ticket
 artist      1--* stream
-customer    1--* stream
+com.msse.demo.customer    1--* stream
 venue       1--* event
 venue       1--* address

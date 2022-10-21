@@ -13,15 +13,11 @@ import org.msse.demo.mockdata.music.stream.StreamRequest;
 import org.msse.demo.mockdata.music.ticket.Ticket;
 import org.msse.demo.mockdata.music.ticket.TicketRequest;
 import org.msse.demo.mockdata.music.venue.Venue;
-import org.msse.demo.music.venue.VenueEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @Slf4j
 @RestController

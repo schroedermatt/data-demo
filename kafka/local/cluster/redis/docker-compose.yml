@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  default:
+    external: true
+    name: dev-local
+
+volumes:
+  cache: {}
+
+services:
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+#   # --save 20 1 instructs the server to save 1 or more writes every 20 seconds to disk in case the server restarts
+    command: redis-server --save 20 1 --loglevel warning # --requirepass redis-cache
+    volumes:
+      - cache:/data
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "6380:8081"

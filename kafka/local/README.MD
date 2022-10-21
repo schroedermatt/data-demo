@@ -31,7 +31,7 @@ kafka-topics --list --bootstrap-server localhost:19092
 AVRO
 ```bash
 kafka-avro-console-consumer \
-   --topic _postgres_.public.customer \
+   --topic _postgres_.public.com.msse.demo.customer \
    --from-beginning \
    --bootstrap-server localhost:19092 \
    --property schema.registry.url=https://localhost:8081
@@ -40,7 +40,7 @@ kafka-avro-console-consumer \
 STRING
 ```bash
 kafka-console-consumer \
-   --topic _postgres_.public.customer \
+   --topic _postgres_.public.com.msse.demo.customer \
    --bootstrap-server localhost:19092 \
    --property print.key=true \
    --from-beginning
