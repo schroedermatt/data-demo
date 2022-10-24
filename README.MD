@@ -57,27 +57,76 @@ https://stedolan.github.io/jq/download/
 # POSTGRESQL
 ./gradlew postgresComposeUp
 ./gradlew postgresComposeDown
-./gradlew postgresComposeDownForce
+./gradlew postgresComposeDownForced
 
-# KAFKA -- only needed if running the connector
+# pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
+# pgAdmin4 username: root@email.com
+# pgAdmin4 password: root
+# pgAdmin4 postgres database password: postgres
+
+# KAFKA
 ./gradlew kafkaComposeUp
 ./gradlew kafkaComposeDown
-./gradlew kafkaComposeDownForce
+./gradlew kafkaComposeDownForced
 
+# KPow (Kafka Exploration UI) available at `http://localhost:3000`
 
 # EVERYTHING -- helpful if running Postgres with Connector publishing to Kafka
 ./gradlew fullComposeUp
 ./gradlew fullComposeDown
-./gradlew fullComposeDownForce
+./gradlew fullComposeDownForced
 ```
 
-2. Run the mockdata-api ONLY
+--
+
+If you want to run the OpenTelemetry stack and enable distributed tracing, also start up the tracing services (Jaeger)
 
 ```bash
-./gradlew :mockdata-api:bootRunMockData
+./gradlew tracingComposeUp
+./gradlew tracingComposeDown
+./gradlew tracingComposeDownForced
+
+# Jaeger UI available at `http://localhost:16686`
 ```
 
-3. Send a sample request
+2. Set `runtimeMode` and `tracingEnabled` depending on which ancillary services you started in step 1
+
+These properties are located in the project's [root gradle.properties](./gradle.properties) file.
+
+```properties
+# options: postgres, kafka
+runtimeMode=postgres
+
+# options: true, false
+tracingEnabled=false
+```
+
+3. Configure Initial Load Volume (if running the Daemon)
+
+If you're running the Daemon, you can also configure the amount of data you would like to be initially loaded.
+
+These properties are located in the project's [root gradle.properties](./gradle.properties) file.
+
+```properties
+initialLoadCustomers=100
+initialLoadArtists=200
+initialLoadVenues=50
+initialLoadEvents=100
+initialLoadTickets=1000
+initialLoadStreams=1000
+```
+
+4. Run the API or Daemon
+
+```bash
+# runs the Mock Data API
+./gradlew bootRunAPI
+
+# runs the Mock Data Daemon
+./gradlew bootRunDaemon
+```
+
+5. If running the API, send a sample request.
 
 ```bash
 # remove jq if you don't have it installed, jq will just help format the response nicely in your terminal
@@ -85,22 +134,6 @@ curl -X POST localhost:8080/customers | jq
 ```
 
 For the full request collection, import the [Insomnia Collection](./assets/DataDemo_Insomnia_2022-10-20.json).
-
----
-
-Run the mockdata-api AND the mockdata-daemon -
-
-```bash
-# --parallel will start both at the same time
-./gradlew bootRunMockData --parallel 
-
-# you could also run the below commands from separate terminal tabs to have a cleaner separation of logs
-
-## run from tab 1
-./gradlew :mockdata-api:bootRunMockData
-## run from tab 2
-./gradlew :mockdata-daemon:bootRunMockData
-```
 
 ## Observability - OTEL & Jaeger
 

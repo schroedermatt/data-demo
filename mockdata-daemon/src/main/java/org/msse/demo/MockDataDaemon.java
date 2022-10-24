@@ -44,7 +44,8 @@ public class MockDataDaemon {
 	@EnableAutoConfiguration(exclude = {
 			DataSourceAutoConfiguration.class,
 			DataSourceTransactionManagerAutoConfiguration.class,
-			HibernateJpaAutoConfiguration.class
+			HibernateJpaAutoConfiguration.class,
+			RedisRepositoriesAutoConfiguration.class
 	})
 	@EnableCaching
 	@Configuration

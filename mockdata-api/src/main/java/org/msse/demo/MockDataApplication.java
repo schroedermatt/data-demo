@@ -39,7 +39,8 @@ public class MockDataApplication {
 	@EnableAutoConfiguration(exclude = {
 			DataSourceAutoConfiguration.class,
 			DataSourceTransactionManagerAutoConfiguration.class,
-			HibernateJpaAutoConfiguration.class
+			HibernateJpaAutoConfiguration.class,
+			RedisRepositoriesAutoConfiguration.class
 	})
 	@EnableConfigurationProperties(value = { KafkaConfig.Cluster.class, KafkaConfig.Topics.class })
 	public class KafkaProfileConfiguration {}

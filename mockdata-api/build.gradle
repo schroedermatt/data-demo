@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
 	id("java-conventions")
 
@@ -17,23 +19,29 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-// defaults to running in postgres profile
-task bootRunMockData {
-	bootRun.configure {
-		systemProperty "spring.profiles.active", 'mockdata,postgres'
-//		systemProperty "spring.profiles.active", 'mockdata,kafka'
 
-		// TRACING
+task bootRunAPI(type: BootRun, dependsOn: 'build') {
+	group = 'Application'
+	classpath = sourceSets.main.runtimeClasspath
+	mainClass = project.mainClassName
 
-//		systemProperty "otel.traces.exporter", 'otlp'
-//		systemProperty "otel.exporter.otlp.protocol", 'grpc'
-//		systemProperty "otel.exporter.otlp.endpoint", 'http://localhost:4317'
-//		systemProperty "otel.resource.attributes", 'service.name=mockdata-api,service.namespace=mockdata'
-//		systemProperty "otel.logs.exporter", 'none'
-//		systemProperty "otel.metrics.exporter", 'none'
-//
-//		jvmArgs = ["-javaagent:../observability/opentelemetry-javaagent.jar"]
+	doFirst() {
+		if ("postgres" == project.runtimeMode) {
+			systemProperty 'spring.profiles.active', "postgres"
+		} else if ("kafka" == project.runtimeMode) {
+			systemProperty 'spring.profiles.active', "kafka"
+		}
+
+		// configure tracing properties if enabled
+		if ("true" == project.tracingEnabled) {
+			systemProperty "otel.traces.exporter", 'otlp'
+			systemProperty "otel.exporter.otlp.protocol", 'grpc'
+			systemProperty "otel.exporter.otlp.endpoint", 'http://localhost:4317'
+			systemProperty "otel.resource.attributes", 'service.name=mockdata-daemon,service.namespace=mockdata'
+			systemProperty "otel.logs.exporter", 'none'
+			systemProperty "otel.metrics.exporter", 'none'
+
+			jvmArgs = ["-javaagent:../observability/opentelemetry-javaagent.jar"]
+		}
 	}
 }
-
-bootRunMockData.finalizedBy bootRun
