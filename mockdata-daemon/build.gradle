@@ -18,7 +18,18 @@ dependencies {
 task bootRunMockData {
 	bootRun.configure {
 		systemProperty "spring.profiles.active", 'mockdata,postgres'
-		// systemProperty "spring.profiles.active", 'mockdata,kafka'
+//		systemProperty "spring.profiles.active", 'mockdata,kafka'
+
+		// TRACING
+
+//		systemProperty "otel.traces.exporter", 'otlp'
+//		systemProperty "otel.exporter.otlp.protocol", 'grpc'
+//		systemProperty "otel.exporter.otlp.endpoint", 'http://localhost:4317'
+//		systemProperty "otel.resource.attributes", 'service.name=mockdata-daemon,service.namespace=mockdata'
+//		systemProperty "otel.logs.exporter", 'none'
+//		systemProperty "otel.metrics.exporter", 'none'
+//
+//		jvmArgs = ["-javaagent:../observability/opentelemetry-javaagent.jar"]
 	}
 }
 

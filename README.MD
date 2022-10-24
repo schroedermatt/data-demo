@@ -102,6 +102,16 @@ Run the mockdata-api AND the mockdata-daemon -
 ./gradlew :mockdata-daemon:bootRunMockData
 ```
 
+## Observability - OTEL & Jaeger
+
+The stack supports the OpenTelemetry and can be run with the Java Auto-Instrumentation turned on and exporting to Jaeger.
+
+1) Start the observability stack - `./gradlew tracingComposeUp`
+   - this will run the `docker-compose` file found in the `/observability` directory
+2) Find the `bootRunMockData` task in the `build.gradle` file of either the api or daemon module depending on what you're running
+3) Uncomment the `systemProperty` lines with "otel" properties & the `jvmArgs` line that attaches the otel java agent
+4) View traces in Jaeger at `http://localhost:16686`
+
 ## Stream Processing Scenarios
 
 The following scenarios can be accomplished using the data within this project.

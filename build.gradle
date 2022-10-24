@@ -21,6 +21,12 @@ dockerCompose {
                 './kafka/local/cluster/redis/docker-compose.yml'
         ]
     }
+
+    tracing {
+        useComposeFiles = [
+                './observability/docker-compose.yml'
+        ]
+    }
 }
 
 task dockerCreateNetwork(type: Exec) {
@@ -42,3 +48,4 @@ task fullComposeDown {
 postgresComposeUp.dependsOn dockerCreateNetwork
 kafkaComposeUp.dependsOn dockerCreateNetwork
 fullComposeUp.dependsOn dockerCreateNetwork
+tracingComposeUp.dependsOn dockerCreateNetwork
