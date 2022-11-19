@@ -18,7 +18,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       # state will be retained unless "-v" is used when tearing things down (docker-compose down -v)
-      - db:/var/lib/postgresql/data
+      - ./db:/var/lib/postgresql/data
       # initialize the tables necessary for mockdata
       - ./init/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     # required for the kafka connector to read

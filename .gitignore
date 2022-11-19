@@ -23,3 +23,6 @@ build
 
 # VS Code #
 .vscode/
+
+# Postgres Volume
+db/
