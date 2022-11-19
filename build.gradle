@@ -30,7 +30,7 @@ dockerCompose {
 }
 
 task dockerCreateNetwork(type: Exec) {
-    workingDir "$projectDir/kafka/local/bin"
+    workingDir "$projectDir/kafka/local"
     commandLine 'sh', './network.sh'
 }
 

@@ -12,6 +12,8 @@ This project will start up a local environment and generate data of the followin
 - Ticket
 - Venue
 
+ERD can be found in the [mockdata readme.](./mockdata/README.MD)
+
 ## Environment Prerequisites
 
 ### IntelliJ CE
