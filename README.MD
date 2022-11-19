@@ -91,7 +91,17 @@ If you want to run the OpenTelemetry stack and enable distributed tracing, also 
 # Jaeger UI available at `http://localhost:16686`
 ```
 
-2. Set `runtimeMode` and `tracingEnabled` depending on which ancillary services you started in step 1
+2. Validate Docker Startup
+   1. Postgres:
+      1. pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
+         1. username: `root@email.com` 
+         2. password: `root` 
+         3. After logging in, it will prompt for postgres database password: `postgres`
+            1. If it prompts for username, it's `postgres`.
+   2. Kafka:
+      1. KPow (Kafka Exploration UI) available at `http://localhost:3000`
+
+3. Set `runtimeMode` and `tracingEnabled` depending on which ancillary services you started in step 1
 
 These properties are located in the project's [root gradle.properties](./gradle.properties) file.
 
@@ -146,6 +156,16 @@ The stack supports the OpenTelemetry and can be run with the Java Auto-Instrumen
 2) Find the `bootRunMockData` task in the `build.gradle` file of either the api or daemon module depending on what you're running
 3) Uncomment the `systemProperty` lines with "otel" properties & the `jvmArgs` line that attaches the otel java agent
 4) View traces in Jaeger at `http://localhost:16686`
+
+## Troubleshooting
+
+### Invalid Java Version
+
+The following error is likely the cause of not having Java 17 installed.
+
+```bash
+> error: invalid source release: 17
+```
 
 ## Stream Processing Scenarios
 
