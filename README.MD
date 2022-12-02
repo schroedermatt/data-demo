@@ -176,7 +176,7 @@ The following scenarios can be accomplished using the data within this project.
 
 ### MOST STREAMED ARTISTS
 
-Context: A com.msse.demo.customer streams (listens to) an artist.
+Context: A Customer streams (listens to) an artist.
 
 Goals:
 - Find the top 3 streamed artists across all customers.
@@ -205,8 +205,8 @@ Goals:
 Context: Customers stream artists and each artist has a genre.
 
 Goals:
-- Alert com.msse.demo.customer when an event is created in their most streamed genre.
-- BONUS) Alert com.msse.demo.customer when popular* events are created in their most streamed genre.
+- Alert customer when an event is created in their most streamed genre.
+- BONUS) Alert customer when popular* events are created in their most streamed genre.
    - *popular: within 10% max capacity
 
 ### SUGGESTED EVENTS - LOCATION
