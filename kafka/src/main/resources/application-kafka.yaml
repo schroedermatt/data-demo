@@ -8,6 +8,11 @@ spring:
 kafka:
   cluster:
     bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
+    cloud: false
+#    bootstrap-servers: pkc-ymrq7.us-east-2.aws.confluent.cloud:9092
+#    security-protocol: SASL_SSL
+#    saslJaasConfig: org.apache.kafka.common.security.plain.PlainLoginModule required username='7CZ3VB4LXTBAQAAN' password='BLgV86/1CDnkQExuJ7qVVf+hRuYGA7oE4w8dtxY8B1cnxSHqQeqOLFvK4Rdheh5O';
+#    saslMechanism: PLAIN
   topics:
     customers: data-demo-customers
     addresses: data-demo-addresses

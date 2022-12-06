@@ -27,6 +27,12 @@ public class KafkaConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
+        if (cluster.cloud) {
+            props.put("security.protocol", cluster.securityProtocol);
+            props.put("sasl.jaas.config", cluster.saslJaasConfig);
+            props.put("sasl.mechanism", cluster.saslMechanism);
+        }
+
         return props;
     }
 
@@ -38,7 +44,11 @@ public class KafkaConfig {
 
     @ConfigurationProperties(prefix = "kafka.cluster")
     public record Cluster(
-            String bootstrapServers
+            String bootstrapServers,
+            boolean cloud,
+            String securityProtocol,
+            String saslJaasConfig,
+            String saslMechanism
     ) {}
 
     @ConfigurationProperties(prefix = "kafka.topics")
