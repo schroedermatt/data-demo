@@ -7,12 +7,9 @@ spring:
 
 kafka:
   cluster:
+    client-id: data-demo-producer
     bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
     cloud: false
-#    bootstrap-servers: ***-****.us-east-2.aws.confluent.cloud:9092
-#    security-protocol: SASL_SSL
-#    saslJaasConfig: org.apache.kafka.common.security.plain.PlainLoginModule required username='****' password='***';
-#    saslMechanism: PLAIN
   topics:
     customers: data-demo-customers
     addresses: data-demo-addresses

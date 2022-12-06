@@ -26,6 +26,8 @@ task bootRunDaemon(type: BootRun, dependsOn: 'build') {
 			systemProperty 'spring.profiles.active', "postgres"
 		} else if ("kafka" == project.runtimeMode) {
 			systemProperty 'spring.profiles.active', "kafka"
+		} else if ("kafka-cloud" == project.runtimeMode) {
+			systemProperty 'spring.profiles.active', "kafka,ccloud"
 		}
 
 		// setup initial load volumes (configured in root gradle.properties file)

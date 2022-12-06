@@ -30,6 +30,8 @@ task bootRunAPI(type: BootRun, dependsOn: 'build') {
 			systemProperty 'spring.profiles.active', "postgres"
 		} else if ("kafka" == project.runtimeMode) {
 			systemProperty 'spring.profiles.active', "kafka"
+		} else if ("kafka-cloud" == project.runtimeMode) {
+			systemProperty 'spring.profiles.active', "kafka,ccloud"
 		}
 
 		// configure tracing properties if enabled

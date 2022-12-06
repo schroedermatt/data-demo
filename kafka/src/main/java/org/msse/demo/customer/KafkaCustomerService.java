@@ -46,18 +46,16 @@ public class KafkaCustomerService implements CustomerService {
 
     @SneakyThrows
     private void produceCustomer(FullCustomer customer) {
-        String key = customer.customer().id();
-
         log.info("Producing Customer ({}) to Kafka", customer.customer().id());
-        kafkaProducer.send(new ProducerRecord<>(topics.customers(), key, customer.customer())).get();
+        kafkaProducer.send(new ProducerRecord<>(topics.customers(), customer.customer().id(), customer.customer())).get();
 
         log.info("Producing Address ({}) for Customer ({}) to Kafka", customer.address().id(), customer.customer().id());
-        kafkaProducer.send(new ProducerRecord<>(topics.addresses(), key, customer.address())).get();
+        kafkaProducer.send(new ProducerRecord<>(topics.addresses(), customer.address().id(), customer.address())).get();
 
         log.info("Producing Phone ({}) for Customer ({}) to Kafka", customer.phone().id(), customer.customer().id());
-        kafkaProducer.send(new ProducerRecord<>(topics.phones(), key, customer.phone())).get();
+        kafkaProducer.send(new ProducerRecord<>(topics.phones(), customer.phone().id(), customer.phone())).get();
 
         log.info("Producing Email ({}) for Customer ({}) to Kafka", customer.email().id(), customer.customer().id());
-        kafkaProducer.send(new ProducerRecord<>(topics.emails(), key, customer.email())).get();
+        kafkaProducer.send(new ProducerRecord<>(topics.emails(), customer.email().id(), customer.email())).get();
     }
 }

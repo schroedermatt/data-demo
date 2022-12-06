@@ -1,0 +1,8 @@
+# if running with ccloud profile active, wire up to the confluent cloud environment
+kafka:
+  cluster:
+    bootstrap-servers: pkc-ymrq7.us-east-2.aws.confluent.cloud:9092
+    cloud: true
+    security-protocol: SASL_SSL
+    saslJaasConfig: org.apache.kafka.common.security.plain.PlainLoginModule required username='' password='';
+    saslMechanism: PLAIN

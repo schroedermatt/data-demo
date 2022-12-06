@@ -23,6 +23,7 @@ public class KafkaConfig {
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
 
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, cluster.clientId);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
@@ -48,7 +49,8 @@ public class KafkaConfig {
             boolean cloud,
             String securityProtocol,
             String saslJaasConfig,
-            String saslMechanism
+            String saslMechanism,
+            String clientId
     ) {}
 
     @ConfigurationProperties(prefix = "kafka.topics")
