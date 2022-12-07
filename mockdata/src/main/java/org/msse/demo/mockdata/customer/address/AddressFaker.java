@@ -31,6 +31,7 @@ public class AddressFaker extends BaseFaker {
 
   private Address generateAddress(String addressId, String customerId, String addressType) {
     String stateAbbr = faker.address().stateAbbr();
+    String zipByState = faker.address().zipCodeByState(stateAbbr);
 
     return new Address(
             addressId,
@@ -41,7 +42,7 @@ public class AddressFaker extends BaseFaker {
             faker.address().streetAddress(),
             faker.address().cityName(),
             stateAbbr,
-            faker.address().zipCodeByState(stateAbbr),
+            zipByState,
             faker.number().digits(4),
             faker.address().countryCode()
     );

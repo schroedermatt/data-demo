@@ -1,18 +1,17 @@
 # DATA DEMO
 
-This project will start up a local environment and generate data of the following types.
+The Data Demo [generates fake data](https://fakerjs.dev/) aligned with the ERD below.
 
-- Customer
-- Address
-- Email
-- Phone
-- Artist
-- Event
-- Stream
-- Ticket
-- Venue
+The Data Demo can throw data into the following environments -
 
-ERD can be found in the [mockdata readme.](./mockdata/README.MD)
+1) Local Postgres (Docker)
+2) Local Kafka (Docker)
+3) Local Postgres -> Kafka Connect -> Kafka (Docker)
+4) Confluent Cloud ([tf-ccloud](./tf-ccloud/README.md))
+
+For more details on running the Data Demo, jump ahead to the [getting started section](#getting-started).
+
+![erd](assets/erd.png)
 
 ## Environment Prerequisites
 
@@ -22,7 +21,9 @@ https://www.jetbrains.com/idea/download/#section=mac
 
 _Feel free to use another IDE, but IntelliJ has become the industry defacto IDE._
 
-### SDKMAN!
+### Java 17 (via SDKMAN!)
+
+You can install Java 17 however you'd like, but SDKMAN is a tool that makes installing and switching between versions a breeze.
 
 1) [Install SDKMAN!](https://sdkman.io/install)
 2) Install Java 17 via SDKMAN!
@@ -33,9 +34,13 @@ _Feel free to use another IDE, but IntelliJ has become the industry defacto IDE.
 
 ### Set Project SDK
 
+Update the SDK in your IDE to align with your Java 17 installation.
+
 ![project-sdk](./assets/project_sdk.png)
 
 ### Enable Annotation Processors for Lombok
+
+Lombok is a tool that helps remove boilerplate in Java applications. Lombok is utilized in this project, so you must enabled annotation processors for Lombok to work.
 
 ![enable-annotation-processing](./assets/enable_annotation_processing.png)
 
@@ -43,13 +48,22 @@ _[Lombok Docs](https://projectlombok.org/)_
 
 ### Docker
 
+If you plan to run the [Local Docker Environment](#local-docker-environment), you must first install and start Docker.
+
 https://docs.docker.com/get-docker/
 
-### jq
+### `jq` (optional)
+
+`jq` is a command line tool that can format (and do many other things) JSON responses. It is really only needed if you plan to run the mockdata-api and call the API via curl.
+
+```bash
+# example usage of jq 
+curl -X POST localhost:8080/customers | jq
+```
 
 https://stedolan.github.io/jq/download/
 
-## Getting Started
+## Local Docker Environment
 
 1. Start ancillary services (PostgreSQL, Kafka, etc)
 
@@ -79,9 +93,9 @@ https://stedolan.github.io/jq/download/
 ./gradlew fullComposeDownForced
 ```
 
---
+If you want to run the OpenTelemetry stack and enable distributed tracing, start up the tracing services (Jaeger).
 
-If you want to run the OpenTelemetry stack and enable distributed tracing, also start up the tracing services (Jaeger)
+This command is run separate from the above commands that start postgres/kafka. The networking between the two docker compose files is configured to allow them to communicate.
 
 ```bash
 ./gradlew tracingComposeUp
@@ -100,8 +114,10 @@ If you want to run the OpenTelemetry stack and enable distributed tracing, also 
             1. If it prompts for username, it's `postgres`.
    2. Kafka:
       1. KPow (Kafka Exploration UI) available at `http://localhost:3000`
+   3. Tracing (If observability stack was started)
+      1. Jaeger (Tracing UI) available at `http://localhost:16686`
 
-3. Set `runtimeMode` and `tracingEnabled` depending on which ancillary services you started in step 1
+3. Set `runtimeMode` and `tracingEnabled` depending on which services you started in step 1.
 
 These properties are located in the project's [root gradle.properties](./gradle.properties) file.
 
@@ -147,15 +163,31 @@ curl -X POST localhost:8080/customers | jq
 
 For the full request collection, import the [Insomnia Collection](./assets/DataDemo_Insomnia_2022-10-20.json).
 
-## Observability - OTEL & Jaeger
+## Confluent Cloud Environment
 
-The stack supports the OpenTelemetry and can be run with the Java Auto-Instrumentation turned on and exporting to Jaeger.
+If you are running the project pointed at Confluent Cloud you will first need to provision the environment using Terraform.
 
-1) Start the observability stack - `./gradlew tracingComposeUp`
-   - this will run the `docker-compose` file found in the `/observability` directory
-2) Find the `bootRunMockData` task in the `build.gradle` file of either the api or daemon module depending on what you're running
-3) Uncomment the `systemProperty` lines with "otel" properties & the `jvmArgs` line that attaches the otel java agent
-4) View traces in Jaeger at `http://localhost:16686`
+1) Provision Confluent Cloud Environment - see the [tf-ccloud readme](./tf-ccloud/README.md) for more details.
+2) After the environment is provisioned, configure the bootstrap-servers, api-key, and api-secret
+   ```bash
+   terraform output resource-ids
+   
+   export CONFLUENT_CLOUD_CLUSTER_ID="lkc-r556np"
+   export CONFLUENT_CLOUD_API_KEY="***REDACTED***"
+   export CONFLUENT_CLOUD_API_SECRET="***REDACTED***"
+   ```
+3) Update `runtimeMode` to `kafka-cloud` in the [root gradle.properties](./gradle.properties).
+4) Configure Initial Load Volume (if running the Daemon) in the [root gradle.properties](./gradle.properties) file.
+   ```properties
+   initialLoadCustomers=100
+   initialLoadArtists=200
+   initialLoadVenues=50
+   initialLoadEvents=100
+   initialLoadTickets=1000
+   initialLoadStreams=1000
+   ```
+5) Run the daemon (`./gradlew bootRunDaemon`) OR the API (`./gradlew bootRunApi)`
+   - If running the API, there is an [insomnia export](./assets/DataDemo_Insomnia_2022-10-20.json) you can use to get started 
 
 ## Troubleshooting
 

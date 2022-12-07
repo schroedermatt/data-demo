@@ -1,8 +1,11 @@
 # if running with ccloud profile active, wire up to the confluent cloud environment
 kafka:
   cluster:
-    bootstrap-servers: pkc-ymrq7.us-east-2.aws.confluent.cloud:9092
+    # Run 'terraform output resource-ids' and copy the "Kafka Cluster ID" value
+    bootstrap-servers: ${CONFLUENT_CLOUD_BOOTSTRAP_SERVER}
     cloud: true
     security-protocol: SASL_SSL
-    saslJaasConfig: org.apache.kafka.common.security.plain.PlainLoginModule required username='' password='';
+    # Run 'terraform output resource-ids' and copy the "data-demo-app's Kafka API Key" value for the CONFLUENT_CLOUD_API_KEY
+    # Run 'terraform output resource-ids' and copy the "data-demo-app's Kafka API Secret" value for the CONFLUENT_CLOUD_API_SECRET
+    saslJaasConfig: org.apache.kafka.common.security.plain.PlainLoginModule required username='${CONFLUENT_CLOUD_API_KEY}' password='${CONFLUENT_CLOUD_API_SECRET}';
     saslMechanism: PLAIN
