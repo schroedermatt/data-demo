@@ -1,7 +1,7 @@
 # if running with ccloud profile active, wire up to the confluent cloud environment
 kafka:
   cluster:
-    # Run 'terraform output resource-ids' and copy the "Kafka Cluster ID" value
+    # Run 'terraform output resource-ids' and copy the "Kafka Cluster Bootstrap Endpoint" value and remove the "SASL_SSL://" prefix
     bootstrap-servers: ${CONFLUENT_CLOUD_BOOTSTRAP_SERVER}
     cloud: true
     security-protocol: SASL_SSL

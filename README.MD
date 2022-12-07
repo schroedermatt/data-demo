@@ -172,7 +172,7 @@ If you are running the project pointed at Confluent Cloud you will first need to
    ```bash
    terraform output resource-ids
    
-   export CONFLUENT_CLOUD_CLUSTER_ID="lkc-r556np"
+   export CONFLUENT_CLOUD_BOOTSTRAP_SERVER="pkc-ymrq7.us-east-2.aws.confluent.cloud:9092"
    export CONFLUENT_CLOUD_API_KEY="***REDACTED***"
    export CONFLUENT_CLOUD_API_SECRET="***REDACTED***"
    ```
