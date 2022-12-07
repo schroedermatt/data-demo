@@ -11,7 +11,7 @@ The Data Demo can throw data into the following environments -
 
 For more details on running the Data Demo, jump ahead to the [getting started section](#getting-started).
 
-![erd](assets/erd.png)
+![erd](assets/ERD.png)
 
 ## Environment Prerequisites
 

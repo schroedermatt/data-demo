@@ -18,4 +18,4 @@ Core Music Entities -
 
 ### ERD
 
-![erd](../assets/erd.png)
+![erd](../assets/ERD.png)
