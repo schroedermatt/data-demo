@@ -6,8 +6,8 @@ The resources provisioned include -
 
 ## Resources
 
-* `confluent_environment.workshop` named "ImprovingWorkshop"
-* `confluent_kafka_cluster.dev-cluster` named "development" within the "ImprovingWorkshop" environment
+* `confluent_environment.workshop` named "workshop"
+* `confluent_kafka_cluster.dev-cluster` named "development" within the "workshop" environment
   * AWS, Single Zone (us-east-2), 1 CKU Dedicated Cluster
 * `confluent_service_account.env-manager`: Service Account to manage all resources within the 'dev-cluster' Kafka cluster
     * `confluent_role_binding`: CloudClusterAdmin 

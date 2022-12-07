@@ -8,7 +8,7 @@ provider "confluent" {
 }
 
 resource "confluent_environment" "workshop" {
-  display_name = "ImprovingWorkshop"
+  display_name = "workshop"
 }
 
 resource "confluent_kafka_cluster" "dev-cluster" {
