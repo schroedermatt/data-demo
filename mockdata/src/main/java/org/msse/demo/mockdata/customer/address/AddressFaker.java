@@ -34,8 +34,9 @@ public class AddressFaker extends BaseFaker {
             customerId,
             "US",
             addressType,
-            faker.address().mailBox(),
             faker.address().streetAddress(),
+            // todo - randomly add mailbox
+            faker.address().mailBox(),
             faker.address().cityName(),
             faker.address().stateAbbr(),
             faker.address().zipCode(),
