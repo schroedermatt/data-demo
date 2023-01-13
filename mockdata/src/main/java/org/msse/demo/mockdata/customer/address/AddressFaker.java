@@ -9,7 +9,6 @@ import java.util.List;
 @Service
 public class AddressFaker extends BaseFaker {
 
-  private static final List<String> ADDRESS_FORMAT_CODES = List.of("US", "MX", "CA", "EU");
   private static final String RESID_TYPE_CODE = "RESID";
   private static final String VENUE_TYPE_CODE = "VENUE";
 
@@ -33,7 +32,7 @@ public class AddressFaker extends BaseFaker {
     return new Address(
             addressId,
             customerId,
-            faker.options().nextElement(ADDRESS_FORMAT_CODES),
+            "US",
             addressType,
             faker.address().mailBox(),
             faker.address().streetAddress(),
@@ -41,7 +40,7 @@ public class AddressFaker extends BaseFaker {
             faker.address().stateAbbr(),
             faker.address().zipCode(),
             faker.number().digits(4),
-            faker.address().countryCode()
+            "US"
     );
   }
 }
