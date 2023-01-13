@@ -1,3 +1,32 @@
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    group = 'org.msse.demo'
+    version = '0.1.0'
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {}
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+}
+
 buildscript {
     repositories {
         mavenCentral()

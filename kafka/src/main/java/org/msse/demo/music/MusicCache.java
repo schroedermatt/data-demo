@@ -142,7 +142,7 @@ public class MusicCache {
     }
 
     public Optional<Ticket> bookTicket(String ticketId, String eventId, String customerId) {
-        Ticket ticket = musicFaker.ticketFaker().generate(ticketId, eventId, customerId);
+        Ticket ticket = musicFaker.ticketFaker().generate(ticketId, customerId, eventId);
 
         redis.put(CACHE_TICKET, ticket.id(), ticket);
 

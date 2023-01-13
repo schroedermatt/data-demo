@@ -154,7 +154,7 @@ public class KafkaMusicService implements MusicService {
 
     @Override
     public Optional<Stream> streamArtist(String artistId, String customerId) {
-        Optional<Stream> stream = musicCache.streamArtist(artistId, customerId);
+        Optional<Stream> stream = musicCache.streamArtist(customerId, artistId);
 
         stream.ifPresent(value -> {
             log.info("Producing Stream ({}) for Artist ({}) from Customer ({}) to Kafka", value.id(), value.artistid(), value.customerid());
