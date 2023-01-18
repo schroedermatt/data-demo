@@ -1,0 +1,33 @@
+{
+  "name": "utopia-connector-4",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
+    "database.server.name": "utopia",
+    "database.dbname": "postgres",
+    "schema.whitelist": "public",
+
+    "_snapshot.mode" : "initial,always,never,initial_only,exported,custom",
+    "snapshot.mode" : "always",
+
+    "_plugin.name": "w/out this set, the following error occurs -> ERROR: could not access file 'decoderbufs': No such file or directory",
+    "plugin.name": "pgoutput",
+
+    "_publication.autocreate.mode": "use 'filtered' with the pgoutput plug-in",
+    "publication.autocreate.mode" : "filtered",
+
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.converter.schemas.enable": "false",
+    "transforms.extract_pk.type" : "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "transforms.extract_pk.field" : "id",
+
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+
+    "topic.prefix": "cdc."
+  }
+}

@@ -4,11 +4,11 @@ This folder contains a local dockerized kafka environment.
 
 ## Start Environment
 
-Run `./up.sh`, and you'll have -
+From the root directory, run `./gradlew kafkaComposeUp` to start all of the services found in `./cluster/docker-compose.yml`
 
 ## Destroy Environment
 
-Run `./down.sh` to tear down the environment, including the local docker volumes.
+Run `./gradlew kafkaComposeDown` to tear down the environment, including the local docker volumes.
 
 ## Additional Info
 
@@ -17,7 +17,7 @@ Run `./down.sh` to tear down the environment, including the local docker volumes
 [Debezium Postgres Connector](https://debezium.io/documentation/reference/stable/install.html)
 
 ```bash
-curl -X POST localhost:18083/connectors -H "Content-Type: application/json" -d @./connect/connectors/postgres.json 
+curl -X POST localhost:18083/connectors -H "Content-Type: application/json" -d @./kafka/local/connect/postgres-connector-config.json 
 ```
 
 ### List Kafka Topics
@@ -31,7 +31,7 @@ kafka-topics --list --bootstrap-server localhost:19092
 AVRO
 ```bash
 kafka-avro-console-consumer \
-   --topic _postgres_.public.com.msse.demo.customer \
+   --topic topic-name-here \
    --from-beginning \
    --bootstrap-server localhost:19092 \
    --property schema.registry.url=https://localhost:8081
@@ -40,7 +40,7 @@ kafka-avro-console-consumer \
 STRING
 ```bash
 kafka-console-consumer \
-   --topic _postgres_.public.com.msse.demo.customer \
+   --topic topic-name-here \
    --bootstrap-server localhost:19092 \
    --property print.key=true \
    --from-beginning
