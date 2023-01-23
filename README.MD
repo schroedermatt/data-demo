@@ -114,14 +114,21 @@ If you're planning to load data from Postgres into Kafka via Kafka Connect, run 
 The Confluent Cloud environment is provisioned via Terraform. You will need the Confluent CLI installed and logged in.
 
 1) Provision Confluent Cloud Environment - see the [tf-ccloud readme](./tf-ccloud/README.md) for more details.
-2) After the environment is provisioned, configure the bootstrap-servers, api-key, and api-secret
+2) After the environment is provisioned, configure the bootstrap-servers, api-key, and api-secret. These values are expected by the [application-ccloud.yaml](./kafka/src/main/resources/application-ccloud.yaml) properties file.
    ```bash
    terraform output resource-ids
    
-   export CONFLUENT_CLOUD_BOOTSTRAP_SERVER="pkc-ymrq7.us-east-2.aws.confluent.cloud:9092"
-   export CONFLUENT_CLOUD_API_KEY="***REDACTED***"
-   export CONFLUENT_CLOUD_API_SECRET="***REDACTED***"
+   export CONFLUENT_CLOUD_BOOTSTRAP_SERVER="pkc-mg1wx.us-east-2.aws.confluent.cloud:9092"
+   export DATA_DEMO_CONFLUENT_CLOUD_API_KEY="**REDACTED**"
+   export DATA_DEMO_CONFLUENT_CLOUD_API_SECRET="**REDACTED**"
    ```
+3) You will still need to start Redis locally, as it is needed by data-demo for caching the created entities. This allows the tool to generate data with referential integrity.
+    ```bash
+    ./gradlew redisComposeUp
+    ./gradlew redisComposeDown
+    ./gradlew redisComposeDownForced
+    ```
+4) Redis Commander available at http://localhost:6380
 
 ### Tracing
 

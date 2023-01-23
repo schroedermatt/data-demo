@@ -21,7 +21,7 @@ public class EventFaker extends BaseFaker {
             eventId,
             artistId,
             venueId,
-            faker.number().numberBetween(50, venueMaxCapacity),
+            faker.number().numberBetween(2, venueMaxCapacity),
             faker.date().future(250, TimeUnit.DAYS).toString()
     );
   }

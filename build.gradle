@@ -50,6 +50,12 @@ dockerCompose {
                 './kafka/local/cluster/redis/docker-compose.yml'
         ]
     }
+    // ./gradlew redisComposeUp|redisComposeDown|redisComposeDownForced
+    redis {
+        useComposeFiles = [
+                './kafka/local/cluster/redis/docker-compose.yml'
+        ]
+    }
 
     tracing {
         useComposeFiles = [

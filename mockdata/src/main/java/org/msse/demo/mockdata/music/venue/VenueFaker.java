@@ -23,7 +23,7 @@ public class VenueFaker extends BaseFaker {
             venueId,
             addressId,
             faker.company().name() + faker.options().nextElement(VENUE_SUFFIX),
-            faker.number().numberBetween(2, 50000)
+            faker.number().numberBetween(5, 5000)
     );
   }
 }

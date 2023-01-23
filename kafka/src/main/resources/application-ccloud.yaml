@@ -2,10 +2,13 @@
 kafka:
   cluster:
     # Run 'terraform output resource-ids' and copy the "Kafka Cluster Bootstrap Endpoint" value and remove the "SASL_SSL://" prefix
+    # export CONFLUENT_CLOUD_BOOTSTRAP_SERVER="pkc-mg1wx.us-east-2.aws.confluent.cloud:9092"
     bootstrap-servers: ${CONFLUENT_CLOUD_BOOTSTRAP_SERVER}
     cloud: true
     security-protocol: SASL_SSL
-    # Run 'terraform output resource-ids' and copy the "data-demo-app's Kafka API Key" value for the CONFLUENT_CLOUD_API_KEY
-    # Run 'terraform output resource-ids' and copy the "data-demo-app's Kafka API Secret" value for the CONFLUENT_CLOUD_API_SECRET
-    saslJaasConfig: org.apache.kafka.common.security.plain.PlainLoginModule required username='${CONFLUENT_CLOUD_API_KEY}' password='${CONFLUENT_CLOUD_API_SECRET}';
+    # Run 'terraform output resource-ids' and copy the "data-demo-app's Kafka API Key" value for the DATA_DEMO_CONFLUENT_CLOUD_API_KEY
+    # export DATA_DEMO_CONFLUENT_CLOUD_API_KEY="ABCDEF2ZKZP627LSE"
+    # Run 'terraform output resource-ids' and copy the "data-demo-app's Kafka API Secret" value for the DATA_DEMO_CONFLUENT_CLOUD_API_SECRET
+    # export DATA_DEMO_CONFLUENT_CLOUD_API_SECRET="abcdefg1234567ZxdqaET1WkZ7IBXvLINZIPYp6AaQyGMKMuh+F4xYHv47xWbV5z"
+    saslJaasConfig: org.apache.kafka.common.security.plain.PlainLoginModule required username='${DATA_DEMO_CONFLUENT_CLOUD_API_KEY}' password='${DATA_DEMO_CONFLUENT_CLOUD_API_SECRET}';
     saslMechanism: PLAIN
