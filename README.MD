@@ -4,168 +4,114 @@ The Data Demo [generates fake data](https://fakerjs.dev/) aligned with the ERD b
 
 The Data Demo can throw data into the following environments -
 
-1) Local Postgres (Docker)
-2) Local Kafka (Docker)
-3) Local Postgres -> Kafka Connect -> Kafka (Docker)
-4) Confluent Cloud ([tf-ccloud](./tf-ccloud/README.md))
+1) [Local Postgres (Docker)](#postgresql)
+2) [Local Kafka (Docker)](#kafka)
+3) [Local Postgres -> Kafka Connect -> Kafka (Docker)](#postgres--kafka)
+4) [Confluent Cloud](#confluent-cloud) ([tf-ccloud](./tf-ccloud/README.md))
 
-For more details on running the Data Demo, jump ahead to the [getting started section](#getting-started).
+For more details on running the Data Demo, jump ahead to the [getting started section](#getting-started) after installing the [prerequisites](#environment-prerequisites).
 
-![erd](assets/ERD.png)
+<img src="./assets/ERD.png" alt="erd" width="750"/>
 
 ## Environment Prerequisites
 
-### IntelliJ CE
+* [git](PREREQS.MD#git)
+* [Java 17](PREREQS.MD#java-17)
+* [Docker](PREREQS.MD#docker)
+* [IDE](PREREQS.MD#ide)
+  * [SDK Setup](PREREQS.MD#project-sdk-configuration) & [Lombok Config](PREREQS.MD#enable-annotation-processors-for-lombok)
+* [jq](PREREQS.MD#jq) (optional)
 
-https://www.jetbrains.com/idea/download/#section=mac
+## Getting Started
 
-_Feel free to use another IDE, but IntelliJ has become the industry defacto IDE._
+1. In the [root gradle.properties](./gradle.properties) file, select your `runtimeMode` (brief descriptions below).
+   * `postgres`: data-demo will inject mock data into a local postgres database.
+   * `kafka`: data-demo will produce mock data into Kafka. A redis cache is used to keep track of the produced mock entities.
+   * `kafka-cloud`: data-demo will connect to a Confluent Cloud cluster and produce mock data. A local redis cache is still used to keep track of the produced mock entities.
+2. Start the [environment](#local-environments) for your selected `runtimeMode`
+   * [PostgreSQL](#postgresql)
+   * [Kafka](#kafka)
+   * [Confluent Cloud](#confluent-cloud)
+   * [Tracing](#tracing)
+3. If you're enabling tracing, start the [tracing environment](#tracing) and set `tracingEnabled=true` in the [`gradle.properties`](./gradle.properties) file.
+4. Configure the initial load volumes (these do not apply if running the `mockdata-api`). These properties are in the [`gradle.properties`](./gradle.properties) file.
+   ```properties
+   initialLoadCustomers=20
+   initialLoadArtists=20
+   initialLoadVenues=15
+   initialLoadEvents=100
+   initialLoadTickets=10000
+   initialLoadStreams=50000
+   ```
+5. Run `data-demo`. There are 2 modes of operation, a daemon and an API. More details can be found on each below.
+   1. `mockdata-daemon`, run via `./gradlew bootRunDaemon`
+      * The daemon will hydrate the configured initial load volumes and then continue to run and inject random data into the environment.
+   2. `mockdata-api`, run via `./gradlew bootRunAPI`
+      * The API exposes endpoints to manually create entities. Import the [Insomnia Collection](./assets/DataDemo_Insomnia_2022-10-20.json) to explore the available endpoints.
+        * To validate the API, you can fire off a sample request with this command -> `curl -X POST localhost:8080/customers | jq`
 
-### Java 17 (via SDKMAN!)
+## Local Environments
 
-You can install Java 17 however you'd like, but SDKMAN is a tool that makes installing and switching between versions a breeze.
+The `docker-compose` gradle plugin is used to start the services in appropriate docker-compose files.
 
-1) [Install SDKMAN!](https://sdkman.io/install)
-2) Install Java 17 via SDKMAN!
-    ```bash
-    sdk install java 17.0.2-tem
-    sdk use java 17.0.2-tem
-    ```
+### PostgreSQL
 
-### Set Project SDK
+1. Start [Postgres Services](./postgres/local/docker-compose.yml)
 
-Update the SDK in your IDE to align with your Java 17 installation.
+   ```bash
+   # `docker-compose` gradle plugin is used to start services
+   
+   # POSTGRESQL
+   ./gradlew postgresComposeUp
+   ./gradlew postgresComposeDown
+   ./gradlew postgresComposeDownForced
+   ```
 
-![project-sdk](./assets/project_sdk.png)
+2. Validate Environment
+   * pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
+     * username: `root@email.com`
+     * password: `root`
+     * postgres database password: `postgres`
 
-### Enable Annotation Processors for Lombok
+### Kafka
 
-Lombok is a tool that helps remove boilerplate in Java applications. Lombok is utilized in this project, so you must enabled annotation processors for Lombok to work.
-
-![enable-annotation-processing](./assets/enable_annotation_processing.png)
-
-_[Lombok Docs](https://projectlombok.org/)_
-
-### Docker
-
-If you plan to run the [Local Docker Environment](#local-docker-environment), you must first install and start Docker.
-
-https://docs.docker.com/get-docker/
-
-### `jq` (optional)
-
-`jq` is a command line tool that can format (and do many other things) JSON responses. It is really only needed if you plan to run the mockdata-api and call the API via curl.
+1. Start [Kafka Services](./kafka/local/cluster/docker-compose.yml)
 
 ```bash
-# example usage of jq 
-curl -X POST localhost:8080/customers | jq
-```
-
-https://stedolan.github.io/jq/download/
-
-## Local Docker Environment
-
-1. Start ancillary services (PostgreSQL, Kafka, etc)
-
-```bash
-# `docker-compose` gradle plugin is used to start services
-
-# POSTGRESQL
-./gradlew postgresComposeUp
-./gradlew postgresComposeDown
-./gradlew postgresComposeDownForced
-
-# pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
-# pgAdmin4 username: root@email.com
-# pgAdmin4 password: root
-# pgAdmin4 postgres database password: postgres
-
 # KAFKA
 ./gradlew kafkaComposeUp
 ./gradlew kafkaComposeDown
 ./gradlew kafkaComposeDownForced
 
-# KPow (Kafka Exploration UI) available at `http://localhost:3000`
+```
 
-# EVERYTHING -- helpful if running Postgres with Connector publishing to Kafka
+2. Validate Environment 
+   * KPow (Kafka Exploration UI) available at `http://localhost:3000`
+
+### Postgres + Kafka
+
+If you're planning to load data from Postgres into Kafka via Kafka Connect, run the following commands.
+
+1. Start All Services ([Postgres](./postgres/local/docker-compose.yml) & [Kafka](./kafka/local/cluster/docker-compose.yml))
+
+```bash
 ./gradlew fullComposeUp
 ./gradlew fullComposeDown
 ./gradlew fullComposeDownForced
 ```
 
-If you want to run the OpenTelemetry stack and enable distributed tracing, start up the tracing services (Jaeger).
+2. Validate Environment
+   * Postgres
+     * pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
+        * username: `root@email.com`
+        * password: `root`
+        * postgres database password: `postgres`
+   * Kafka
+     * KPow (Kafka Exploration UI) available at `http://localhost:3000`
 
-This command is run separate from the above commands that start postgres/kafka. The networking between the two docker compose files is configured to allow them to communicate.
+### Confluent Cloud
 
-```bash
-./gradlew tracingComposeUp
-./gradlew tracingComposeDown
-./gradlew tracingComposeDownForced
-
-# Jaeger UI available at `http://localhost:16686`
-```
-
-2. Validate Docker Startup
-   1. Postgres:
-      1. pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
-         1. username: `root@email.com` 
-         2. password: `root` 
-         3. After logging in, it will prompt for postgres database password: `postgres`
-            1. If it prompts for username, it's `postgres`.
-   2. Kafka:
-      1. KPow (Kafka Exploration UI) available at `http://localhost:3000`
-   3. Tracing (If observability stack was started)
-      1. Jaeger (Tracing UI) available at `http://localhost:16686`
-
-3. Set `runtimeMode` and `tracingEnabled` depending on which services you started in step 1.
-
-These properties are located in the project's [root gradle.properties](./gradle.properties) file.
-
-```properties
-# options: postgres, kafka
-runtimeMode=postgres
-
-# options: true, false
-tracingEnabled=false
-```
-
-3. Configure Initial Load Volume (if running the Daemon)
-
-If you're running the Daemon, you can also configure the amount of data you would like to be initially loaded.
-
-These properties are located in the project's [root gradle.properties](./gradle.properties) file.
-
-```properties
-initialLoadCustomers=100
-initialLoadArtists=200
-initialLoadVenues=50
-initialLoadEvents=100
-initialLoadTickets=1000
-initialLoadStreams=1000
-```
-
-4. Run the API or Daemon
-
-```bash
-# runs the Mock Data API
-./gradlew bootRunAPI
-
-# runs the Mock Data Daemon
-./gradlew bootRunDaemon
-```
-
-5. If running the API, send a sample request.
-
-```bash
-# remove jq if you don't have it installed, jq will just help format the response nicely in your terminal
-curl -X POST localhost:8080/customers | jq
-```
-
-For the full request collection, import the [Insomnia Collection](./assets/DataDemo_Insomnia_2022-10-20.json).
-
-## Confluent Cloud Environment
-
-If you are running the project pointed at Confluent Cloud you will first need to provision the environment using Terraform.
+The Confluent Cloud environment is provisioned via Terraform. You will need the Confluent CLI installed and logged in.
 
 1) Provision Confluent Cloud Environment - see the [tf-ccloud readme](./tf-ccloud/README.md) for more details.
 2) After the environment is provisioned, configure the bootstrap-servers, api-key, and api-secret
@@ -176,19 +122,22 @@ If you are running the project pointed at Confluent Cloud you will first need to
    export CONFLUENT_CLOUD_API_KEY="***REDACTED***"
    export CONFLUENT_CLOUD_API_SECRET="***REDACTED***"
    ```
-3) Update `runtimeMode` to `kafka-cloud` in the [root gradle.properties](./gradle.properties).
-4) Configure Initial Load Volume (if running the Daemon) in the [root gradle.properties](./gradle.properties) file.
-   ```properties
-   initialLoadCustomers=100
-   initialLoadArtists=200
-   initialLoadVenues=50
-   initialLoadEvents=100
-   initialLoadTickets=1000
-   initialLoadStreams=1000
-   ```
-5) Run the daemon (`./gradlew bootRunDaemon`) OR the API (`./gradlew bootRunApi)`
-   - If running the API, there is an [insomnia export](./assets/DataDemo_Insomnia_2022-10-20.json) you can use to get started 
 
+### Tracing
+
+If you want to run the OpenTelemetry stack and enable distributed tracing, start up the [tracing services](./observability/docker-compose.yml) (Jaeger).
+
+This command is run separate from the above commands that start postgres/kafka. The networking between the two docker compose files is configured to allow them to communicate.
+
+   ```bash
+   ./gradlew tracingComposeUp
+   ./gradlew tracingComposeDown
+   ./gradlew tracingComposeDownForced
+   ```
+
+2. Validate Environment
+   * Jaeger (Tracing UI) available at `http://localhost:16686`
+   
 ## Troubleshooting
 
 ### Invalid Java Version
