@@ -75,7 +75,6 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       CONFLUENT_METRICS_ENABLE: 'false'
 
-
   broker-2:
     image: confluentinc/cp-kafka:${VERSION}
     hostname: broker-2

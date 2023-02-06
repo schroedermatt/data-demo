@@ -59,8 +59,6 @@ The `docker-compose` gradle plugin is used to start the services in appropriate 
 1. Start [Postgres Services](./postgres/local/docker-compose.yml)
 
    ```bash
-   # `docker-compose` gradle plugin is used to start services
-   
    # POSTGRESQL
    ./gradlew postgresComposeUp
    ./gradlew postgresComposeDown
@@ -75,18 +73,20 @@ The `docker-compose` gradle plugin is used to start the services in appropriate 
 
 ### Kafka
 
-1. Start [Kafka Services](./kafka/local/cluster/docker-compose.yml)
-
-```bash
-# KAFKA
-./gradlew kafkaComposeUp
-./gradlew kafkaComposeDown
-./gradlew kafkaComposeDownForced
-
-```
+1. Start [Kafka Services](./kafka/local/cluster/docker-compose-redpanda.yml)
+   - [Redpanda](https://redpanda.com/) is a *Kafka-compatible* streaming data platform that is JVM-free & ZooKeeper®-free. It starts fast and requires fewer resources, making it great for local environments.
+    
+    ```bash
+    # KAFKA
+    ./gradlew kafkaComposeUp
+    ./gradlew kafkaComposeDown
+    ./gradlew kafkaComposeDownForced
+    ```
 
 2. Validate Environment 
-   * KPow (Kafka Exploration UI) available at `http://localhost:3000`
+   * [Redpanda Console](https://github.com/redpanda-data/console) available at `http://localhost:3000`
+
+_If you'd rather run Confluent's Kafka services, see the [advanced setup](#running-confluent-instead-of-redpanda)._
 
 ### Postgres + Kafka
 
@@ -94,11 +94,11 @@ If you're planning to load data from Postgres into Kafka via Kafka Connect, run 
 
 1. Start All Services ([Postgres](./postgres/local/docker-compose.yml) & [Kafka](./kafka/local/cluster/docker-compose.yml))
 
-```bash
-./gradlew fullComposeUp
-./gradlew fullComposeDown
-./gradlew fullComposeDownForced
-```
+    ```bash
+    ./gradlew fullComposeUp
+    ./gradlew fullComposeDown
+    ./gradlew fullComposeDownForced
+    ```
 
 2. Validate Environment
    * Postgres
@@ -107,7 +107,7 @@ If you're planning to load data from Postgres into Kafka via Kafka Connect, run 
         * password: `root`
         * postgres database password: `postgres`
    * Kafka
-     * KPow (Kafka Exploration UI) available at `http://localhost:3000`
+       * [Redpanda Console](https://github.com/redpanda-data/console) available at `http://localhost:3000`
 
 ### Confluent Cloud
 
@@ -158,3 +158,43 @@ The following error is likely the cause of not having Java 17 installed.
 ## Stream Processing
 
 Ready to do something with this data? Go check out the [stream-processing-workshop](https://github.com/schroedermatt/stream-processing-workshop).
+
+## Advanced Setup
+
+### Running Confluent instead of Redpanda
+
+The default docker environment starts up redpanda mainly due to performance and memory. If you want to run the full Confluent environment.
+
+1. In the base [`build.gradle`](./build.gradle), uncomment the `docker-compose-confluent.yml` line and comment out the `docker-compose-redpanda.yml` line.
+
+    ```groovy
+    dockerCompose {
+        // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
+        kafka {
+            useComposeFiles = [
+                    './kafka/local/cluster/docker-compose-confluent.yml',
+                    // './kafka/local/cluster/docker-compose-redpanda.yml',
+                    './kafka/local/cluster/redis/docker-compose.yml'
+            ]
+        }
+    }
+    ```
+
+2. Start [Confluent Kafka Services](./kafka/local/cluster/docker-compose-confluent.yml)
+
+    ```bash
+    # KAFKA
+    ./gradlew kafkaComposeUp
+    ./gradlew kafkaComposeDown
+    ./gradlew kafkaComposeDownForced
+    ```
+
+3. Validate Environment
+    * KPow (Kafka Exploration UI) available at `http://localhost:3000`
+
+4. Modify the [application-kafka.yml](/kafka/src/main/resources/application-kafka.yaml) `bootstrap-servers` property.
+   - 3 brokers are running, so uncomment the line with the 3 brokers.
+       
+     ```yaml
+     bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
+     ```
