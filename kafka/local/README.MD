@@ -6,6 +6,43 @@ This folder contains a local dockerized kafka environment.
 
 From the root directory, run `./gradlew kafkaComposeUp` to start all of the services found in `./cluster/docker-compose.yml`
 
+## Redpanda Keeper `rpk`
+
+https://docs.redpanda.com/docs/reference/rpk/
+
+### Cluster Info
+
+```bash
+# view cluster info
+> docker exec -it redpanda-0 rpk cluster info 
+
+CLUSTER
+=======
+redpanda.458a54ba-fe7a-4d67-8546-f3299bf1a602
+
+BROKERS
+=======
+ID    HOST        PORT
+0*    redpanda-0  9092
+1     redpanda-2  9092
+2     redpanda-1  9092
+
+TOPICS
+======
+NAME      PARTITIONS  REPLICAS
+_schemas  1           1
+```
+
+### Create Topic, Produce, Consume
+
+```bash
+> docker exec -it redpanda-0 rpk topic create twitch_chat
+
+> docker exec -it redpanda-0 rpk topic produce twitch_chat
+
+> docker exec -it redpanda-0 rpk topic consume twitch_chat --num 1
+```
+
 ## Destroy Environment
 
 Run `./gradlew kafkaComposeDown` to tear down the environment, including the local docker volumes.

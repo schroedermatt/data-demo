@@ -8,10 +8,7 @@ spring:
 kafka:
   cluster:
     client-id: data-demo-producer
-    # confluent setup runs 3 brokers
-    # bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
-    # redpanda only has one broker
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:19092
     cloud: false
   topics:
     customers: data-demo-customers

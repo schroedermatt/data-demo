@@ -6,98 +6,182 @@ networks:
     name: dev-local
 
 volumes:
-  redpanda: {}
+  redpanda-0: {}
+  redpanda-1: {}
+  redpanda-2: {}
   c1_kafka_data: {}
   c1_kafka_secrets: {}
 
 services:
-  # broker-1, available at localhost:9092
-  redpanda:
-    image: docker.redpanda.com/vectorized/redpanda:v22.3.11
+  # BROKER 1
+  redpanda-0:
     command:
-      - redpanda start
+      - redpanda
+      - start
+      # use the internal addresses to connect to the Redpanda brokers'
+      # from inside the same Docker network.
+      #
+      # use the external addresses to connect to the Redpanda brokers'
+      # from outside the Docker network.
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      # address the broker advertises to clients that connect to the Kafka API.
+      - --advertise-kafka-addr internal://redpanda-0:9092,external://localhost:19092
+      # address the broker advertises to clients that connect to PandaProxy.
+      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr internal://redpanda-0:8082,external://localhost:18082
+      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
+      # Redpanda brokers use the RPC API to communicate with eachother internally.
+      - --rpc-addr redpanda-0:33145
+      - --advertise-rpc-addr redpanda-0:33145
+      # tells Seastar (the framework Redpanda uses under the hood) to use 1 core on the system.
       - --smp 1
+      # the amount of memory to make available to Redpanda.
+      - --memory 1G
+      # the amount of memory that's left for the Seastar subsystem.
+      # For development purposes this is set to 0.
+      - --reserve-memory 0M
+      # Redpanda won't assume it has all of the provisioned CPU (to accommodate Docker resource limitations).
       - --overprovisioned
-      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
-      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
-      - --pandaproxy-addr 0.0.0.0:8082
-      - --advertise-pandaproxy-addr localhost:8082
-    ports:
-      - 8081:8081
-      - 8082:8082
-      - 9092:9092
-      - 9644:9644
-      - 29092:29092
+      # enable logs for debugging.
+      - --default-log-level=debug
+    image: docker.redpanda.com/vectorized/redpanda:v22.3.11
+    container_name: redpanda-0
     volumes:
-      - redpanda:/var/lib/redpanda/data
+      - redpanda-0:/var/lib/redpanda/data
+    ports:
+      - 18081:18081
+      - 18082:18082
+      - 19092:19092
+      - 19644:9644
+
+  # BROKER 2
+  redpanda-1:
+    command:
+      - redpanda
+      - start
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:29092
+      - --advertise-kafka-addr internal://redpanda-1:9092,external://localhost:29092
+      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:28082
+      - --advertise-pandaproxy-addr internal://redpanda-1:8082,external://localhost:28082
+      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:28081
+      - --rpc-addr redpanda-1:33145
+      - --advertise-rpc-addr redpanda-1:33145
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --default-log-level=debug
+      - --seeds redpanda-0:33145
+    image: docker.redpanda.com/vectorized/redpanda:v22.3.11
+    container_name: redpanda-1
+    volumes:
+      - redpanda-1:/var/lib/redpanda/data
+    ports:
+      - 28081:28081
+      - 28082:28082
+      - 29092:29092
+      - 29644:9644
+    depends_on:
+      - redpanda-0
+
+  # BROKER 3
+  redpanda-2:
+    command:
+      - redpanda
+      - start
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:39092
+      - --advertise-kafka-addr internal://redpanda-2:9092,external://localhost:39092
+      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:38082
+      - --advertise-pandaproxy-addr internal://redpanda-2:8082,external://localhost:38082
+      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:38081
+      - --rpc-addr redpanda-2:33145
+      - --advertise-rpc-addr redpanda-2:33145
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --default-log-level=debug
+      - --seeds redpanda-0:33145
+    image: docker.redpanda.com/vectorized/redpanda:v22.3.11
+    container_name: redpanda-2
+    volumes:
+      - redpanda-2:/var/lib/redpanda/data
+    ports:
+      - 38081:38081
+      - 38082:38082
+      - 39092:39092
+      - 39644:9644
+    depends_on:
+      - redpanda-0
 
   console:
+    container_name: redpanda-console
     image: docker.redpanda.com/vectorized/console:v2.1.1
     entrypoint: /bin/sh
-    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+    command: -c 'echo "$$CONSOLE_CONFIG_FILE" > /tmp/config.yml; /app/console'
     environment:
       CONFIG_FILEPATH: /tmp/config.yml
       CONSOLE_CONFIG_FILE: |
         kafka:
-          brokers: ["redpanda:29092"]
+          brokers: ["redpanda-0:9092"]
           schemaRegistry:
             enabled: true
-            urls: ["http://redpanda:8081"]
+            urls: ["http://redpanda-0:8081"]
         redpanda:
           adminApi:
             enabled: true
-            urls: ["http://redpanda:9644"]
+            urls: ["http://redpanda-0:9644"]
         connect:
           enabled: true
           clusters:
             - name: local-connect-cluster
-              url: http://connect:8083
+              url: http://connect-0:8083
     ports:
       - 3000:8080
     depends_on:
-      - redpanda
+      - redpanda-0
 
-  connect-1:
-    image: confluentinc/cp-kafka-connect:${VERSION}
-    hostname: connect-1
-    container_name: connect-1
-    ports:
-      - "18083:8083"
-      - "17072:7071"
-    healthcheck:
-      test: curl --fail http://localhost:8083/connector-plugins || exit 1
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 15s
-    depends_on:
-      - redpanda
-    volumes:
-      - c1_kafka_data:/var/lib/kafka/data
-      - c1_kafka_secrets:/etc/kafka/secrets
-      - ./jmx_prometheus:/opt/jmx_prometheus
-      - ./jars:/etc/kafka-connect/jars
-      - ./data:/data
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: 'redpanda:29092'
-      CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY: All
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: 'connect-cluster'
-      CONNECT_CONFIG_STORAGE_TOPIC: 'connect-cluster-config'
-      CONNECT_OFFSET_STORAGE_TOPIC: 'connect-cluster-offsets'
-      CONNECT_STATUS_STORAGE_TOPIC: 'connect-cluster-status'
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_CONFIG_PROVIDERS: file
-      CONNECT_CONFIG_PROVIDERS_FILE_CLASS: 'org.apache.kafka.common.config.provider.FileConfigProvider'
-      CONNECT_KEY_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
-      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://redpanda:8081'
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://redpanda:8081'
-      CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
-      CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
-      CONNECT_REST_ADVERTISED_HOST_NAME: 'connect-1'
-      CONNECT_PLUGIN_PATH: /etc/kafka-connect/jars
-      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
-      KAFKA_OPTS: -javaagent:/opt/jmx_prometheus/jmx_prometheus_javaagent.jar=7071:/opt/jmx_prometheus/connect-config.yml
+#  connect-0:
+#    image: confluentinc/cp-kafka-connect:${VERSION}
+#    hostname: connect-0
+#    container_name: connect-0
+#    ports:
+#      - "18083:8083"
+#      - "17072:7071"
+#    healthcheck:
+#      test: curl --fail http://localhost:8083/connector-plugins || exit 1
+#      interval: 5s
+#      timeout: 5s
+#      retries: 20
+#      start_period: 15s
+#    depends_on:
+#      - redpanda-0
+#    volumes:
+#      - c1_kafka_data:/var/lib/kafka/data
+#      - c1_kafka_secrets:/etc/kafka/secrets
+#      - ./jmx_prometheus:/opt/jmx_prometheus
+#      - ./jars:/etc/kafka-connect/jars
+#      - ./data:/data
+#    environment:
+#      CONNECT_BOOTSTRAP_SERVERS: 'redpanda-0:9092,redpanda-1:9092,redpanda-2:9092'
+#      CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY: All
+#      CONNECT_REST_PORT: 8083
+#      CONNECT_GROUP_ID: 'connect-cluster'
+#      CONNECT_CONFIG_STORAGE_TOPIC: 'connect-cluster-config'
+#      CONNECT_OFFSET_STORAGE_TOPIC: 'connect-cluster-offsets'
+#      CONNECT_STATUS_STORAGE_TOPIC: 'connect-cluster-status'
+#      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+#      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+#      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+#      CONNECT_CONFIG_PROVIDERS: file
+#      CONNECT_CONFIG_PROVIDERS_FILE_CLASS: 'org.apache.kafka.common.config.provider.FileConfigProvider'
+#      CONNECT_KEY_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+#      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+#      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://redpanda:8081'
+#      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://redpanda:8081'
+#      CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+#      CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+#      CONNECT_REST_ADVERTISED_HOST_NAME: 'connect-1'
+#      CONNECT_PLUGIN_PATH: /etc/kafka-connect/jars
+#      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+#      KAFKA_OPTS: -javaagent:/opt/jmx_prometheus/jmx_prometheus_javaagent.jar=7071:/opt/jmx_prometheus/connect-config.yml
