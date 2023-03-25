@@ -145,16 +145,6 @@ This command is run separate from the above commands that start postgres/kafka. 
 2. Validate Environment
    * Jaeger (Tracing UI) available at `http://localhost:16686`
    
-## Troubleshooting
-
-### Invalid Java Version
-
-The following error is likely the cause of not having Java 17 installed.
-
-```bash
-> error: invalid source release: 17
-```
-
 ## Stream Processing
 
 Ready to do something with this data? Go check out the [stream-processing-workshop](https://github.com/schroedermatt/stream-processing-workshop).
@@ -198,3 +188,32 @@ The default docker environment starts up redpanda mainly due to performance and 
      ```yaml
      bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
      ```
+   
+
+## Troubleshooting
+
+### Invalid Java Version
+
+The following error is likely the cause of not having Java 17 installed.
+
+```bash
+> error: invalid source release: 17
+```
+
+### Windows
+
+./network.sh doesn't work
+
+Ideally, use git bash to run the `./gradlew kafkaComposeUp`
+
+OR
+
+1. Create the network manually - `docker network create dev-local`
+2. Comment out the `kafkaComposeUp.dependsOn dockerCreateNetwork` line in the root `build.gradle`
+3. Run `./gradlew kafkaComposeUp`
+
+### Linux
+
+1. add user to permission group to use docker (without sudo) 
+   - https://docs.docker.com/engine/install/linux-postinstall/
+2. install `docker-compose` manually: `sudo apt install docker-compose`
