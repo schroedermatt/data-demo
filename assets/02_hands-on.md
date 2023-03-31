@@ -88,10 +88,14 @@ Topologies:
 
 Choose one or both of the [stateless exercises](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/main/java/org/improving/workshop/exercises/stateless) to solve. The goals are listed at the top of the class.
 
+It can be helpful to first map out your topology. Download [this file](https://github.com/schroedermatt/stream-processing-workshop/blob/main/assets/excalidraw/workshop-template.excalidraw) and open it up in https://excalidraw.com and sketch out the expected topology.
+
 A test case for each exercise is [already written for you](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/test/groovy/org/improving/workshop/exercises/stateless). Work on the stream until the test is green (passing).
 
 ### Solve Stateful Exercises
 
 If you've solved the stateless exercises, explore the stateful exercises. These will require a little more thought and up front design.
+
+It can be helpful to first map out your topology. Download [this file](https://github.com/schroedermatt/stream-processing-workshop/blob/main/assets/excalidraw/workshop-template.excalidraw) and open it up in https://excalidraw.com and sketch out the expected topology.
 
 These also have [tests written for you](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/test/groovy/org/improving/workshop/exercises/stateful) to get you going. Develop the stream until its test is green (passing).
