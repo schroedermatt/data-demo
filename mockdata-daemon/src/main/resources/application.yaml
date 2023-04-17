@@ -6,3 +6,13 @@ initial-load:
   events: 0
   tickets: 0
   streams: 0
+
+management:
+  endpoints:
+    enabled-by-default: true
+    jmx:
+      exposure:
+        include: "*"
+    web:
+      exposure:
+        include: "*"

@@ -132,7 +132,7 @@ The Confluent Cloud environment is provisioned via Terraform. You will need the 
 
 ### Tracing
 
-If you want to run the OpenTelemetry stack and enable distributed tracing, start up the [tracing services](./observability/docker-compose.yml) (Jaeger).
+If you want to run the OpenTelemetry stack and enable distributed tracing, start up the [tracing services](observability/jaeger/docker-compose.yml) (Jaeger).
 
 This command is run separate from the above commands that start postgres/kafka. The networking between the two docker compose files is configured to allow them to communicate.
 
@@ -145,6 +145,18 @@ This command is run separate from the above commands that start postgres/kafka. 
 2. Validate Environment
    * Jaeger (Tracing UI) available at `http://localhost:16686`
    
+Once the tracing backend is started, flip the [`tracingEnabled`](https://github.com/schroedermatt/data-demo/blob/main/gradle.properties#L5) flag to `true` in the root `gradle.properties` file before starting up the API or Daemon.
+
+Want to run Grafana Tempo instead of Jaeger? Update the [tracing `dockerCompose` config](https://github.com/schroedermatt/data-demo/blob/main/build.gradle#L61-L65) in the root `build.gradle` to point to the tempo folder as shown below.
+
+```groovy
+tracing {
+    useComposeFiles = [
+            './observability/tempo/docker-compose.yml'
+    ]
+}
+```
+
 ## Stream Processing
 
 Ready to do something with this data? Go check out the [stream-processing-workshop](https://github.com/schroedermatt/stream-processing-workshop).

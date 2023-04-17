@@ -26,3 +26,5 @@ build
 
 # Postgres Volume
 db/
+
+tempo-data/
