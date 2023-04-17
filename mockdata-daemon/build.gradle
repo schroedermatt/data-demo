@@ -41,11 +41,11 @@ task bootRunDaemon(type: BootRun, dependsOn: 'build') {
 			systemProperty "otel.traces.exporter", 'otlp'
 			systemProperty "otel.exporter.otlp.protocol", 'grpc'
 			systemProperty "otel.exporter.otlp.endpoint", 'http://localhost:4317'
-			systemProperty "otel.resource.attributes", 'service.name=mockdata-daemon,service.namespace=mockdata'
+			systemProperty "otel.resource.attributes", 'service.name=data-demo'
 			systemProperty "otel.logs.exporter", 'none'
 			systemProperty "otel.metrics.exporter", 'none'
 
-			jvmArgs = ["-javaagent:../observability/opentelemetry-javaagent.jar"]
+			jvmArgs = ["-javaagent:../observability/opentelemetry-javaagent_1.25.0.jar"]
 		}
 	}
 }
