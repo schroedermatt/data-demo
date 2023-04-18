@@ -7,15 +7,16 @@ networks:
 
 services:
   # Uncomment k6-tracing to generate fake traces...
-#  k6-tracing:
-#    image: ghcr.io/grafana/xk6-client-tracing:v0.0.2
-#    environment:
-#      - ENDPOINT=otel-collector:4317
-#    restart: always
-#    depends_on:
-#      - otel-collector
+  k6-tracing:
+    image: ghcr.io/grafana/xk6-client-tracing:v0.0.2
+    environment:
+      - ENDPOINT=otel-collector:4317
+    restart: always
+    depends_on:
+      - otel-collector
 
   # And put them in an OTEL collector pipeline...
+  # https://opentelemetry.io/docs/collector/configuration
   otel-collector:
     image: otel/opentelemetry-collector:0.61.0
     command: [ "--config=/etc/otel-collector.yml" ]
@@ -30,7 +31,7 @@ services:
     command: [ "-config.file=/etc/tempo.yml" ]
     volumes:
       - ./tempo.yml:/etc/tempo.yml
-      - ./tempo-data:/tmp/tempo
+      # - ./tempo-data:/tmp/tempo
     ports:
       - "14268"  # jaeger ingest
       - "3200"   # tempo
@@ -60,3 +61,15 @@ services:
       - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor
     ports:
       - "13000:3000"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.38
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      # serve frontend (Jaeger UI)
+      - "16686:16686"
+      # accept OpenTelemetry Protocol (OTLP) over gRPC, if enabled
+      - "4317"
+      # accept OpenTelemetry Protocol (OTLP) over HTTP, if enabled
+      - "4318"

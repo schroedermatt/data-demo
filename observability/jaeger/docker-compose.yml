@@ -16,4 +16,4 @@ services:
       # accept OpenTelemetry Protocol (OTLP) over gRPC, if enabled
       - "4317:4317"
       # accept OpenTelemetry Protocol (OTLP) over HTTP, if enabled
-      - "4318:4318"
+      - "4318"

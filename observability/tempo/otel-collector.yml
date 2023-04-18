@@ -1,3 +1,4 @@
+# https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/README.md
 receivers:
   otlp:
     protocols:
@@ -7,8 +8,12 @@ exporters:
     endpoint: tempo:4317
     tls:
       insecure: true
+  otlp/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp]
+      exporters: [otlp, otlp/jaeger]
