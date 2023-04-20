@@ -37,11 +37,13 @@ The data-demo project has an additional [observability environment](https://gith
 
 Validate that Jaeger is up and running by navigating to [http://localhost:16686](http://localhost:16686)
 
+In the search panel on the left, you may see a "jaeger-query" service listed but you should not see anything else at this point.
+
 ### Run data-demo with Tracing Enabled
 
 > See this [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/01_hands-on.md) for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
 
-In the [gradle.properties](https://github.com/schroedermatt/data-demo/blob/main/gradle.properties#L5) file, update the `tracingEnabled` flag to `true`.
+In the [gradle.properties](https://github.com/schroedermatt/data-demo/blob/main/gradle.properties#L5) file, update the `tracingEnabled` flag to `true`. [When true](https://github.com/schroedermatt/data-demo/blob/main/mockdata-api/build.gradle#L36-L45), the data-demo will start up with the otel java agent attached.
 
 ```properties
 tracingEnabled=true
@@ -87,10 +89,9 @@ curl --request POST --url http://localhost:8080/artists
 }
 ```
 
-3. Stream an Artist (**Customer ID & Artist ID REQUIRED**)
+3. Stream Artist (**Customer ID & Artist ID REQUIRED**)
 
-
-**Use the Customer ID from step 1 and Artist ID from step 2 in the request body.**
+> Use the Customer ID from step 1 and Artist ID from step 2 in the request body.
 
 ```bash
 curl --request POST \
@@ -113,15 +114,38 @@ curl --request POST \
 
 #### View Results in Jaeger
 
-Open Jaeger (http://localhost:16686/) and select the `data-demo` service before clicking "Find Traces".
+Open Jaeger (http://localhost:16686/) and select the `data-demo` service before clicking "Find Traces"
 
-Select a trace and view the results.
+<img src="./images/jaeger-services.png" alt="jaeger" width="300"/>
+
+Select one of the "data-demo: POST" traces and view the results. There should be a trace for each of the API requests you made in the previous section.
+
+![jaeger](./images/jaeger-trace-1.png)
+
+This trace shows the event being generated and produced to Kafka.
+
+#### View `traceparent` in Message Headers
+
+Curious to see how the trace is being propogated between the services?
+
+1. Jump back into [Redpanda Console](http://localhost:3000)
+2. Navigate to the Topics page and select [`data-demo-customers`](http://localhost:3000/topics/data-demo-customers?o=-1&p=-1&q&s=50#messages)
+3. Expand the Value (click the "+") of a message
+4. Select the "Headers" tab
+
+![redpanda](./images/redpanda-headers.png)
+
+Notice the `traceparent` header (ex. 00-a7092c72522316b2bdba7979a4cb74d1-42965c7462c03850-01). There is a lot of information jammed into this value that is used (and propogated) by the OpenTelemetry instrumentation agents. An overview of the segments inside the traceparent is shown in the diagram below.
+
+![redpanda](./images/traceparent.png)
+
+When you run a Stream or other client that processes a message, it will now be able to grab this `traceparent` header and propagate (report) the trace to Jaeger to continue building a picture of the end-to-end flow of the message.
 
 ### Run "Top Customer Artists" with Tracing Enabled
 
 >  See this [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/02_hands-on.md) for additional details on cloning, configuring, and running [stream-processing-workshop](https://github.com/schroedermatt/stream-processing-workshop).
 
-In the [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2) file, update the `tracingEnabled` flag to `true`.
+In the [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2) file of the stream-processing-workshop project, update the `tracingEnabled` flag to `true`.  [When true](https://github.com/schroedermatt/stream-processing-workshop/blob/main/build.gradle#L27-L36), the Stream(s) will start up with the otel java agent attached.
 
 ```properties
 tracingEnabled=true
@@ -136,13 +160,17 @@ Run the `TopCustomerArtists` stream.
 
 #### View Results in Jaeger
 
-Open Jaeger (http://localhost:16686/) again and notice that TopCustomerArtists is now listed as a service. Select it before clicking "Find Traces".
+Open Jaeger (http://localhost:16686/) again and notice that `TopCustomerArtists` is now listed as a service. Select it before clicking "Find Traces".
 
-Select a trace and view the results.
+Select a trace and view the results. Notice that the trace now extends from the origin (data-demo) all the way into the consuming service and you can see the full path. **COOL!**
+
+![jaeger](./images/jaeger-trace-2.png)
 
 ### Run "Customer Stream Count" with Tracing Enabled
 
-> In the [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2) file, update the `tracingEnabled` flag to `true`.
+Let's take it one step further to see what happens when multiple consumers/streams process the same event. The Customer Stream Count can be found on the `solutions` branch so you'll first need to checkout that branch before running the Stream.
+
+> Before continuing, double check that the `tracingEnabled` flag is `true` in [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2)
 
 ```bash
 # run from the root of the stream-processing-workshop
@@ -155,11 +183,13 @@ git checkout solutions
 
 Open Jaeger (http://localhost:16686/) again and notice that CustomerStreamCount is now listed as a service. Select it before clicking "Find Traces".
 
-Select a trace and view the results.
+Select a trace and view the results. Notice that the trace now extends from the origin (data-demo) all the way into MULTIPLE consuming services. **SWEET!**
+
+![jaeger](./images/jaeger-trace-3.png)
 
 ### Cleanup
 
-Tear down your environment when completed.
+Now that your endorphins are flowing, it's time to tear down the environment (if you're done playing around).
 
 ```bash
 # run from the root of the data-demo repository
