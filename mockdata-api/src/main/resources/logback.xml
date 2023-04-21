@@ -1,0 +1,31 @@
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%.-4thread] %-5level %logger{6} [%X{trace_id}-%X{span_id}-%X{trace_flags}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Activate appender only when 'mySystemProperty' is set to 'true' -->
+    <if condition='property("logback.file-appender.enabled").contains("true")'>
+        <then>
+            <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+                <file>../file.log</file>
+                <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                    <customFields>{"service":"data-demo"}</customFields>
+                </encoder>
+            </appender>
+
+            <!-- enable both console & file appender -->
+            <root level="INFO">
+                <appender-ref ref="CONSOLE"/>
+                <appender-ref ref="FILE"/>
+            </root>
+        </then>
+        <else>
+            <!-- enable only console appender -->
+            <root level="INFO">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+        </else>
+    </if>
+</configuration>

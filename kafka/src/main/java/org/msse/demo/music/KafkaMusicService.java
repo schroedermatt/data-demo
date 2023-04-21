@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static net.logstash.logback.argument.StructuredArguments.v;
+
 @Slf4j
 @Service
 @Profile("kafka")
@@ -32,7 +34,7 @@ public class KafkaMusicService implements MusicService {
     public Artist createArtist() {
         Artist artist = musicCache.createArtist();
 
-        log.info("Producing Artist ({}) to Kafka", artist.id());
+        log.info("Producing Artist ({}) to Kafka", v("artist_id", artist.id()));
         send(topics.artists(), artist.id(), artist);
 
         return artist;
@@ -42,7 +44,7 @@ public class KafkaMusicService implements MusicService {
     public Artist createArtist(String artistId) {
         Artist artist = musicCache.createArtist(artistId);
 
-        log.info("Producing Artist ({}) to Kafka", artist.id());
+        log.info("Producing Artist ({}) to Kafka", v("artist_id", artist.id()));
         send(topics.artists(), artist.id(), artist);
 
         return artist;
@@ -58,7 +60,9 @@ public class KafkaMusicService implements MusicService {
         Optional<Venue> venue = musicCache.createVenue();
 
         venue.ifPresent(value -> {
-            log.info("Producing Venue ({}) at Address ({}) to Kafka", value.id(), value.addressid());
+            log.info("Producing Venue ({}) at Address ({}) to Kafka",
+                    v("venue_id", value.id()),
+                    v("address_id", value.addressid()));
             send(topics.venues(), value.id(), value);
         });
 
@@ -70,7 +74,9 @@ public class KafkaMusicService implements MusicService {
         Optional<Venue> venue = musicCache.createVenue(addressId);
 
         venue.ifPresent(value -> {
-            log.info("Producing Venue ({}) at Address ({}) to Kafka", value.id(), value.addressid());
+            log.info("Producing Venue ({}) at Address ({}) to Kafka",
+                    v("venue_id", value.id()),
+                    v("address_id", value.addressid()));
             send(topics.venues(), value.id(), value);
         });
 
@@ -87,7 +93,9 @@ public class KafkaMusicService implements MusicService {
         Optional<Event> event = musicCache.createEvent();
 
         event.ifPresent(value -> {
-            log.info("Producing Event ({}) at Venue ({}) for Artist ({}) to Kafka", value.id(), value.venueid(), value.artistid());
+            log.info("Producing Event ({}) at Venue ({}) for Artist ({}) to Kafka",
+                    v("event_id", value.id()),
+                    v("venue_id", value.venueid()), value.artistid());
             send(topics.events(), value.id(), value);
         });
 
@@ -99,7 +107,10 @@ public class KafkaMusicService implements MusicService {
         Optional<Event> event = musicCache.createEvent(artistId, venueId);
 
         event.ifPresent(value -> {
-            log.info("Producing Event ({}) at Venue ({}) for Artist ({}) to Kafka", value.id(), value.venueid(), value.artistid());
+            log.info("Producing Event ({}) at Venue ({}) for Artist ({}) to Kafka",
+                    v("event_id", value.id()),
+                    v("venue_id", value.venueid()),
+                    v("artist_id", value.artistid()));
             send(topics.events(), value.id(), value);
         });
 
@@ -116,7 +127,10 @@ public class KafkaMusicService implements MusicService {
         Optional<Ticket> ticket = musicCache.bookTicket();
 
         ticket.ifPresent(value -> {
-            log.info("Producing Ticket ({}) for Customer ({}) to Event ({}) to Kafka", value.id(), value.customerid(), value.eventid());
+            log.info("Producing Ticket ({}) for Customer ({}) to Event ({}) to Kafka",
+                    v("ticket_id", value.id()),
+                    v("customer_id", value.customerid()),
+                    v("event_id", value.eventid()));
             send(topics.tickets(), value.id(), value);
         });
 
@@ -128,7 +142,10 @@ public class KafkaMusicService implements MusicService {
         Optional<Ticket> ticket = musicCache.bookTicket(eventId, customerId);
 
         ticket.ifPresent(value -> {
-            log.info("Producing Ticket ({}) for Customer ({}) to Event ({}) to Kafka", value.id(), value.customerid(), value.eventid());
+            log.info("Producing Ticket ({}) for Customer ({}) to Event ({}) to Kafka",
+                    v("ticket_id", value.id()),
+                    v("customer_id", value.customerid()),
+                    v("event_id", value.eventid()));
             send(topics.tickets(), value.id(), value);
         });
 
@@ -145,7 +162,10 @@ public class KafkaMusicService implements MusicService {
         Optional<Stream> stream = musicCache.streamArtist();
 
         stream.ifPresent(value -> {
-            log.info("Producing Stream ({}) for Artist ({}) from Customer ({}) to Kafka", value.id(), value.artistid(), value.customerid());
+            log.info("Producing Stream ({}) for Artist ({}) from Customer ({}) to Kafka",
+                    v("stream_id", value.id()),
+                    v("artist_id", value.artistid()),
+                    v("customer_id", value.customerid()));
             send(topics.streams(), value.id(), value);
         });
 
@@ -157,7 +177,10 @@ public class KafkaMusicService implements MusicService {
         Optional<Stream> stream = musicCache.streamArtist(customerId, artistId);
 
         stream.ifPresent(value -> {
-            log.info("Producing Stream ({}) for Artist ({}) from Customer ({}) to Kafka", value.id(), value.artistid(), value.customerid());
+            log.info("Producing Stream ({}) for Artist ({}) from Customer ({}) to Kafka",
+                    v("stream_id", value.id()),
+                    v("artist_id", value.artistid()),
+                    v("customer_id", value.customerid()));
             send(topics.streams(), value.id(), value);
         });
 

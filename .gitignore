@@ -7,8 +7,9 @@ Thumbs.db
 #*
 *#
 
-# Build Files #
+*.log
 
+# Build Files #
 bin
 target
 build

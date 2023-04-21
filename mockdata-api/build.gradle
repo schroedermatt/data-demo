@@ -13,7 +13,10 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
 
+	// conditional processing in the logback file
+	implementation 'org.codehaus.janino:janino:3.1.9'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -24,6 +27,7 @@ task bootRunAPI(type: BootRun, dependsOn: 'build') {
 	mainClass = project.mainClassName
 
 	doFirst() {
+
 		if ("postgres" == project.runtimeMode) {
 			systemProperty 'spring.profiles.active', "postgres"
 		} else if ("kafka" == project.runtimeMode) {
@@ -40,6 +44,8 @@ task bootRunAPI(type: BootRun, dependsOn: 'build') {
 			systemProperty "otel.resource.attributes", 'service.name=data-demo'
 			systemProperty "otel.logs.exporter", 'none'
 			systemProperty "otel.metrics.exporter", 'none'
+
+			// systemProperty "logback.file-appender.enabled", "true"
 
 			jvmArgs = ["-javaagent:../observability/opentelemetry-javaagent_1.25.0.jar"]
 		}
