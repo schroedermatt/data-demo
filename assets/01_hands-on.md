@@ -1,3 +1,5 @@
+# Hands On: Introduction to Kafka
+
 ## Goals
 
 1. Clone data-demo

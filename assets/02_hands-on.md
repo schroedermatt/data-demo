@@ -1,3 +1,5 @@
+# Hands On: Stream Processing
+
 ## Goals
 
 1. Clone `stream-processing-workshop`

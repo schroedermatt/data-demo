@@ -1,4 +1,6 @@
-### Goals
+# Hands On: Observability
+
+## Goals
 
 1. Start Environment (Kafka + Observability)
 2. Run `data-demo` and produce mock data
