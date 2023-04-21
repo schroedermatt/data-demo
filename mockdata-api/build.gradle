@@ -36,6 +36,10 @@ task bootRunAPI(type: BootRun, dependsOn: 'build') {
 			systemProperty 'spring.profiles.active', "kafka,ccloud"
 		}
 
+		if ("true" == project.fileLoggingEnabled) {
+			systemProperty "logback.file-appender.enabled", "true"
+		}
+
 		// configure tracing properties if enabled
 		if ("true" == project.tracingEnabled) {
 			systemProperty "otel.traces.exporter", 'otlp'
@@ -44,8 +48,6 @@ task bootRunAPI(type: BootRun, dependsOn: 'build') {
 			systemProperty "otel.resource.attributes", 'service.name=data-demo'
 			systemProperty "otel.logs.exporter", 'none'
 			systemProperty "otel.metrics.exporter", 'none'
-
-			// systemProperty "logback.file-appender.enabled", "true"
 
 			jvmArgs = ["-javaagent:../observability/opentelemetry-javaagent_1.25.0.jar"]
 		}

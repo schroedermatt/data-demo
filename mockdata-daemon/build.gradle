@@ -12,6 +12,13 @@ dependencies {
 	implementation project(':kafka')
 
 	implementation 'org.springframework.boot:spring-boot-starter'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
+
+	// conditional processing in the logback file
+	implementation 'org.codehaus.janino:janino:3.1.9'
 }
 
 task bootRunDaemon(type: BootRun, dependsOn: 'build') {
@@ -35,6 +42,10 @@ task bootRunDaemon(type: BootRun, dependsOn: 'build') {
 		systemProperty 'initial-load.events', project.initialLoadEvents
 		systemProperty 'initial-load.tickets', project.initialLoadTickets
 		systemProperty 'initial-load.streams', project.initialLoadStreams
+
+		if ("true" == project.fileLoggingEnabled) {
+			systemProperty "logback.file-appender.enabled", "true"
+		}
 
 		// configure tracing properties if enabled
 		if ("true" == project.tracingEnabled) {
