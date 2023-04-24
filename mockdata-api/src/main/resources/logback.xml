@@ -9,7 +9,7 @@
     <if condition='property("logback.file-appender.enabled").contains("true")'>
         <then>
             <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-                <file>../file.log</file>
+                <file>../data-demo.log</file>
                 <encoder class="net.logstash.logback.encoder.LogstashEncoder">
                     <customFields>{"service":"data-demo"}</customFields>
                 </encoder>

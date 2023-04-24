@@ -6,14 +6,18 @@ networks:
     name: dev-local
 
 services:
+###################
+# TEMPO - TRACING #
+###################
+
   # Uncomment k6-tracing to generate fake traces...
-  k6-tracing:
-    image: ghcr.io/grafana/xk6-client-tracing:v0.0.2
-    environment:
-      - ENDPOINT=otel-collector:4317
-    restart: always
-    depends_on:
-      - otel-collector
+#  k6-tracing:
+#    image: ghcr.io/grafana/xk6-client-tracing:v0.0.2
+#    environment:
+#      - ENDPOINT=otel-collector:4317
+#    restart: always
+#    depends_on:
+#      - otel-collector
 
   # And put them in an OTEL collector pipeline...
   # https://opentelemetry.io/docs/collector/configuration
@@ -39,6 +43,10 @@ services:
       - "4318"  # otlp http
       - "9411"   # zipkin
 
+########################
+# PROMETHEUS - METRICS #
+########################
+
   prometheus:
     image: prom/prometheus:latest
     command:
@@ -50,15 +58,51 @@ services:
     ports:
       - "19090:9090"
 
+###############
+# LOKI - LOGS #
+###############
+
+  loki:
+    image: grafana/loki:2.8.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.8.0
+    volumes:
+      - ../../:/var/log
+    command: -config.file=/etc/promtail/config.yml
+
   grafana:
     image: grafana/grafana:9.4.3
     volumes:
       - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
     environment:
+      #- GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Loki
+          type: loki
+          access: proxy 
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: false
+        EOF
+        /run.sh
     ports:
       - "13000:3000"
 

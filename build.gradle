@@ -60,7 +60,7 @@ dockerCompose {
 
     tracing {
         useComposeFiles = [
-                './observability/jaeger/docker-compose.yml'
+                './observability/tempo/docker-compose.yml'
         ]
     }
 }

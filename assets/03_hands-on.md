@@ -172,7 +172,9 @@ Select a trace and view the results. Notice that the trace now extends from the 
 
 Let's take it one step further to see what happens when multiple consumers/streams process the same event. The Customer Stream Count can be found on the `solutions` branch so you'll first need to checkout that branch before running the Stream.
 
-> Before continuing, double check that the `tracingEnabled` flag is `true` in [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2)
+Before continuing, 
+* double check that the `tracingEnabled` flag is `true` in [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2)
+* kill the "Top Customer Artists" process
 
 ```bash
 # run from the root of the stream-processing-workshop
