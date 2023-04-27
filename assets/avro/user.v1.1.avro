@@ -1,0 +1,3 @@
+{
+    "schema": "{\"type\":\"record\",\"namespace\":\"org.msse.mockdata\",\"name\":\"User\",\"fields\":[{\"name\":\"fname\",\"type\":\"string\"},{\"name\":\"lname\",\"type\":\"string\"},{\"name\":\"mname\",\"type\":[\"null\",\"string\"],\"default\":\"null\"}]}"
+}

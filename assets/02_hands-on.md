@@ -22,12 +22,12 @@ Validate your project setup by running the [`TopCustomerArtistsSpec`](https://gi
 
 ### Run data-demo Daemon
 
-> See the [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/01_hands-on.md) from last week for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
+> See the [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/01_hands-on-confluent.md) from last week for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
 
-If you haven't already, start up Redpanda (Kafka) and begin producing data with the data-demo daemon.
+If you haven't already, start up Kafka and begin producing data with the data-demo daemon.
 
 ```bash
-# start redpanda cluster
+# start kafka cluster
 ./gradlew kafkaComposeUp
 
 # start data-demo daemon
@@ -36,7 +36,7 @@ If you haven't already, start up Redpanda (Kafka) and begin producing data with 
 
 ### Run "Top Customer Artists" Stream
 
-Once data is being loaded into your local Redpanda (Kafka) cluster, start up the [`TopCustomerArtists`](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/main/java/org/improving/workshop/samples/TopCustomerArtists.java) Kafka Streams application. The stream will produce data to a topic named `"kafka-workshop-top-10-stream-count"`. Open up [Redpanda Console](http://localhost:3000/topics) and watch the data flow in as events are produced.
+Once data is being loaded into your local Kafka cluster, start up the [`TopCustomerArtists`](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/main/java/org/improving/workshop/samples/TopCustomerArtists.java) Kafka Streams application. The stream will produce data to a topic named `"kafka-workshop-top-10-stream-count"`. Open up [Control Center](http://localhost:9021) and watch the data flow in as events are produced.
 
 You can run the stream directly in your terminal or IDE (IntelliJ shown below).
 

@@ -43,7 +43,7 @@ In the search panel on the left, you may see a "jaeger-query" service listed but
 
 ### Run data-demo with Tracing Enabled
 
-> See this [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/01_hands-on.md) for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
+> See this [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/01_hands-on-confluent.md) for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
 
 In the [gradle.properties](https://github.com/schroedermatt/data-demo/blob/main/gradle.properties#L5) file, update the `tracingEnabled` flag to `true`. [When true](https://github.com/schroedermatt/data-demo/blob/main/mockdata-api/build.gradle#L36-L45), the data-demo will start up with the otel java agent attached.
 

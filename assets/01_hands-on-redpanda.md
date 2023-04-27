@@ -25,7 +25,7 @@ cd data-demo
 ```bash
 # run from root dir of data-demo
 
-./gradlew kafkaComposeUp
+./gradlew redpandaComposeUp
 
 # wait for the following output in your terminal
 
@@ -54,7 +54,7 @@ cd data-demo
 ```
 
 4. Validate Cluster Startup
-    - Navigate to Redpanda Console at http://localhost:3000
+    - Navigate to Redpanda Console at [http://localhost:3000](http://localhost:3000)
     - View Cluster Info (command below)
 
 ```bash

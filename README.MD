@@ -4,10 +4,11 @@ The Data Demo [generates fake data](https://fakerjs.dev/) aligned with the ERD b
 
 The Data Demo can throw data into the following environments -
 
-1) [Local Postgres (Docker)](#postgresql)
-2) [Local Kafka (Docker)](#kafka)
-3) [Local Postgres -> Kafka Connect -> Kafka (Docker)](#postgres--kafka)
-4) [Confluent Cloud](#confluent-cloud) ([tf-ccloud](./tf-ccloud/README.md))
+1) [Local Kafka (Confluent) (Docker)](#confluent)
+2) [Local Kafka (Redpanda) (Docker)](#redpanda)
+3) [Local Postgres (Docker)](#postgresql)
+4) [Local Postgres -> Kafka Connect -> Kafka (Docker)](#postgresql--kafka)
+5) [Confluent Cloud](#confluent-cloud) ([tf-ccloud](./tf-ccloud/README.md))
 
 For more details on running the Data Demo, jump ahead to the [getting started section](#getting-started) after installing the [prerequisites](#environment-prerequisites).
 
@@ -29,8 +30,9 @@ For more details on running the Data Demo, jump ahead to the [getting started se
    * `kafka`: data-demo will produce mock data into Kafka. A redis cache is used to keep track of the produced mock entities.
    * `kafka-cloud`: data-demo will connect to a Confluent Cloud cluster and produce mock data. A local redis cache is still used to keep track of the produced mock entities.
 2. Start the [environment](#local-environments) for your selected `runtimeMode`
+   * [Kafka](#confluent)
+   * [Redpanda](#redpanda)
    * [PostgreSQL](#postgresql)
-   * [Kafka](#kafka)
    * [Confluent Cloud](#confluent-cloud)
    * [Tracing](#tracing)
 3. If you're enabling tracing, start the [tracing environment](#tracing) and set `tracingEnabled=true` in the [`gradle.properties`](./gradle.properties) file.
@@ -54,6 +56,39 @@ For more details on running the Data Demo, jump ahead to the [getting started se
 
 The `docker-compose` gradle plugin is used to start the services in appropriate docker-compose files.
 
+### Confluent
+
+1. Start [Kafka Services](./kafka/local/cluster/docker-compose-confluent.yml)
+
+    ```bash
+    # KAFKA
+    ./gradlew kafkaComposeUp
+    ./gradlew kafkaComposeDown
+    ./gradlew kafkaComposeDownForced
+    ```
+
+2. Validate Environment
+   - If all containers seem to be running (healthy), navigate to [Control Center](https://docs.confluent.io/platform/current/control-center/index.html) at http://localhost:9021 and poke around a bit. You should see a few things but feel free to explore as much as you want. 
+     - A single cluster named "controlcenter.cluster"
+     - When clicking on the "controlcenter.cluster" cluster, 1 Broker 
+     - When clicking on Topics, No Topics 
+       - If you unselect "Hide internal topics", you should see the topics used by CC itself to manage its own state.
+
+### Redpanda
+
+1. Start [Kafka Services](./kafka/local/cluster/docker-compose-redpanda.yml)
+   - [Redpanda](https://redpanda.com/) is a *Kafka-compatible* streaming data platform that is JVM-free & ZooKeeper®-free. It starts fast and requires fewer resources, making it great for local environments.
+    
+    ```bash
+    # KAFKA
+    ./gradlew redpandaComposeUp
+    ./gradlew redpandaComposeDown
+    ./gradlew redpandaComposeDownForced
+    ```
+
+2. Validate Environment 
+   * [Redpanda Console](https://github.com/redpanda-data/console) available at `http://localhost:3000`
+   
 ### PostgreSQL
 
 1. Start [Postgres Services](./postgres/local/docker-compose.yml)
@@ -66,33 +101,16 @@ The `docker-compose` gradle plugin is used to start the services in appropriate 
    ```
 
 2. Validate Environment
-   * pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
-     * username: `root@email.com`
-     * password: `root`
-     * postgres database password: `postgres`
-
-### Kafka
-
-1. Start [Kafka Services](./kafka/local/cluster/docker-compose-redpanda.yml)
-   - [Redpanda](https://redpanda.com/) is a *Kafka-compatible* streaming data platform that is JVM-free & ZooKeeper®-free. It starts fast and requires fewer resources, making it great for local environments.
-    
-    ```bash
-    # KAFKA
-    ./gradlew kafkaComposeUp
-    ./gradlew kafkaComposeDown
-    ./gradlew kafkaComposeDownForced
-    ```
-
-2. Validate Environment 
-   * [Redpanda Console](https://github.com/redpanda-data/console) available at `http://localhost:3000`
-
-_If you'd rather run Confluent's Kafka services, see the [advanced setup](#running-confluent-instead-of-redpanda)._
-
-### Postgres + Kafka
+    * pgAdmin4 (Postgres Exploration UI) available at `http://localhost:5433`
+        * username: `root@email.com`
+        * password: `root`
+        * postgres database password: `postgres`
+        
+### PostgreSQL + Kafka
 
 If you're planning to load data from Postgres into Kafka via Kafka Connect, run the following commands.
 
-1. Start All Services ([Postgres](./postgres/local/docker-compose.yml) & [Kafka](./kafka/local/cluster/docker-compose.yml))
+1. Start All Services ([Postgres](./postgres/local/docker-compose.yml) & [Kafka](./kafka/local/cluster/docker-compose-confluent.yml))
 
     ```bash
     ./gradlew fullComposeUp
@@ -161,47 +179,6 @@ tracing {
 
 Ready to do something with this data? Go check out the [stream-processing-workshop](https://github.com/schroedermatt/stream-processing-workshop).
 
-## Advanced Setup
-
-### Running Confluent instead of Redpanda
-
-The default docker environment starts up redpanda mainly due to performance and memory. If you want to run the full Confluent environment.
-
-1. In the base [`build.gradle`](./build.gradle), uncomment the `docker-compose-confluent.yml` line and comment out the `docker-compose-redpanda.yml` line.
-
-    ```groovy
-    dockerCompose {
-        // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
-        kafka {
-            useComposeFiles = [
-                    './kafka/local/cluster/docker-compose-confluent.yml',
-                    // './kafka/local/cluster/docker-compose-redpanda.yml',
-                    './kafka/local/cluster/redis/docker-compose.yml'
-            ]
-        }
-    }
-    ```
-
-2. Start [Confluent Kafka Services](./kafka/local/cluster/docker-compose-confluent.yml)
-
-    ```bash
-    # KAFKA
-    ./gradlew kafkaComposeUp
-    ./gradlew kafkaComposeDown
-    ./gradlew kafkaComposeDownForced
-    ```
-
-3. Validate Environment
-    * KPow (Kafka Exploration UI) available at `http://localhost:3000`
-
-4. Modify the [application-kafka.yml](/kafka/src/main/resources/application-kafka.yaml) `bootstrap-servers` property.
-   - 3 brokers are running, so uncomment the line with the 3 brokers.
-       
-     ```yaml
-     bootstrap-servers: localhost:19092,localhost:29092,localhost:39092
-     ```
-   
-
 ## Troubleshooting
 
 ### Invalid Java Version
@@ -212,7 +189,7 @@ The following error is likely the cause of not having Java 17 installed.
 > error: invalid source release: 17
 ```
 
-### Windows
+### Windows Specific
 
 ./network.sh doesn't work
 
@@ -224,7 +201,7 @@ OR
 2. Comment out the `kafkaComposeUp.dependsOn dockerCreateNetwork` line in the root `build.gradle`
 3. Run `./gradlew kafkaComposeUp`
 
-### Linux
+### Linux Specific
 
 1. add user to permission group to use docker (without sudo) 
    - https://docs.docker.com/engine/install/linux-postinstall/

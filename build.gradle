@@ -46,7 +46,13 @@ dockerCompose {
     // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
     kafka {
         useComposeFiles = [
-                // './kafka/local/cluster/docker-compose-confluent.yml',
+                './kafka/local/cluster/docker-compose-confluent.yml',
+                './kafka/local/cluster/redis/docker-compose.yml'
+        ]
+    }
+    // ./gradlew redpandaComposeUp|redpandaComposeDown|redpandaComposeDownForced
+    redpanda {
+        useComposeFiles = [
                 './kafka/local/cluster/docker-compose-redpanda.yml',
                 './kafka/local/cluster/redis/docker-compose.yml'
         ]
