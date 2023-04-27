@@ -1,5 +1,7 @@
 # Hands On: Observability
 
+> NOTE: `git pull main` on data-demo before continuing!
+
 ## Goals
 
 1. Start Environment (Kafka + Observability)

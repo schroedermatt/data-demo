@@ -1,5 +1,7 @@
 # Hands On: Introduction to Kafka
 
+> NOTE: `git pull main` on data-demo before continuing!
+
 ## Goals
 
 1. Clone data-demo

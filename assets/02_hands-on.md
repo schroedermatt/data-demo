@@ -1,5 +1,7 @@
 # Hands On: Stream Processing
 
+> NOTE: `git pull main` on data-demo before continuing!
+
 ## Goals
 
 1. Clone `stream-processing-workshop`

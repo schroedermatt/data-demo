@@ -1,12 +1,13 @@
 # Hands On: Schema Registry
 
+> NOTE: `git pull main` on data-demo before continuing!
+
 ## Goals
 
 1. Start Environment (Kafka - Confluent Platform)
 2. Register Schema(s)
 3. Produce & Consume Data
 
-> NOTE: `git pull main` on data-demo before continuing!
 
 ### Start Kafka Cluster
 
