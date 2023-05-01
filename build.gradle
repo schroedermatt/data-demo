@@ -89,5 +89,6 @@ task fullComposeDown {
 // ensure the docker network is created
 postgresComposeUp.dependsOn dockerCreateNetwork
 kafkaComposeUp.dependsOn dockerCreateNetwork
+redpandaComposeUp.dependsOn dockerCreateNetwork
 fullComposeUp.dependsOn dockerCreateNetwork
 tracingComposeUp.dependsOn dockerCreateNetwork
