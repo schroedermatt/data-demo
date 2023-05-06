@@ -1,6 +1,6 @@
 # Hands On: Introduction to Kafka
 
-> NOTE: `git pull main` on data-demo before continuing!
+> NOTE: `git pull` on data-demo's `main` branch before continuing!
 
 ## Goals
 

@@ -10,6 +10,8 @@ The `main.tf` file in this will provision a [full Confluent Cloud environment](#
 
 ### Configure Confluent Cloud API Key + Secret
 
+_$750 in credits available with the following promo codes: `C50INTEG`, `DEVOPS200`, `FREETRIAL400`, `CLOUD100`_
+
 ```bash
 export CONFLUENT_CLOUD_API_KEY="ABCDEFG6HPYEX2ZN"
 export CONFLUENT_CLOUD_API_SECRET="/HIJKLMNOP+QRSTUVWXYZIebwIEg6ldxioAaoYW4DL+orAvVy4vJOU2SR"
@@ -97,3 +99,37 @@ curl --location --request PUT 'https://{CLUSTER_REST_ENDPOINT}/kafka/v3/clusters
   * data-demo-streams (partitions: 3)
   * data-demo-tickets (partitions: 3)
   * data-demo-venues (partitions: 3)
+
+
+--
+
+Topic Cleanup -
+
+`terraform output resource-ids`
+  - grab the bootstrap server
+  - create a `ccloud.properties` file and plug in the env-manager's key/secret into the username/password of `sasl.jaas.config`
+
+```properties
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='..' password='..';
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+```
+
+List topics -
+
+```bash
+kafka-topics \
+  --bootstrap-server pkc-kywrm.us-east-2.aws.confluent.cloud:9092 \
+  --command-config ccloud.properties \
+  --list
+```
+
+Delete topics starting with "kafka-workshop-*" -
+
+```bash
+kafka-topics \
+  --bootstrap-server pkc-kywrm.us-east-2.aws.confluent.cloud:9092 \
+  --command-config ccloud.properties \
+  --delete \
+  --topic 'kafka-workshop-.*'
+```
