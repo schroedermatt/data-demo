@@ -1,0 +1,357 @@
+{
+  "generators": [
+    {
+      "topic": "shadowCustomer",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "type": {
+          "_gen": "oneOf",
+          "choices": [
+            "IND", "FAM", "FREE", "PREMIUM"
+          ]
+        },
+        "gender": {
+          "_gen": "oneOf",
+          "choices": [
+            "U", "N", "F", "M"
+          ]
+        },
+        "fname": {
+          "_gen": "string",
+          "expr": "#{Name.first_name}"
+        },
+        "lname": {
+          "_gen": "string",
+          "expr": "#{Name.last_name}"
+        },
+        "suffix": {
+          "_gen": "string",
+          "expr": "#{Name.suffix}"
+        },
+        "title": {
+          "_gen": "string",
+          "expr": "#{Name.prefix}"
+        },
+        "birthdt": {
+          "_gen": "string",
+          "expr": "#{Date.birthday '16','100'}"
+        },
+        "joindt": {
+          "_gen" : "dateBetween",
+          "between" : ["2000-06-01", "2023-10-25"]
+        }
+      }
+    },
+    {
+      "topic": "shadowPhone",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "phoneId": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "customerId": {
+          "_gen" : "lookup",
+          "topic" : "shadowCustomer",
+          "path" : [ "value", "id" ]
+        },
+        "phonetypecd": {
+          "_gen": "oneOf",
+          "choices": [
+            "RESID", "UNLST", "BUS", "FAX", "CELL", "U"
+          ]
+        },
+        "primaryind": {
+          "_gen": "oneOf",
+          "choices": [
+            "U", "Y", "N"
+          ]
+        },
+        "timezone": {
+          "_gen": "oneOf",
+          "choices": [
+            "EST", "CST", "MTN", "PAC", "U", "ATL", "AST", "HST"
+          ]
+        },
+        "extnbr": {
+          "_gen": "string",
+          "expr": "#{PhoneNumber.extension}"
+        },
+        "number": {
+          "_gen": "string",
+          "expr": "#{PhoneNumber.phone_number}"
+        }
+      }
+    },
+    {
+      "topic": "shadowEmail",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "customerId": {
+          "_gen" : "lookup",
+          "topic" : "shadowCustomer",
+          "path" : [ "value", "id" ]
+        },
+        "email": {
+          "_gen": "string",
+          "expr": "#{Internet.email_address}"
+        }
+      }
+    },
+    {
+      "topic": "shadowAddress",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "customerId": {
+          "_gen" : "lookup",
+          "topic" : "shadowCustomer",
+          "path" : [ "value", "id" ]
+        },
+        "formatcode": {
+          "_gen": "string",
+          "expr": "US"
+        },
+        "type": {
+          "_gen": "oneOf",
+          "choices": [
+            "RESID", "VENUE"
+          ]
+        },
+        "line1": {
+          "_gen": "string",
+          "expr": "#{Address.street_address}"
+        },
+        "line2": {
+          "_gen": "string",
+          "expr": "#{Address.secondary_address}"
+        },
+        "citynm": {
+          "_gen": "string",
+          "expr": "#{Address.city_name}"
+        },
+        "state": {
+          "_gen": "string",
+          "expr": "#{Address.state_abbr}"
+        },
+        "zip5": {
+          "_gen": "string",
+          "expr": "#{Address.zip_code}"
+        },
+        "countrycd": {
+          "_gen": "string",
+          "expr": "US"
+        }
+      }
+    },
+    {
+      "topic": "shadowArtist",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "name": {
+          "_gen" : "string",
+          "expr" : "#{Artist.name}"
+        },
+        "genre": {
+          "_gen": "string",
+          "expr": "#{Music.genre}"
+        }
+      }
+    },
+    {
+      "topic": "shadowVenue",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "addressid": {
+          "_gen" : "lookup",
+          "topic" : "shadowAddress",
+          "path" : [ "value", "id" ]
+        },
+        "name": {
+          "_gen": "string",
+          "expr": "#{Company.name} Arena"
+        },
+        "maxcapacity": {
+          "_gen": "string",
+          "expr": "todo - Integer"
+        }
+      }
+    },
+    {
+      "topic": "shadowEvent",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "artistid": {
+          "_gen" : "lookup",
+          "topic" : "shadowArtist",
+          "path" : [ "value", "id" ]
+        },
+        "venueid": {
+          "_gen" : "lookup",
+          "topic" : "shadowVenue",
+          "path" : [ "value", "id" ]
+        },
+        "capacity": {
+          "_gen": "string",
+          "expr": "todo - Integer"
+        },
+        "eventdate": {
+          "_gen" : "dateBetween",
+          "between" : ["2023-10-01", "2025-10-25"]
+        }
+      }
+    },
+    {
+      "topic": "shadowTicket",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "customerid": {
+          "_gen" : "lookup",
+          "topic" : "shadowCustomer",
+          "path" : [ "value", "id" ]
+        },
+        "eventid": {
+          "_gen" : "lookup",
+          "topic" : "shadowEvent",
+          "path" : [ "value", "id" ]
+        },
+        "price": {
+          "_gen": "string",
+          "expr": "todo - Double"
+        }
+      }
+    },
+    {
+      "topic": "shadowStream",
+      "vars" : {
+        "id" : {
+          "_gen" : "uuid"
+        }
+      },
+      "key": {
+        "_gen" : "var",
+        "var" : "id"  
+      },
+      "value": {
+        "id": {
+          "_gen" : "var",
+          "var" : "id"    
+        },
+        "customerid": {
+          "_gen" : "lookup",
+          "topic" : "shadowCustomer",
+          "path" : [ "value", "id" ]
+        },
+        "artistid": {
+          "_gen" : "lookup",
+          "topic" : "shadowArtist",
+          "path" : [ "value", "id" ]
+        },
+        "streamtime": {
+          "_gen": "now"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "local-kafka": {
+      "kind": "kafka",
+      "producerConfigs": {
+        "bootstrap.servers": "broker:19092",
+        "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+        "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+      }
+    }
+  }
+}

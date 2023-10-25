@@ -30,3 +30,4 @@ db/
 tempo-data/
 
 kafka/local/cluster/jars
+shadowtraffic/license.env
