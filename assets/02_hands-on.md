@@ -8,7 +8,7 @@
 2. Run `data-demo` & produce mock data
 3. Run "Top Customer Artists" Stream
 4. Solve Stateless Stream Processing Exercises
-5. Solve Stateful Stream Procsesing Exercises (optional)
+5. Solve Stateful Stream Processing Exercises (optional)
 
 ### Clone Stream Processing Workshop
 

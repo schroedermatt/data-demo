@@ -1,0 +1,18 @@
+{
+  "name": "s3-spans-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.s3.S3SinkConnector",
+    "tasks.max": "1",
+    "topics": "otlp_spans",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "store.url": "http://minio:9000",
+    "s3.bucket.name": "data-demo",
+    "aws.access.key.id": "minio",
+    "aws.secret.access.key": "minio123",
+    "flush.size": "1",
+    "storage.class": "io.confluent.connect.s3.storage.S3Storage",
+    "format.class": "io.confluent.connect.s3.format.json.JsonFormat"
+  }
+}

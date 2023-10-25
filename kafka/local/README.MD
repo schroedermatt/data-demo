@@ -55,6 +55,7 @@ Run `./gradlew kafkaComposeDown` to tear down the environment, including the loc
 
 ```bash
 curl -X POST localhost:18083/connectors -H "Content-Type: application/json" -d @./kafka/local/connect/postgres-connector-config.json 
+curl -X POST localhost:18083/connectors -H "Content-Type: application/json" -d @./kafka/local/connect/s3-connector-config.json 
 ```
 
 ### List Kafka Topics

@@ -63,10 +63,16 @@ dockerCompose {
                 './kafka/local/cluster/redis/docker-compose.yml'
         ]
     }
+    // ./gradlew s3ComposeUp|s3ComposeDown|s3ComposeDownForced
+    s3 {
+        useComposeFiles = [
+                './observability/s3/docker-compose.yml'
+        ]
+    }
 
     tracing {
         useComposeFiles = [
-                './observability/jaeger/docker-compose.yml'
+                './observability/tempo/docker-compose.yml'
         ]
     }
 }
@@ -92,3 +98,4 @@ kafkaComposeUp.dependsOn dockerCreateNetwork
 redpandaComposeUp.dependsOn dockerCreateNetwork
 fullComposeUp.dependsOn dockerCreateNetwork
 tracingComposeUp.dependsOn dockerCreateNetwork
+s3ComposeUp.dependsOn dockerCreateNetwork

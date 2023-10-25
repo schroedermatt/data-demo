@@ -12,8 +12,23 @@ exporters:
     endpoint: jaeger:4317
     tls:
       insecure: true
+  kafka:
+    brokers:
+      - broker-1:9092
+      - broker-2:9092
+      - broker-3:9092
+    protocol_version: 2.0.0
+    encoding: otlp_json
+#  kafka/proto:
+#    brokers:
+#      - broker-1:9092
+#      - broker-2:9092
+#      - broker-3:9092
+#    protocol_version: 2.0.0
+#    encoding: otlp_proto
+#    topic: otlp_spans_proto
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp, otlp/jaeger]
+      exporters: [otlp, otlp/jaeger, kafka]

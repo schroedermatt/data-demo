@@ -7,13 +7,13 @@ networks:
 
 services:
   # Uncomment k6-tracing to generate fake traces...
-  k6-tracing:
-    image: ghcr.io/grafana/xk6-client-tracing:v0.0.2
-    environment:
-      - ENDPOINT=otel-collector:4317
-    restart: always
-    depends_on:
-      - otel-collector
+#  k6-tracing:
+#    image: ghcr.io/grafana/xk6-client-tracing:v0.0.2
+#    environment:
+#      - ENDPOINT=otel-collector:4317
+#    restart: always
+#    depends_on:
+#      - otel-collector
 
   # And put them in an OTEL collector pipeline...
   # https://opentelemetry.io/docs/collector/configuration
