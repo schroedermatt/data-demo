@@ -19,7 +19,7 @@ https://shadowtraffic.io/
 ### --watch will listen for config.json file changes and refresh
 ### --sample 10 will limit results to 10 (change number if desired)
 ### --stdout will print results to stdout instead of kafka
-docker run \                                                                         INT 1m 10s
+docker run \
   --network container:broker \
   --env-file license.env \
   -v /your/path/to/data-demo/shadowtraffic/config.json:/home/config.json \
@@ -28,7 +28,8 @@ docker run \                                                                    
   --watch --sample 10 --stdout
   
 # run the shadowtraffic container pointed at Kafka
-docker run \                                                                         INT 1m 10s
+### add --sample to limit results
+docker run \
   --network container:broker \
   --env-file license.env \
   -v /your/path/to/data-demo/shadowtraffic/config.json:/home/config.json \
