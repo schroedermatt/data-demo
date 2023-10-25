@@ -2,30 +2,36 @@
   "generators": [
     {
       "topic": "shadowCustomer",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "type": {
           "_gen": "oneOf",
           "choices": [
-            "IND", "FAM", "FREE", "PREMIUM"
+            "IND",
+            "FAM",
+            "FREE",
+            "PREMIUM"
           ]
         },
         "gender": {
           "_gen": "oneOf",
           "choices": [
-            "U", "N", "F", "M"
+            "U",
+            "N",
+            "F",
+            "M"
           ]
         },
         "fname": {
@@ -49,48 +55,68 @@
           "expr": "#{Date.birthday '16','100'}"
         },
         "joindt": {
-          "_gen" : "dateBetween",
-          "between" : ["2000-06-01", "2023-10-25"]
+          "_gen": "dateBetween",
+          "between": [
+            "2000-06-01",
+            "2023-10-25"
+          ]
         }
       }
     },
     {
       "topic": "shadowPhone",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "phoneId": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "customerId": {
-          "_gen" : "lookup",
-          "topic" : "shadowCustomer",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowCustomer",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "phonetypecd": {
           "_gen": "oneOf",
           "choices": [
-            "RESID", "UNLST", "BUS", "FAX", "CELL", "U"
+            "RESID",
+            "UNLST",
+            "BUS",
+            "FAX",
+            "CELL",
+            "U"
           ]
         },
         "primaryind": {
           "_gen": "oneOf",
           "choices": [
-            "U", "Y", "N"
+            "U",
+            "Y",
+            "N"
           ]
         },
         "timezone": {
           "_gen": "oneOf",
           "choices": [
-            "EST", "CST", "MTN", "PAC", "U", "ATL", "AST", "HST"
+            "EST",
+            "CST",
+            "MTN",
+            "PAC",
+            "U",
+            "ATL",
+            "AST",
+            "HST"
           ]
         },
         "extnbr": {
@@ -105,24 +131,27 @@
     },
     {
       "topic": "shadowEmail",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "customerId": {
-          "_gen" : "lookup",
-          "topic" : "shadowCustomer",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowCustomer",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "email": {
           "_gen": "string",
@@ -132,24 +161,27 @@
     },
     {
       "topic": "shadowAddress",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "customerId": {
-          "_gen" : "lookup",
-          "topic" : "shadowCustomer",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowCustomer",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "formatcode": {
           "_gen": "string",
@@ -158,7 +190,8 @@
         "type": {
           "_gen": "oneOf",
           "choices": [
-            "RESID", "VENUE"
+            "RESID",
+            "VENUE"
           ]
         },
         "line1": {
@@ -189,23 +222,23 @@
     },
     {
       "topic": "shadowArtist",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "name": {
-          "_gen" : "string",
-          "expr" : "#{Artist.name}"
+          "_gen": "string",
+          "expr": "#{Artist.name}"
         },
         "genre": {
           "_gen": "string",
@@ -215,24 +248,27 @@
     },
     {
       "topic": "shadowVenue",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "addressid": {
-          "_gen" : "lookup",
-          "topic" : "shadowAddress",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowAddress",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "name": {
           "_gen": "string",
@@ -246,65 +282,80 @@
     },
     {
       "topic": "shadowEvent",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "artistid": {
-          "_gen" : "lookup",
-          "topic" : "shadowArtist",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowArtist",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "venueid": {
-          "_gen" : "lookup",
-          "topic" : "shadowVenue",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowVenue",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "capacity": {
           "_gen": "string",
           "expr": "todo - Integer"
         },
         "eventdate": {
-          "_gen" : "dateBetween",
-          "between" : ["2023-10-01", "2025-10-25"]
+          "_gen": "dateBetween",
+          "between": [
+            "2023-10-01",
+            "2025-10-25"
+          ]
         }
       }
     },
     {
       "topic": "shadowTicket",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "customerid": {
-          "_gen" : "lookup",
-          "topic" : "shadowCustomer",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowCustomer",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "eventid": {
-          "_gen" : "lookup",
-          "topic" : "shadowEvent",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowEvent",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "price": {
           "_gen": "string",
@@ -314,29 +365,35 @@
     },
     {
       "topic": "shadowStream",
-      "vars" : {
-        "id" : {
-          "_gen" : "uuid"
+      "vars": {
+        "id": {
+          "_gen": "uuid"
         }
       },
       "key": {
-        "_gen" : "var",
-        "var" : "id"  
+        "_gen": "var",
+        "var": "id"
       },
       "value": {
         "id": {
-          "_gen" : "var",
-          "var" : "id"    
+          "_gen": "var",
+          "var": "id"
         },
         "customerid": {
-          "_gen" : "lookup",
-          "topic" : "shadowCustomer",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowCustomer",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "artistid": {
-          "_gen" : "lookup",
-          "topic" : "shadowArtist",
-          "path" : [ "value", "id" ]
+          "_gen": "lookup",
+          "topic": "shadowArtist",
+          "path": [
+            "value",
+            "id"
+          ]
         },
         "streamtime": {
           "_gen": "now"
