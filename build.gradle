@@ -4,9 +4,11 @@ allprojects {
 
     group = 'org.msse.demo'
     version = '0.1.0'
-
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+  
+    java {
+      sourceCompatibility = JavaVersion.VERSION_17
+      targetCompatibility = JavaVersion.VERSION_17
+    }
 
     repositories {
         mavenCentral()
@@ -27,14 +29,7 @@ allprojects {
     }
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.16.9"
-    }
-}
+
 
 apply plugin: 'docker-compose'
 
@@ -44,6 +39,12 @@ dockerCompose {
         useComposeFiles = ['./postgres/local/docker-compose.yml']
     }
     // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
+    kafka-1 {
+        useComposeFiles = [
+                './kafka/local/cluster/docker-compose-confluent.yml',
+                './kafka/local/cluster/redis/docker-compose.yml'
+        ]
+    }
     kafka {
         useComposeFiles = [
                 './kafka/local/cluster/docker-compose-confluent.yml',
