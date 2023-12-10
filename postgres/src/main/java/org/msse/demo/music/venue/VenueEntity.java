@@ -16,10 +16,12 @@ public class VenueEntity {
     @Id
     private String id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "addressid")
-    private AddressEntity address;
-
     private String name;
+    private String street;
+    private String city;
+    private String state;
+    private String zip;
+    private Double latitude;
+    private Double longitude;
     private Integer maxcapacity;
 }

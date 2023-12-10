@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.msse.demo.config.InitialLoadProperties;
 import org.msse.demo.mockdata.customer.CustomerService;
 import org.msse.demo.mockdata.music.MusicService;
+import org.msse.demo.util.Loader;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -85,18 +86,23 @@ public class PostgresDaemon {
   }
 
   private void loadVenues() {
-    long desiredVenues = initialLoadProperties.venues();
-    long existingVenues = musicService.eventCount();
 
-    if (existingVenues >= desiredVenues) {
-      log.info("{} venues already exist ({} desired). Skipping initial load.", existingVenues, desiredVenues);
-    } else {
-      long newVenues = desiredVenues - existingVenues;
-      log.info("Generating {} venues ({} already exist).", newVenues, existingVenues);
-      for (long i = 0; i < newVenues; i++) {
-        musicService.createVenue();
-      }
-    }
+    Loader.loadVenues().forEach(musicService::createVenue);
+
+//    //System.out.println(Loader.loadCityData());
+//
+//    long desiredVenues = initialLoadProperties.venues();
+//    long existingVenues = musicService.eventCount();
+//
+//    if (existingVenues >= desiredVenues) {
+//      log.info("{} venues already exist ({} desired). Skipping initial load.", existingVenues, desiredVenues);
+//    } else {
+//      long newVenues = desiredVenues - existingVenues;
+//      log.info("Generating {} venues ({} already exist).", newVenues, existingVenues);
+//      for (long i = 0; i < newVenues; i++) {
+//        musicService.createVenue();
+//      }
+//    }
   }
 
   private void loadEvents() {

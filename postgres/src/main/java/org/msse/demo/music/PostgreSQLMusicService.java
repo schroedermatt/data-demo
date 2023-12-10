@@ -82,29 +82,28 @@ public class PostgreSQLMusicService implements MusicService {
     }
 
     @Override
-    public Optional<Venue> createVenue() {
-        // todo - setup a new venue address
+    public Optional<Venue> createVenue(Venue incoming) {
 
-        return createVenue(
-                findRandomAddressId().get()
-        );
-    }
+        Venue venue = incoming;
 
-    @Override
-    public Optional<Venue> createVenue(String addressId) {
-        Optional<AddressEntity> existingAddress = addressRepository.findById(addressId);
-
-        if (existingAddress.isPresent()) {
-            Venue venue = musicFaker.venueFaker().generate(addressId);
-
-            log.info("Saving Venue ({}) at Address ({}) to PostgreSQL", venue.id(), addressId);
-
-            venueRepository.save(venueMapper.mapToEntity(venue, existingAddress.get()));
-
-            return Optional.of(venue);
-        } else {
-            log.info("Address ({}) does not exist. Venue creation cancelled.", addressId);
+        if (venue.id() == null) {
+          venue = new Venue(
+                  musicFaker.streamFaker().randomId(),
+                  incoming.name(),
+                  incoming.street(),
+                  incoming.city(),
+                  incoming.state(),
+                  incoming.zip(),
+                  incoming.latitude(),
+                  incoming.longitude(),
+                  incoming.maxcapacity()
+          );
         }
+
+        log.info("Saving Venue ({})  to PostgreSQL", venue.id());
+
+        venueRepository.save(venueMapper.mapToEntity(venue));
+
         return Optional.empty();
     }
 

@@ -33,16 +33,19 @@ allprojects {
 
 apply plugin: 'docker-compose'
 
+// projectName for each project should match .env/COMPOSE_PROJECT_NAME
+// this allows for cli and gradle tasks to co-exist.
+
 dockerCompose {
     // ./gradlew postgresComposeUp|postgresComposeDown|postgresComposeDownForced
     postgres {
+        projectName = 'data-demo-postgres'
         useComposeFiles = ['./postgres/local/docker-compose.yml']
     }
     // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
-    kafka-1 {
+    kafka1 {
         useComposeFiles = [
-                './kafka/local/cluster/docker-compose-confluent.yml',
-                './kafka/local/cluster/redis/docker-compose.yml'
+                './kafka/kafka-1/docker-compose.yml'
         ]
     }
     kafka {

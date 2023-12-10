@@ -42,8 +42,8 @@ public class MockDataApi {
   }
 
   @PostMapping(path = "venues")
-  public ResponseEntity<Venue> generateVenue() {
-    return musicService.createVenue()
+  public ResponseEntity<Venue> generateVenue(Venue incoming) {
+    return musicService.createVenue(incoming)
             .map(venue -> ResponseEntity.status(HttpStatus.CREATED).body(venue))
             .orElseGet(() -> ResponseEntity.badRequest().build());
   }

@@ -54,28 +54,18 @@ public class KafkaMusicService implements MusicService {
     }
 
     @Override
-    public Optional<Venue> createVenue() {
-        Optional<Venue> venue = musicCache.createVenue();
+    public Optional<Venue> createVenue(Venue incoming) {
+
+        Optional<Venue> venue = musicCache.createVenue(incoming);
 
         venue.ifPresent(value -> {
-            log.info("Producing Venue ({}) at Address ({}) to Kafka", value.id(), value.addressid());
+            log.info("Producing Venue ({}) to Kafka", value.id());
             send(topics.venues(), value.id(), value);
         });
 
         return venue;
     }
 
-    @Override
-    public Optional<Venue> createVenue(String addressId) {
-        Optional<Venue> venue = musicCache.createVenue(addressId);
-
-        venue.ifPresent(value -> {
-            log.info("Producing Venue ({}) at Address ({}) to Kafka", value.id(), value.addressid());
-            send(topics.venues(), value.id(), value);
-        });
-
-        return venue;
-    }
 
     @Override
     public long venueCount() {

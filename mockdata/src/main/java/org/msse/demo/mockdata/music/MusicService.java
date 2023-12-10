@@ -12,8 +12,7 @@ public interface MusicService {
     Artist createArtist();
     Artist createArtist(String artistId);
     long artistCount();
-    Optional<Venue> createVenue();
-    Optional<Venue> createVenue(String addressId);
+    Optional<Venue> createVenue(Venue venueData);
     long venueCount();
     Optional<Event> createEvent();
     Optional<Event> createEvent(String artistId, String venueId);

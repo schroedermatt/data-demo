@@ -54,24 +54,23 @@ public class MusicCache {
         return redis.size(CACHE_ARTIST).intValue();
     }
 
-    public Optional<Venue> createVenue() {
-        Optional<Address> address = customerCache.randomAddress();
+    public Optional<Venue> createVenue(Venue incoming) {
 
-        if (address.isPresent()) {
-            return createVenue(address.get().id());
+        Venue venue = incoming;
+
+        if (venue.id() == null) {
+            venue = new Venue(
+                    musicFaker.streamFaker().randomId(),
+                    incoming.name(),
+                    incoming.street(),
+                    incoming.city(),
+                    incoming.state(),
+                    incoming.zip(),
+                    incoming.latitude(),
+                    incoming.longitude(),
+                    incoming.maxcapacity()
+            );
         }
-
-        log.info("Address not found. Venue creation cancelled.");
-
-        return Optional.empty();
-    }
-
-    public Optional<Venue> createVenue(String addressId) {
-        return createVenue(musicFaker.venueFaker().randomId(), addressId);
-    }
-
-    public Optional<Venue> createVenue(String venueId, String addressId) {
-        Venue venue = musicFaker.venueFaker().generate(venueId, addressId);
 
         redis.put(CACHE_VENUE, venue.id(), venue);
 
