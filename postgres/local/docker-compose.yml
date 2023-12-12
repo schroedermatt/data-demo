@@ -13,6 +13,11 @@ services:
     image: postgres:14.1-alpine
     container_name: postgres
     hostname: postgres
+    healthcheck:
+      test: pg_isready -U main
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - '5432:5432'
     environment:

@@ -31,3 +31,6 @@ tempo-data/
 
 kafka/local/cluster/jars
 shadowtraffic/license.env
+
+kafka/local/kafka-1/connect-plugins
+kafka/local/kafka-3/connect-plugins

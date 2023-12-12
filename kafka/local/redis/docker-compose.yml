@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   default:
     external: true
@@ -13,6 +11,12 @@ services:
     container_name: redis
     hostname: redis
     image: redis:6.2-alpine
+    healthcheck:
+      test: nc -z localhost 6379 || exit 1
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 3
     restart: always
     ports:
       - '6379:6379'
