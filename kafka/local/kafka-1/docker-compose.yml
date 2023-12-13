@@ -6,13 +6,17 @@ networks:
 volumes:
   kb: {}
   kb_secrets: {}
+  sr_secrets: {}
+  c_kafka_data: {}
+  c_kafka_secrets: {}
+  c_secrets: {}
 
 services:
 
-  kafka-broker:
+  broker-1:
     image: confluentinc/cp-kafka:${VERSION}
-    hostname: kafka-broker
-    container_name: kafka-broker
+    hostname: broker-1
+    container_name: kafka1_broker-1
     stop_grace_period: 120s
     healthcheck:
       test: nc -z localhost 9092 || exit 1
@@ -34,8 +38,8 @@ services:
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_SECURITY_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092,PLAINTEXT_HOST://localhost:19092
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-broker:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:9092,PLAINTEXT_HOST://localhost:19092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker-1:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_MIN_INSYNC_REPLICAS: 1
       KAFKA_NUM_PARTITIONS: 4
@@ -44,4 +48,68 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 500
       KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_METRIC_REPORTERS:
+      KAFKA_OPTS:
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:${VERSION}
+    hostname: schema-registry
+    container_name: kafka1_schema-registry
+    stop_grace_period: 120s
+    healthcheck:
+      test: curl --fail http://localhost:8081/ || exit 1
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    ports:
+      - '8081:8081'
+    volumes:
+      - sr_secrets:/etc/schema-registry/secrets
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker-1:9092
+      KAFKA_METRIC_REPORTERS:
+      CONFLUENT_METRICS_ENABLE: 'false'
+      EXTRA_OPTS:
+      SCHEMA_REGISTRY_OPTS:
+
+  connect-1:
+    image: confluentinc/cp-kafka-connect:${VERSION}
+    hostname: connect-1
+    container_name: kafka1_connect-1
+    ports:
+      - "18083:8083"
+    healthcheck:
+      test: curl --fail http://localhost:8083/connector-plugins || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+    volumes:
+      - c_kafka_data:/var/lib/kafka/data
+      - c_kafka_secrets:/etc/kafka/secrets
+      - c_secrets:/etc/kafka-connect/secrets
+      - ./connect-plugins:/etc/kafka-connect/jars
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'broker-1:9092'
+      CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY: All
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: 'connect-cluster'
+      CONNECT_CONFIG_STORAGE_TOPIC: 'connect-cluster-config'
+      CONNECT_OFFSET_STORAGE_TOPIC: 'connect-cluster-offsets'
+      CONNECT_STATUS_STORAGE_TOPIC: 'connect-cluster-status'
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_CONFIG_PROVIDERS: file
+      CONNECT_CONFIG_PROVIDERS_FILE_CLASS: 'org.apache.kafka.common.config.provider.FileConfigProvider'
+      CONNECT_KEY_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+      CONNECT_VALUE_CONVERTER: 'io.confluent.connect.avro.AvroConverter'
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
+      CONNECT_REST_ADVERTISED_HOST_NAME: 'connect-1'
+      CONNECT_PLUGIN_PATH: /etc/kafka-connect/jars
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       KAFKA_OPTS:

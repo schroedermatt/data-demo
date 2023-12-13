@@ -31,7 +31,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok,stat"
+      KAFKA_OPTS:
     volumes:
       - zk:/var/lib/zookeeper/data
       - zk_log:/var/lib/zookeeper/log
@@ -71,7 +71,7 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 500
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_METRIC_REPORTERS: ' '
-      KAFKA_OPTS: -javaagent:/opt/jmx_prometheus/jmx_prometheus_javaagent.jar=7071:/opt/jmx_prometheus/kafka-config.yml -javaagent:/opt/jmx_prometheus/jolokia-agent.jar=port=7072,host=*
+      KAFKA_OPTS:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       CONFLUENT_METRICS_ENABLE: 'false'
 
@@ -107,7 +107,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 500
       KAFKA_METRIC_REPORTERS: ' '
-      KAFKA_OPTS: -javaagent:/opt/jmx_prometheus/jmx_prometheus_javaagent.jar=7071:/opt/jmx_prometheus/kafka-config.yml -javaagent:/opt/jmx_prometheus/jolokia-agent.jar=port=7072,host=*
+      KAFKA_OPTS:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       CONFLUENT_METRICS_ENABLE: 'false'
 
@@ -143,7 +143,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 500
       KAFKA_METRIC_REPORTERS: ' '
-      KAFKA_OPTS: -javaagent:/opt/jmx_prometheus/jmx_prometheus_javaagent.jar=7071:/opt/jmx_prometheus/kafka-config.yml -javaagent:/opt/jmx_prometheus/jolokia-agent.jar=port=7072,host=*
+      KAFKA_OPTS:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       CONFLUENT_METRICS_ENABLE: 'false'
 
@@ -226,7 +226,7 @@ services:
       CONNECT_REST_ADVERTISED_HOST_NAME: 'connect-1'
       CONNECT_PLUGIN_PATH: /etc/kafka-connect/jars
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
-      KAFKA_OPTS: -javaagent:/opt/jmx_prometheus/jmx_prometheus_javaagent.jar=7071:/opt/jmx_prometheus/connect-config.yml
+      KAFKA_OPTS:
 
   kpow:
     image: factorhouse/kpow-ce

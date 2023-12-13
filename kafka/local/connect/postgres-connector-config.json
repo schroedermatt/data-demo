@@ -22,11 +22,13 @@
 
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "key.converter.schemas.enable": "false",
-    "transforms.extract_pk.type" : "org.apache.kafka.connect.transforms.ExtractField$Key",
-    "transforms.extract_pk.field" : "id",
 
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
+
+    "transforms": "extract_pk",
+    "transforms.extract_pk.type" : "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "transforms.extract_pk.field" : "id",
 
     "topic.prefix": "cdc."
   }
