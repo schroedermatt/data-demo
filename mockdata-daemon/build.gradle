@@ -1,9 +1,9 @@
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
-	id "io.freefair.lombok" version "6.5.1"
-	id 'org.springframework.boot' version '2.7.1'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "io.freefair.lombok" version "8.4"
+	id 'org.springframework.boot' version '2.7.18'
+	id 'io.spring.dependency-management' version '1.1.4'
 }
 
 dependencies {
@@ -12,6 +12,10 @@ dependencies {
 	implementation project(':kafka')
 
 	implementation 'org.springframework.boot:spring-boot-starter'
+
+	implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
+	implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.10.0'
+
 }
 
 task bootRunDaemon(type: BootRun, dependsOn: 'build') {

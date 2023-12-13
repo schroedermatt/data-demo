@@ -6,4 +6,5 @@ public record Venue(
         String id,
         String addressid,
         String name,
-        Integer maxcapacity) implements Serializable {}
+        Integer maxcapacity
+) implements Serializable {}

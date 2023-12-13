@@ -59,7 +59,6 @@ CREATE TABLE venue (
     addressid VARCHAR(50),
     name VARCHAR(50),
     maxcapacity INTEGER,
-
     FOREIGN KEY (addressid) REFERENCES address (id)
 );
 

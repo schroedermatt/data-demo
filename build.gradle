@@ -5,8 +5,10 @@ allprojects {
     group = 'org.msse.demo'
     version = '0.1.0'
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    java {
+      sourceCompatibility = JavaVersion.VERSION_17
+      targetCompatibility = JavaVersion.VERSION_17
+    }
 
     repositories {
         mavenCentral()
@@ -27,47 +29,52 @@ allprojects {
     }
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.16.9"
-    }
-}
 
 apply plugin: 'docker-compose'
+
+// projectName for each project should match .env/COMPOSE_PROJECT_NAME
+// this allows for cli and gradle tasks to co-exist.
 
 dockerCompose {
     // ./gradlew postgresComposeUp|postgresComposeDown|postgresComposeDownForced
     postgres {
+        projectName = 'data-demo-postgres'
+        composeAdditionalArgs = [ '--env-file', './postgres/local/.env' ]
         useComposeFiles = ['./postgres/local/docker-compose.yml']
-    }
-    // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
-    kafka {
-        useComposeFiles = [
-                './kafka/local/cluster/docker-compose-confluent.yml',
-                './kafka/local/cluster/redis/docker-compose.yml'
-        ]
-    }
-    // ./gradlew redpandaComposeUp|redpandaComposeDown|redpandaComposeDownForced
-    redpanda {
-        useComposeFiles = [
-                './kafka/local/cluster/docker-compose-redpanda.yml',
-                './kafka/local/cluster/redis/docker-compose.yml'
-        ]
     }
     // ./gradlew redisComposeUp|redisComposeDown|redisComposeDownForced
     redis {
-        useComposeFiles = [
-                './kafka/local/cluster/redis/docker-compose.yml'
-        ]
+        projectName = 'data-demo-redis'
+        composeAdditionalArgs = [ '--env-file', './kafka/local/redis/.env' ]
+        useComposeFiles = ['./kafka/local/redis/docker-compose.yml']
+    }
+    // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
+    kafka1 {
+        // keep projectName identical to the COMPOSE_PROJECT_NAME in the .env file.
+        projectName = 'data-demo-kafka-1'
+        composeAdditionalArgs = [ '--env-file', './kafka/local/kafka-1/.env' ]
+        useComposeFiles = ['./kafka/local/kafka-1/docker-compose.yml']
+    }
+    kafka {
+        projectName = 'data-demo-kafka-3'
+        composeAdditionalArgs = [ '--env-file', './kafka/local/kafka-3/.env' ]
+        useComposeFiles = ['./kafka/local/kafka-3/docker-compose.yml']
+    }
+    kafkaCore {
+        projectName = 'data-demo-kafka-3'
+        startedServices = [ 'broker-1', 'broker-2', 'broker-3' ]
+        composeAdditionalArgs = [ '--env-file', './kafka/local/kafka-3/.env' ]
+        useComposeFiles = ['./kafka/local/kafka-3/docker-compose.yml' ]
+    }
+    // ./gradlew redpandaComposeUp|redpandaComposeDown|redpandaComposeDownForced
+    redpanda {
+        composeAdditionalArgs = [ '--env-file', './kafka/local/cluster/.env' ]
+        useComposeFiles = ['./kafka/local/cluster/docker-compose-redpanda.yml']
     }
     // ./gradlew s3ComposeUp|s3ComposeDown|s3ComposeDownForced
     s3 {
-        useComposeFiles = [
-                './observability/s3/docker-compose.yml'
-        ]
+        composeAdditionalArgs = [ '--env-file', './observability/s3/.env' ]
+        useComposeFiles = ['./observability/s3/docker-compose.yml']
     }
 
     tracing {
@@ -92,10 +99,15 @@ task fullComposeDown {
     dependsOn 'kafkaComposeDownForced'
 }
 
-// ensure the docker network is created
-postgresComposeUp.dependsOn dockerCreateNetwork
-kafkaComposeUp.dependsOn dockerCreateNetwork
-redpandaComposeUp.dependsOn dockerCreateNetwork
+postgresComposeUp.dependsOn([dockerCreateNetwork])
+redisComposeUp.dependsOn([dockerCreateNetwork])
+kafkaComposeUp.dependsOn([dockerCreateNetwork, tasks.named("redisComposeUp")])
+kafka1ComposeUp.dependsOn([dockerCreateNetwork, tasks.named("redisComposeUp")])
+redpandaComposeUp.dependsOn([dockerCreateNetwork, tasks.named("redisComposeUp")])
+
+// make sure any of the kafka clusters are down
+redisComposeDown.dependsOn([tasks.named("kafkaComposeDown"), tasks.named("kafka1ComposeDown")])
+
 fullComposeUp.dependsOn dockerCreateNetwork
 tracingComposeUp.dependsOn dockerCreateNetwork
 s3ComposeUp.dependsOn dockerCreateNetwork

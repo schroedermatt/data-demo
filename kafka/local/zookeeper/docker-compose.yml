@@ -1,0 +1,80 @@
+networks:
+  default:
+    external: true
+    name: dev-local
+
+volumes:
+  zk1: {}
+  zk1_log: {}
+  zk1_secrets: {}
+  zk2: {}
+  zk2_log: {}
+  zk2_secrets: {}
+  zk3: {}
+  zk3_log: {}
+  zk3_secrets: {}
+
+services:
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:${VERSION}
+    hostname: zookeeper-1
+    container_name: zookeeper-1
+    healthcheck:
+      test: echo ruok | nc -w 2 localhost 2181 | grep imok
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - zk1:/var/lib/zookeeper/data
+      - zk1_log:/var/lib/zookeeper/log
+      - zk1_secrets:/etc/zookeeper/secrets
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+      KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=ruok,stat
+
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:${VERSION}
+    hostname: zookeeper-2
+    container_name: zookeeper-2
+    healthcheck:
+      test: echo ruok | nc -w 2 localhost 2181 | grep imok
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - zk2:/var/lib/zookeeper/data
+      - zk2_log:/var/lib/zookeeper/log
+      - zk2_secrets:/etc/zookeeper/secrets
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+      KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=ruok,stat
+
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:${VERSION}
+    hostname: zookeeper-3
+    container_name: zookeeper-3
+    healthcheck:
+      test: echo ruok | nc -w 2 localhost 2181 | grep imok
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - zk3:/var/lib/zookeeper/data
+      - zk3_log:/var/lib/zookeeper/log
+      - zk3_secrets:/etc/zookeeper/secrets
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+      KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=ruok,stat
+

@@ -10,5 +10,5 @@ import org.msse.demo.mockdata.music.venue.Venue;
 @Mapper(componentModel = "spring", uses = { AddressMapper.class, CustomerMapper.class })
 public interface VenueMapper {
     @Mapping(target = "id", source = "venue.id")
-    VenueEntity mapToEntity(Venue venue, AddressEntity address);
+    VenueEntity mapToEntity(Venue venue);
 }
