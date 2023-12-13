@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.msse.demo.KafkaConfig;
+import org.msse.demo.customer.CustomerCache;
+import org.msse.demo.mockdata.customer.CustomerService;
+import org.msse.demo.mockdata.customer.address.Address;
 import org.msse.demo.mockdata.music.MusicService;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
@@ -54,18 +57,21 @@ public class KafkaMusicService implements MusicService {
     }
 
     @Override
-    public Optional<Venue> createVenue(Venue incoming) {
+    public Optional<Venue> createVenue(Venue incomingVenue, Address incomingAddress) {
+        // create and publish address
+        Address address = musicCache.createAddress(incomingAddress);
+        log.info("Producing Address ({}) to Kafka", address.id());
+        send(topics.addresses(), address.id(), address);
 
-        Optional<Venue> venue = musicCache.createVenue(incoming);
-
+        // create and publish venue
+        Optional<Venue> venue = musicCache.createVenue(incomingVenue);
         venue.ifPresent(value -> {
-            log.info("Producing Venue ({}) to Kafka", value.id());
+            log.info("Producing Venue ({}) at Address ({}) to Kafka", value.id(), address.id());
             send(topics.venues(), value.id(), value);
         });
 
         return venue;
     }
-
 
     @Override
     public long venueCount() {

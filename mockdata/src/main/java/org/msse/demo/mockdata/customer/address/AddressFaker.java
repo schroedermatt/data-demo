@@ -15,11 +15,11 @@ import java.util.Random;
 @Service
 public class AddressFaker extends BaseFaker {
 
-  private static final String RESID_TYPE_CODE = "RESID";
-  private static final String VENUE_TYPE_CODE = "VENUE";
+  public static final String RESID_TYPE_CODE = "RESID";
+  public static final String VENUE_TYPE_CODE = "VENUE";
 
   private Random random = new Random();
-  private List<CityData> cities = new ArrayList<>();
+  private List<CityData> cities;
 
   public AddressFaker(Faker faker) {
     super(faker);
@@ -58,7 +58,9 @@ public class AddressFaker extends BaseFaker {
             cityData.state_abbr(),
             cityData.zip(),
             faker.number().digits(4),
-            "US"
+            "US",
+            null,
+            null
     );
   }
 

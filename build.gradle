@@ -42,12 +42,15 @@ dockerCompose {
         projectName = 'data-demo-postgres'
         useComposeFiles = ['./postgres/local/docker-compose.yml']
     }
-    // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
+    // ./gradlew kafka1ComposeUp|kafka1ComposeDown|kafka1ComposeDownForced
     kafka1 {
         useComposeFiles = [
-                './kafka/kafka-1/docker-compose.yml'
+                // kafka-1 is a single KRaft broker deployment
+                './kafka/local/kafka-1/docker-compose.yml',
+                './kafka/local/cluster/redis/docker-compose.yml'
         ]
     }
+    // ./gradlew kafkaComposeUp|kafkaComposeDown|kafkaComposeDownForced
     kafka {
         useComposeFiles = [
                 './kafka/local/cluster/docker-compose-confluent.yml',

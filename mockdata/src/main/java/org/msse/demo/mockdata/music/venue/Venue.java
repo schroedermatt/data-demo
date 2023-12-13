@@ -4,12 +4,7 @@ import java.io.Serializable;
 
 public record Venue(
         String id,
+        String addressid,
         String name,
-        String street,
-        String city,
-        String state,
-        String zip,
-        Double latitude,
-        Double longitude,
         Integer maxcapacity
 ) implements Serializable {}

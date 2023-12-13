@@ -3,9 +3,11 @@ package org.msse.demo.music;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.msse.demo.customer.address.AddressEntity;
+import org.msse.demo.customer.address.AddressMapper;
 import org.msse.demo.customer.address.AddressRepository;
 import org.msse.demo.customer.profile.CustomerEntity;
 import org.msse.demo.customer.profile.CustomerRepository;
+import org.msse.demo.mockdata.customer.address.Address;
 import org.msse.demo.mockdata.music.MusicFakerFactory;
 import org.msse.demo.mockdata.music.MusicService;
 import org.msse.demo.mockdata.music.artist.Artist;
@@ -42,6 +44,7 @@ public class PostgreSQLMusicService implements MusicService {
     private final AddressRepository addressRepository;
     private final CustomerRepository customerRepository;
 
+    private final AddressMapper addressMapper;
     private final MusicFakerFactory musicFaker;
     private final ArtistMapper artistMapper;
     private final ArtistRepository artistRepository;
@@ -82,25 +85,22 @@ public class PostgreSQLMusicService implements MusicService {
     }
 
     @Override
-    public Optional<Venue> createVenue(Venue incoming) {
+    public Optional<Venue> createVenue(Venue incoming, Address address) {
+        // save address
+        log.info("Saving Address ({}) to PostgreSQL", address.id());
+        addressRepository.save(addressMapper.mapToEntity(address, null));
 
+        // save venue
         Venue venue = incoming;
-
         if (venue.id() == null) {
           venue = new Venue(
                   musicFaker.streamFaker().randomId(),
+                  incoming.addressid(),
                   incoming.name(),
-                  incoming.street(),
-                  incoming.city(),
-                  incoming.state(),
-                  incoming.zip(),
-                  incoming.latitude(),
-                  incoming.longitude(),
                   incoming.maxcapacity()
           );
         }
-
-        log.info("Saving Venue ({})  to PostgreSQL", venue.id());
+        log.info("Saving Venue ({}) at Address ({}) to PostgreSQL", venue.id(), address.id());
 
         venueRepository.save(venueMapper.mapToEntity(venue));
 

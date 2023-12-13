@@ -13,4 +13,6 @@ public record Address(
         String state,
         String zip5,
         String zip4,
-        String countrycd) implements Serializable {}
+        String countrycd,
+        Double latitude,
+        Double longitude) implements Serializable {}

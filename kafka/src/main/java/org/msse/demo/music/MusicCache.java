@@ -22,6 +22,7 @@ import java.util.Optional;
 @Repository
 public class MusicCache {
 
+    public final static String CACHE_ADDRESS = "address";
     public final static String CACHE_ARTIST = "artist";
     public final static String CACHE_EVENT = "event";
     public final static String CACHE_VENUE = "venue";
@@ -54,20 +55,19 @@ public class MusicCache {
         return redis.size(CACHE_ARTIST).intValue();
     }
 
-    public Optional<Venue> createVenue(Venue incoming) {
+    public Address createAddress(Address address) {
+        redis.put(CACHE_ADDRESS, address.id(), address);
+        return address;
+    }
 
+    public Optional<Venue> createVenue(Venue incoming) {
         Venue venue = incoming;
 
         if (venue.id() == null) {
             venue = new Venue(
                     musicFaker.streamFaker().randomId(),
+                    incoming.addressid(),
                     incoming.name(),
-                    incoming.street(),
-                    incoming.city(),
-                    incoming.state(),
-                    incoming.zip(),
-                    incoming.latitude(),
-                    incoming.longitude(),
                     incoming.maxcapacity()
             );
         }
