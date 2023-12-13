@@ -3,10 +3,9 @@ package org.msse.demo.music.venue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.msse.demo.customer.address.AddressEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +15,11 @@ import javax.persistence.Table;
 public class VenueEntity {
     @Id
     private String id;
-    private String addressid;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "addressid")
+    private AddressEntity address;
+
     private String name;
     private Integer maxcapacity;
 }
