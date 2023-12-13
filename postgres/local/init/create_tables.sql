@@ -56,14 +56,10 @@ CREATE TABLE artist (
 
 CREATE TABLE venue (
     id VARCHAR(50) PRIMARY KEY,
+    addressid VARCHAR(50),
     name VARCHAR(50),
-    street VARCHAR(50),
-    city VARCHAR(50),
-    state VARCHAR(2),
-    zip VARCHAR(10),
-    latitude DECIMAL(9,6),
-    longitude DECIMAL(9,6),
-    maxcapacity INTEGER
+    maxcapacity INTEGER,
+    FOREIGN KEY (addressid) REFERENCES address (id)
 );
 
 CREATE TABLE event (
