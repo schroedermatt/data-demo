@@ -1,0 +1,17 @@
+#!/bin/bash
+
+COMMAND="$(basename "$0")"
+
+CMD="$COMMAND --bootstrap-server localhost:9092 $*"
+
+
+#
+# add the interactive and terminal settings "-it" if this is a console command.
+#
+if [[ $COMMAND == *"-console-"* ]]; then
+ IT="-it"
+else
+ IT=""
+fi
+
+docker exec $IT kafka-broker sh -c "$CMD"

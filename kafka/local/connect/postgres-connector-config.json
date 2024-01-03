@@ -26,6 +26,11 @@
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
 
+    "_comment" : "this would use the JsonSchema serder",
+    "_value.converter" : "io.confluent.connect.json.JsonSchemaConverter",
+    "_value.converter.schemas.enable": "true",
+    "_value.converter.schema.registry.url": "http://schema-registry:8081",
+
     "transforms": "extract_pk",
     "transforms.extract_pk.type" : "org.apache.kafka.connect.transforms.ExtractField$Key",
     "transforms.extract_pk.field" : "id",

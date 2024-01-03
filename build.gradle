@@ -68,8 +68,9 @@ dockerCompose {
     }
     // ./gradlew redpandaComposeUp|redpandaComposeDown|redpandaComposeDownForced
     redpanda {
-        composeAdditionalArgs = [ '--env-file', './kafka/local/cluster/.env' ]
-        useComposeFiles = ['./kafka/local/cluster/docker-compose-redpanda.yml']
+        projectName = 'data-demo-redpanda'
+        composeAdditionalArgs = [ '--env-file', './kafka/local/redpanda/.env' ]
+        useComposeFiles = ['./kafka/local/redpanda/docker-compose.yml']
     }
     // ./gradlew s3ComposeUp|s3ComposeDown|s3ComposeDownForced
     s3 {
