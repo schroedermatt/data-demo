@@ -5,7 +5,7 @@ Finding real data to stream is a challenge, so instead mock data is generated. T
 venues for the demo are real with real addresses and capacity.
 
 The addresses generated for customers are fake, but the city/state/zip information is real. This will become
-important when we start to explore more advances uses of this data when integrating with other systems.
+important when we start to explore more advanced uses of this data when integrating with other systems.
 
 ## Generate Data to Kafka
 
