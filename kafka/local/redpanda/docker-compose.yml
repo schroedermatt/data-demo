@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   default:
     external: true
@@ -44,7 +42,7 @@ services:
       - --overprovisioned
       # enable logs for debugging.
       - --default-log-level=debug
-    image: docker.redpanda.com/vectorized/redpanda:v22.3.11
+    image: docker.redpanda.com/vectorized/redpanda:${VERSION}
     container_name: redpanda-0
     volumes:
       - redpanda-0:/var/lib/redpanda/data
@@ -72,7 +70,7 @@ services:
       - --overprovisioned
       - --default-log-level=debug
       - --seeds redpanda-0:33145
-    image: docker.redpanda.com/vectorized/redpanda:v22.3.11
+    image: docker.redpanda.com/vectorized/redpanda:${VERSION}
     container_name: redpanda-1
     volumes:
       - redpanda-1:/var/lib/redpanda/data
@@ -102,7 +100,7 @@ services:
       - --overprovisioned
       - --default-log-level=debug
       - --seeds redpanda-0:33145
-    image: docker.redpanda.com/vectorized/redpanda:v22.3.11
+    image: docker.redpanda.com/vectorized/redpanda:${VERSION}
     container_name: redpanda-2
     volumes:
       - redpanda-2:/var/lib/redpanda/data

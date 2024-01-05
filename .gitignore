@@ -9,7 +9,6 @@ Thumbs.db
 
 # Build Files #
 
-bin
 target
 build
 .gradle

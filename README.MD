@@ -60,6 +60,7 @@ The `docker-compose` gradle plugin is used to start the services in appropriate 
 
 1. Start [Kafka Services](./kafka/local/cluster/docker-compose-confluent.yml)
 
+  * Typical set-up of 3 brokers with replication of data between brokers. 
     ```bash
     # KAFKA
     ./gradlew kafkaComposeUp
@@ -67,6 +68,53 @@ The `docker-compose` gradle plugin is used to start the services in appropriate 
     ./gradlew kafkaComposeDownForced
     ```
 
+  * Minimal set-up of 1 broker (use on limited hardware)
+    ```bash
+    # KAFKA
+    ./gradlew kafka1ComposeUp
+    ./gradlew kafka1ComposeDown
+    ./gradlew kafka1ComposeDownForced
+    ```
+
+2. Validate Environment
+
+* In each directory there is a bin directory of kafka command line tools. These are actually scripts to run the command on the broker (to avoid additional software installed on your machine).
+
+* Be sure to run from either `kafka-1` or `kafka-3` as container names are different between them.
+
+* `./bin/kafka-topics --list`
+  * Will list all the topics on the cluster, you should see 5 topics in a newly created cluster. `__consumer_offsets` is a topic internally created for Kafka. `_schemas` 
+  is used by the schema-registry which is used for data governance. `connect-cluster-*` topics will be used by the **Kafka Connect** service that will be used to connect
+  Kafka to external systems.
+
+  ``` 
+  __consumer_offsets
+  _schemas
+  connect-cluster-config
+  connect-cluster-offsets
+  connect-cluster-status
+   ```
+
+* `./bin/kafka-topics --create --topic test --partitions 2`
+
+* `./bin/kafka-console-producer --topic test`
+
+  * each line you type will create a message to a topic
+  * hit `ctrl-d` to exit
+  
+* `./bin/kafka-console-consumer --topic test --from-beginning`
+
+  * Each line sent sent by the producer will show up here in the consumer.
+  * `--from-beginning` will have it start with the earliest message, omitting this means it will only display messages after it is started.
+
+* Starting a producer and consumer in two separate consoles is the best way to start seeing how Kafka works.
+ 
+  * Advance concepts to be learned through the course will be:
+    * Keys for Messages
+    * Partitioning of Messages
+    * Replication of Messages
+    * Consumer Groups
+    
 2. Validate Environment
    - If all containers seem to be running (healthy), navigate to [Control Center](https://docs.confluent.io/platform/current/control-center/index.html) at http://localhost:9021 and poke around a bit. You should see a few things but feel free to explore as much as you want. 
      - A single cluster named "controlcenter.cluster"

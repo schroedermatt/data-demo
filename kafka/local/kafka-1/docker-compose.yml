@@ -1,7 +1,7 @@
 networks:
   default:
-    external: true
-    name: dev-local
+#    external: true
+    name: dev-local-2
 
 volumes:
   kb: {}
@@ -26,19 +26,19 @@ services:
       retries: 3
     ports:
       # port 9092 can be used for broker discovery, but 19092 will be actually port used for kafka protocol
-      - '9092:19092'
-      - '19092:19092'
+      - '9091:19091'
+      - '19091:19091'
     volumes:
       - kb:/var/lib/kafka/data
       - kb_secrets:/etc/kafka/secrets
     environment:
       CLUSTER_ID: "0000000000000000000000"
       KAFKA_NODE_ID: 1
-      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:19092,CONTROLLER://:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:19091,CONTROLLER://:9093
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_SECURITY_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:9092,PLAINTEXT_HOST://localhost:19092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:9092,PLAINTEXT_HOST://localhost:19091
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker-1:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_MIN_INSYNC_REPLICAS: 1
