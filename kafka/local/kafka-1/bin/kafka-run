@@ -14,4 +14,4 @@ else
  IT=""
 fi
 
-docker exec $IT kafka-broker sh -c "$CMD"
+docker exec $IT kafka1_broker-1 sh -c "$CMD"
