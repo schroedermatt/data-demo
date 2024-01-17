@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function is_running() {
+  docker ps --format "{{.Names}}" | grep "^$1$" 2>&1 >/dev/null
+}
+
+COMMAND="$(basename "$0")"
+
+CMD="$COMMAND --bootstrap-server localhost:9092 $*"
+
+#
+# add the interactive and terminal settings "-it" if this is a console command.
+#
+if [[ $COMMAND == *"-console-"* ]]; then
+ IT="-it"
+else
+ IT=""
+fi
+
+if is_running "kafka1_broker-1"; then
+ CONTAINER=kafka1_broker-1
+elif is_running "broker-1"; then
+ CONTAINER=broker-1
+else
+  echo "kafka broker(s) appear not to be running."
+  exit 1
+fi
+
+docker exec $IT "$CONTAINER" sh -c "$CMD"
