@@ -101,7 +101,7 @@ We will dive much deeper into these commands and what is happening here during o
 ```bash
 # run from root dir of data-demo
 
-./kafka/local/kafka-1/bin/kafka-console-consumer --topic data-demo-venues --from-beginning
+./kafka-bin/kafka-console-consumer --topic data-demo-venues --from-beginning
 
 # *** output will display here ***
 
