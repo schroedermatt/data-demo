@@ -1,4 +1,4 @@
-# Hands On: Introduction to Kafka
+# Hands On: Hello World (Redpanda Edition)
 
 > NOTE: `git pull` on data-demo's `main` branch before continuing!
 

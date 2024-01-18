@@ -1,4 +1,4 @@
-## Introduction
+# Hands On: Hello World (Kafka Edition)
 
 In session, we're going to get familiar with Apache Kafka by getting our hands on it in a local environment where you have full control to do whatever you want.
 

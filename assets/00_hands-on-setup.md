@@ -1,4 +1,4 @@
-## Introduction
+# Hands On: Environment Setup
 
 In today's hands on, we're going to validate that we can start the Dockerized Kafka Cluster & run the data generation app (data-demo) locally. This setup will be used throughout the semester for various activities as well as your project.
 
