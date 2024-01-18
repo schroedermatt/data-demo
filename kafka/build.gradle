@@ -23,3 +23,15 @@ test {
 bootJar {
     enabled = false
 }
+
+task runSampleJavaKafkaProducer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.msse.demo.sample.SampleJavaKafkaProducer'
+    systemProperty "logging.level.org.apache", "WARN"
+}
+
+task runSampleJavaKafkaConsumer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.msse.demo.sample.SampleJavaKafkaConsumer'
+    systemProperty "logging.level.org.apache", "WARN"
+}

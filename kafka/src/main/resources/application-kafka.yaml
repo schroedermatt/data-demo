@@ -8,7 +8,7 @@ spring:
 kafka:
   cluster:
     client-id: data-demo-producer
-    bootstrap-servers: localhost:19091
+    bootstrap-servers: localhost:9092
     cloud: false
   topics:
     customers: data-demo-customers

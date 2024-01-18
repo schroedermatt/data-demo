@@ -4,12 +4,12 @@ In today's hands on, we're going to validate that we can start the Dockerized Ka
 
 We will cover Kafka in depth in the upcoming weeks. Today is all about validating your local environment and ability to run the stack.
 
-## Goals
+### ✅ Goals
 
-1. Clone `data-demo`
-2. Start Local Kafka (Confluent) Cluster
-3. Run `data-demo` & produce mock data
-4. Validate data was produced
+- [ ] Clone `data-demo`
+- [ ] Start Local Kafka (Confluent) Cluster
+- [ ] Run `data-demo` & produce mock data
+- [ ] Validate data was produced
 
 ## 1) git clone data-demo
 
