@@ -17,21 +17,30 @@ You can install Java 17 however you'd like, but SDKMAN is a tool that makes inst
 
 ## Docker
 
-If you plan to run the [Local Docker Environment](#local-docker-environment), you must first install and start Docker.
+To run any of the local docker clusters, you must first install and start Docker.
 
 https://docs.docker.com/get-docker/
 
+* **📣 ATTN LINUX USERS:** you must also run through these steps -> https://docs.docker.com/engine/install/linux-postinstall/   
+* **📣 ATTN WINDOWS USERS:** you must be running WSL2 -> https://docs.docker.com/desktop/wsl/
+
 ## IDE
+
+> Only required if you're doing development on `data-demo`
 
 [IntelliJ CE](https://www.jetbrains.com/idea/download/#section=mac) is recommended, but use what you're comfortable with.
 
 ### Project SDK Configuration
 
+> Only required if you're doing development on `data-demo`
+
 Once you've opened the project in your IDE of choice, ensure the SDK is aligned with your Java 17 installation.
 
 ![project-sdk](./assets/project_sdk.png)
 
-#### Enable Annotation Processors for Lombok
+### Enable Annotation Processors for Lombok
+
+> Only required if you're doing development on `data-demo`
 
 Lombok is a tool that helps remove boilerplate in Java applications. Lombok is utilized in this project, so you must enabled annotation processors for Lombok to work.
 
@@ -39,7 +48,7 @@ Lombok is a tool that helps remove boilerplate in Java applications. Lombok is u
 
 _[Lombok Docs](https://projectlombok.org/)_
 
-## `jq`
+## `jq` (optional)
 
 `jq` is a command line tool that can format (and do many other things) JSON responses. It is really only needed if you plan to run the mockdata-api and call the API via curl.
 

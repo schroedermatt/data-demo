@@ -11,6 +11,10 @@ We will cover Kafka in depth in the upcoming weeks. Today is all about validatin
 - [ ] Run `data-demo` & produce mock data
 - [ ] Validate data was produced
 
+## Prerequisites
+
+See [prereqs.md](../PREREQS.MD) for more details on what will be required to run this project.
+
 ## 1) git clone data-demo
 
 Clone the [data-demo](https://github.com/schroedermatt/data-demo) repository - this project was built from the ground up for this course. Within the project, we've created a variety of environments that can be booted up via various Gradle tasks.
@@ -109,3 +113,8 @@ We will dive much deeper into these commands and what is happening here during o
 
 Processed a total of 18 messages
 ```
+
+## 5) Cleanup
+
+* Kill `data-demo` by pressing Ctrl + C
+* Kill docker cluster by running `./gradlew kafka1ComposeDown`
