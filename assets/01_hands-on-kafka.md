@@ -47,9 +47,9 @@ You might be thinking "Oh Em Gee, I didn't download the CLIs!" -- well you're in
 
 ### Create Topic
 
-First, create a Kafka Topic by running the command below in your terminal.
+> Command: [`Kafka Topics CLI Tutorial`](https://www.conduktor.io/kafka/kafka-topics-cli-tutorial/)
 
-> Command: [`kafka-topics --create`](https://docs.confluent.io/kafka/operations-tools/topic-operations.html#add-a-topic)
+First, create a Kafka Topic by running the command below in your terminal.
 
 ```bash
 # run from root dir of data-demo repo
@@ -62,7 +62,9 @@ Created topic test-topic.
 
 ### Produce Records (No Key)
 
-The topic exists, now produce a record.
+> Command: [`Kafka Producer CLI Tutorial`](https://www.conduktor.io/kafka/kafka-producer-cli-tutorial/)
+
+The topic now exists, lets produce a record.
 
 Enter the `kafka-console-producer` command below and then type text + press enter to submit. Each line will be its own Kafka record. **Hit Ctrl + C to exit the producer.**
 
@@ -100,6 +102,8 @@ To produce events with keys, we'll use a similar command as before but add a cou
 ```
 
 ### Consume Records (Without Key)
+
+> Command: [`Kafka Consumer CLI Tutorial`](https://www.conduktor.io/kafka/kafka-consumer-cli-tutorial/)
 
 There are records on `test-topic`, now we will consume them 🍕
 
@@ -153,6 +157,8 @@ bye-world
 We're all hackerz now, using CLIs to kill the mainframe and bring down the internet (or produce and consume a few records). If you get tired of hacking, there's are tools to assist you. When we run our full kafka stack (`./gradlew kafkaComposeUp`) we start up [kpow](https://factorhouse.io/kpow/), an easy to use Apache Kafka Web UI.
 
 ### Consumer Group Exploration
+
+> Command: [`Kafka Consumer Group CLI Tutorial`](https://www.conduktor.io/kafka/kafka-consumer-group-management-cli-tutorial/)
 
 We talked about consumer groups enabling seamless distributed processing. Let's inspect your test consumer group in a little more in depth.
 
@@ -239,6 +245,8 @@ To run the code, there's a Gradle task leveraging `javaexec` that will run it.
 Message sent successfully to topic: test-topic, partition: 0, offset: 5
 
 ... more logs
+
+# CONTROL+C to exit
 ```
 
 If you see the "Message sent successfully" log, a record was produced! The producer will shut down once it's produced the record.
