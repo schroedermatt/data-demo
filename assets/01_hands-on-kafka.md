@@ -147,8 +147,8 @@ To include keys, we will modify the command and add a couple more properties. Ru
 null-hello
 null-world
 null-bye
-hello-world
-bye-world
+hello-world1
+bye-world1
 
 # CONTROL+C to exit
 ^CProcessed a total of 5 messages
