@@ -15,7 +15,7 @@ The data-demo project has a [kafka environment](https://github.com/schroedermatt
 
 ```bash
 # run from the root of the data-demo repository
-./gradlew kafkaComposeUp
+./gradlew kafka1ComposeUp
 ```
 
 Validate that Redpanda is up and running by navigating to [http://localhost:3000](http://localhost:3000)

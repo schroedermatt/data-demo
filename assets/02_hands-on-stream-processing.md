@@ -7,8 +7,12 @@
 1. Clone `stream-processing-workshop`
 2. Run `data-demo` & produce mock data
 3. Run "Top Customer Artists" Stream
-4. Solve Stateless Stream Processing Exercises
-5. Solve Stateful Stream Processing Exercises (optional)
+4. Solve BOTH Stateless Stream Processing Exercises
+5. Solve ONE OF TWO Stateful Stream Processing Exercises
+
+## Setup
+
+First, we're going to clone the `stream-processing-workshop` and get it running.
 
 ### Clone Stream Processing Workshop
 
@@ -24,13 +28,15 @@ Validate your project setup by running the [`TopCustomerArtistsSpec`](https://gi
 
 ### Run data-demo Daemon
 
-> See the [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/01_hands-on-confluent.md) from last week for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
+> See the [Environment Setup Guide](https://github.com/schroedermatt/data-demo/blob/main/assets/00_hands-on-setup.md) from last week for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
 
 If you haven't already, start up Kafka and begin producing data with the data-demo daemon.
 
 ```bash
+## RUN FROM data-demo root
+
 # start kafka cluster
-./gradlew kafkaComposeUp
+./gradlew kafka1ComposeUp
 
 # start data-demo daemon
 ./gradlew bootRunDaemon
@@ -88,18 +94,24 @@ Topologies:
       <-- KSTREAM-PEEK-0000000009
 ```
 
+## Stream Processing Exercises
+
 ### Solve Stateless Exercises
 
-Choose one or both of the [stateless exercises](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/main/java/org/improving/workshop/exercises/stateless) to solve. The goals are listed at the top of the class.
+Solve both of the [stateless exercises](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/main/java/org/improving/workshop/exercises/stateless). 
 
-It can be helpful to first map out your topology. Download [this file](https://github.com/schroedermatt/stream-processing-workshop/blob/main/assets/excalidraw/workshop-template.excalidraw) and open it up in https://excalidraw.com and sketch out the expected topology.
+Each exercise `Class` is its own independent processing stream with its own goals. Review the goals in the comments at the top of the `Class` before proceeding.
 
-A test case for each exercise is [already written for you](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/test/groovy/org/improving/workshop/exercises/stateless). Work on the stream until the test is green (passing).
+We will leverage Test-Driven Development for these exercises, and lucky for you [the tests are already written](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/test/groovy/org/improving/workshop/exercises/stateless). 
+
+To complete the exercises, you will need to uncomment any commented out code in `configureTopology()` and develop the topology until all tests are passing.
 
 ### Solve Stateful Exercises
 
-If you've solved the stateless exercises, explore the stateful exercises. These will require a little more thought and up front design.
-
-It can be helpful to first map out your topology. Download [this file](https://github.com/schroedermatt/stream-processing-workshop/blob/main/assets/excalidraw/workshop-template.excalidraw) and open it up in https://excalidraw.com and sketch out the expected topology.
+Solve one of the two [stateful exercises](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/main/java/org/improving/workshop/exercises/stateful). These will require a little more thought and up front design.
 
 These also have [tests written for you](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/test/groovy/org/improving/workshop/exercises/stateful) to get you going. Develop the stream until its test is green (passing).
+
+--
+
+It can be helpful to first map out your topology. Download [this file](https://github.com/schroedermatt/stream-processing-workshop/blob/main/assets/excalidraw/workshop-template.excalidraw) and open it up in https://excalidraw.com and sketch out the expected topology.
