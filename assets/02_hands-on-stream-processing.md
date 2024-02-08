@@ -100,6 +100,9 @@ For each exercise,
    - **THESE WILL NOT PASS AND MIGHT NOT EVEN RUN BY DEFAULT** (if lines of code are missing entirely).
 3. Develop the Stream to align with the goals/requirements/tests
 
+#### NOTE
+> The [Kafka Streams DSL Documentation](https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#stateless-transformations) contains examples of using each stateless transformation that you will use in these exercises.
+
 #### 1) [AddressSortAndStringify](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/main/java/org/improving/workshop/exercises/stateless/AddressSortAndStringify.java) Goals
 
 Create a new address topic that is keyed (record key) by the address state and has a value that is the address condensed into a single String (String Format: `"{line1}, {line2}, {citynm}, {state} {zip5}-{zip4} {countrycd}"`). Lastly, we want to split all 'MN' to one topic and everything else to another topic.
@@ -123,6 +126,9 @@ Create a new customer topic that only contains those born in the 1990s (Utopia's
 Following the same approach as above, choose one of the two [stateful exercises](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/main/java/org/improving/workshop/exercises/stateful) to solve. These will require a little more thought and up front design.
 
 These also have [tests written for you](https://github.com/schroedermatt/stream-processing-workshop/tree/main/src/test/groovy/org/improving/workshop/exercises/stateful) to get you going. Develop the stream until its test is green (passing).
+
+#### NOTE
+> The [Kafka Streams DSL Documentation](https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html#stateful-transformations) contains examples of using each stateful transformation that you will use in these exercises.
 
 #### 1) [ArtistTicketCount](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/main/java/org/improving/workshop/exercises/stateful/ArtistTicketCount.java) Goals
 
