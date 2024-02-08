@@ -269,3 +269,61 @@ RECORD RECEIVED: key = key-bdca7a82-acee-4ed4-a0fb-0a0d51466fbc, value = value-2
 ```
 
 The consumer is a bit clingy and will run until *eliminated* (Ctrl + C) so be assertive and take care of it.
+
+
+# Troubleshooting
+
+## ./kafka-run file or directory not found
+
+If you're running on Windows, you may run into issues running the provided helper scripts.
+
+The simplest way around this is to not use the `./kafka-run` util provided in this project and execute the commands directly from the running Kafka Broker as it has the CLIs on it already (this is what the shared `./kafka-run` script is doing for you).
+
+```bash
+# base command, fill in the {container-name} (find this with `docker ps`) and {command} with the actual CLI command details 
+docker exec -it {container-name} {cli-command}
+
+##
+## EXAMPLES
+##
+ 
+# create topic
+docker exec -it kafka1_broker-1 kafka-topics \
+  --bootstrap-server localhost:9092 \
+  --create \
+  --topic test-topic
+
+# produce records
+docker exec -it kafka1_broker-1 kafka-console-producer \
+  --bootstrap-server localhost:9092 \
+  --topic test-topic
+
+# consume records
+docker exec -it kafka1_broker-1 kafka-console-consumer \
+  --bootstrap-server localhost:9092 \
+  --topic test-topic \
+  --group test-group-with-keys \
+  --from-beginning \
+  --property print.key=true \
+  --property key.separator="-"
+
+# list consumer groups
+docker exec -it kafka1_broker-1 kafka-consumer-groups \
+  --bootstrap-server localhost:9092 \
+  --list
+
+# describe consumer group
+docker exec -it kafka1_broker-1 kafka-consumer-groups \
+  --bootstrap-server localhost:9092 \
+  --group test-group \
+  --describe
+
+# consumer groups command
+docker exec -it kafka1_broker-1 kafka-consumer-groups \
+  --group test-group \
+  --reset-offsets \
+  --to-earliest \
+  --topic test-topic \
+  --bootstrap-server localhost:9092 \
+  --execute
+```
