@@ -4,12 +4,14 @@
 
 ## Goals
 
-1. Start Environment (Kafka + **Observability**)
-2. Run `data-demo` and produce mock data
-3. Run `stream-processing-workshop`
-4. Explore distributed tracing data
+* Start Environment (Kafka + **Observability**)
+* Run `data-demo` and produce mock data
+* Run `stream-processing-workshop`
+* Explore distributed tracing data
 
 ## 1) Start Local Kafka Cluster
+
+We'll start by firing up the single node Kafka cluster.
 
 1. Start Docker (if not already started)
 2. Start [Kafka 1 Stack](https://github.com/schroedermatt/data-demo/blob/main/kafka/local/kafka-1/docker-compose.yml) - this is a simplified stack to ease the load on your machine
@@ -37,6 +39,8 @@ b6da33fb1854   redis:6.2-alpine
 
 The data-demo project has an additional [observability environment](https://github.com/schroedermatt/data-demo/blob/main/observability/jaeger/docker-compose.yml) that can be started via Docker. This includes Jaeger, a simple tracing backend and UI.
 
+Let's fire that up now.
+
 ```bash
 # run from the root of the data-demo repository
 ./gradlew tracingComposeUp
@@ -54,9 +58,11 @@ The data-demo project has an additional [observability environment](https://gith
 
 Validate that Jaeger is up and running by navigating to [http://localhost:16686](http://localhost:16686)
 
-In the search panel on the left, you may see a "jaeger-query" service listed but you should not see anything else at this point.
+In the search panel on the left, you may see a "jaeger-query" service listed, but you should not see anything else at this point.
 
 ## 3) Run data-demo with Tracing Enabled
+
+Now that the infrastructure is up and running, we'll send some data through so that we can inspect how tracing works.
 
 > See this [Hands On: Environment Setup](https://github.com/schroedermatt/data-demo/blob/main/assets/00_hands-on-setup.md) for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
 
@@ -66,7 +72,7 @@ In the [gradle.properties](https://github.com/schroedermatt/data-demo/blob/main/
 tracingEnabled=true
 ```
 
-Start the mockdata-api (not the daemon).
+Start the mockdata-api (**not the daemon**).
 
 ```
 # run from the root of the data-demo repository
@@ -75,7 +81,7 @@ Start the mockdata-api (not the daemon).
 
 ## 4) Produce Mock Data
 
-Open another tab in your terminal to execute the following `curl` statements. These will call the running API and generate data.
+**Open another tab in your terminal** to execute the following `curl` statements. These will call the running API and generate, produce data into Kafka.
 
 1. Generate a Customer (also creates an Address, Email, and Phone linked to the Customer)
 
@@ -133,7 +139,7 @@ curl --request POST \
 
 ## 5) View Results in Jaeger
 
-Open Jaeger [http://localhost:16686/](http://localhost:16686/) and select the `data-demo` service before clicking "Find Traces"
+Open Jaeger [http://localhost:16686/](http://localhost:16686/) and select the `data-demo` service before clicking **"Find Traces"**
 
 <img src="./images/jaeger-services.png" alt="jaeger" width="300"/>
 
@@ -145,7 +151,7 @@ This trace shows the event being generated and produced to Kafka.
 
 ## 6) View `traceparent` in Message Headers
 
-Curious to see how the trace is being propogated between the services? The `kafka-console-consumer` has a property to print record headers.
+Curious to see how the trace is being propagated between the services? The `kafka-console-consumer` has a property to print record headers.
 
 Let's consume the `data-demo-customers` topic and see what's hiding in the headers now that tracing is enabled.
 
@@ -163,7 +169,7 @@ traceparent:00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01	{"id":"38087
 
 We've told the consumer to print out the headers and that's what we're seeing before the JSON object begins. There is a single header.
 
-Ex -> `traceparent:00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01`
+Ex -> `traceparent:00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01    { ... record value }`
 * Header Key: `traceparent` 
 * Header Value: `00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01`
 
