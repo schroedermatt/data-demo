@@ -4,25 +4,38 @@
 
 ## Goals
 
-1. Start Environment (Kafka + Observability)
+1. Start Environment (Kafka + **Observability**)
 2. Run `data-demo` and produce mock data
 3. Run `stream-processing-workshop`
 4. Explore distributed tracing data
 
-### Start Kafka (Redpanda) Cluster
+## 1) Start Local Kafka Cluster
 
-The data-demo project has a [kafka environment](https://github.com/schroedermatt/data-demo/blob/main/kafka/local/cluster/docker-compose-redpanda.yml) that can be started via Docker.
+1. Start Docker (if not already started)
+2. Start [Kafka 1 Stack](https://github.com/schroedermatt/data-demo/blob/main/kafka/local/kafka-1/docker-compose.yml) - this is a simplified stack to ease the load on your machine
+    - This leverages the [`docker-compose` Gradle plugin](https://github.com/avast/gradle-docker-compose-plugin) ([configuration](https://github.com/schroedermatt/data-demo/blob/main/build.gradle#L52-L57))
 
-```bash
-# run from the root of the data-demo repository
-./gradlew kafka1ComposeUp
+```bash  
+# run from root dir of data-demo    
+./gradlew kafka1ComposeUp  
+```  
+
+3. Validate Cluster Startup with `docker ps`
+
+```bash  
+docker ps  
+
+## command output (first 2 columns shown) ##    
+CONTAINER ID   IMAGE  
+25ca84ed77af   confluentinc/cp-kafka-connect:7.5.1
+8616e0532f0f   confluentinc/cp-kafka:7.5.1
+5e2078710584   confluentinc/cp-schema-registry:7.5.1
+b6da33fb1854   redis:6.2-alpine
 ```
 
-Validate that Redpanda is up and running by navigating to [http://localhost:3000](http://localhost:3000)
+## 2) Start Observability Stack (Jaeger)
 
-### Start Observability Stack (Jaeger)
-
-The data-demo project has an additional [observability environment](https://github.com/schroedermatt/data-demo/blob/main/observability/docker-compose.yml) that can be started via Docker. This includes Jaeger, a tracing backend and UI.
+The data-demo project has an additional [observability environment](https://github.com/schroedermatt/data-demo/blob/main/observability/jaeger/docker-compose.yml) that can be started via Docker. This includes Jaeger, a simple tracing backend and UI.
 
 ```bash
 # run from the root of the data-demo repository
@@ -43,24 +56,26 @@ Validate that Jaeger is up and running by navigating to [http://localhost:16686]
 
 In the search panel on the left, you may see a "jaeger-query" service listed but you should not see anything else at this point.
 
-### Run data-demo with Tracing Enabled
+## 3) Run data-demo with Tracing Enabled
 
-> See this [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/01_hands-on-confluent.md) for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
+> See this [Hands On: Environment Setup](https://github.com/schroedermatt/data-demo/blob/main/assets/00_hands-on-setup.md) for additional details on cloning, configuring, and running [data-demo](https://github.com/schroedermatt/data-demo).
 
-In the [gradle.properties](https://github.com/schroedermatt/data-demo/blob/main/gradle.properties#L5) file, update the `tracingEnabled` flag to `true`. [When true](https://github.com/schroedermatt/data-demo/blob/main/mockdata-api/build.gradle#L36-L45), the data-demo will start up with the otel java agent attached.
+In the [gradle.properties](https://github.com/schroedermatt/data-demo/blob/main/gradle.properties#L5) file of `data-demo`, update the `tracingEnabled` flag to `true`. [When true](https://github.com/schroedermatt/data-demo/blob/main/mockdata-api/build.gradle#L36-L45), the `data-demo` will start up with the otel java agent attached to enable tracing.
 
 ```properties
 tracingEnabled=true
 ```
 
-Start the mockdata-api.
+Start the mockdata-api (not the daemon).
 
 ```
 # run from the root of the data-demo repository
 ./gradlew bootRunApi
 ```
 
-### Produce Mock Data
+## 4) Produce Mock Data
+
+Open another tab in your terminal to execute the following `curl` statements. These will call the running API and generate data.
 
 1. Generate a Customer (also creates an Address, Email, and Phone linked to the Customer)
 
@@ -116,9 +131,9 @@ curl --request POST \
 }
 ```
 
-#### View Results in Jaeger
+## 5) View Results in Jaeger
 
-Open Jaeger (http://localhost:16686/) and select the `data-demo` service before clicking "Find Traces"
+Open Jaeger [http://localhost:16686/](http://localhost:16686/) and select the `data-demo` service before clicking "Find Traces"
 
 <img src="./images/jaeger-services.png" alt="jaeger" width="300"/>
 
@@ -128,28 +143,43 @@ Select one of the "data-demo: POST" traces and view the results. There should be
 
 This trace shows the event being generated and produced to Kafka.
 
-#### View `traceparent` in Message Headers
+## 6) View `traceparent` in Message Headers
 
-Curious to see how the trace is being propogated between the services?
+Curious to see how the trace is being propogated between the services? The `kafka-console-consumer` has a property to print record headers.
 
-1. Jump back into [Redpanda Console](http://localhost:3000)
-2. Navigate to the Topics page and select [`data-demo-customers`](http://localhost:3000/topics/data-demo-customers?o=-1&p=-1&q&s=50#messages)
-3. Expand the Value (click the "+") of a message
-4. Select the "Headers" tab
+Let's consume the `data-demo-customers` topic and see what's hiding in the headers now that tracing is enabled.
 
-![redpanda](./images/redpanda-headers.png)
+```bash
+./kafka-bin/kafka-console-consumer \
+  --topic data-demo-customers \
+  --group o11y-hands-on \
+  --from-beginning \
+  --property print.headers=true
+  
+--
 
-Notice the `traceparent` header (ex. 00-a7092c72522316b2bdba7979a4cb74d1-42965c7462c03850-01). There is a lot of information jammed into this value that is used (and propogated) by the OpenTelemetry instrumentation agents. An overview of the segments inside the traceparent is shown in the diagram below.
+traceparent:00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01	{"id":"380873384","type":"PREMIUM","gender":"U","fname":"Lane","mname":"Ewa","lname":"MacGyver","fullname":"Lane Ewa MacGyver","suffix":"DDS","title":"Customer Program Technician","birthdt":"1962-03-24","joindt":"2017-07-15"}
+```
 
-![redpanda](./images/traceparent.png)
+We've told the consumer to print out the headers and that's what we're seeing before the JSON object begins. There is a single header.
+
+Ex -> `traceparent:00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01`
+* Header Key: `traceparent` 
+* Header Value: `00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01`
+
+There is a lot jammed into the `traceparent` header value that is used (and propagated) by the OpenTelemetry instrumentation agents. An overview of the segments inside the traceparent is shown in the diagram below.
+
+![traceparent](./images/traceparent.png)
 
 When you run a Stream or other client that processes a message, it will now be able to grab this `traceparent` header and propagate (report) the trace to Jaeger to continue building a picture of the end-to-end flow of the message.
 
-### Run "Top Customer Artists" with Tracing Enabled
+## 7) Run "Top Customer Artists" with Tracing Enabled
 
->  See this [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/02_hands-on.md) for additional details on cloning, configuring, and running [stream-processing-workshop](https://github.com/schroedermatt/stream-processing-workshop).
+>  See this [Hands On](https://github.com/schroedermatt/data-demo/blob/main/assets/02_hands-on-stream-processing.md) for additional details on cloning, configuring, and running [stream-processing-workshop](https://github.com/schroedermatt/stream-processing-workshop).
 
-In the [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2) file of the stream-processing-workshop project, update the `tracingEnabled` flag to `true`.  [When true](https://github.com/schroedermatt/stream-processing-workshop/blob/main/build.gradle#L27-L36), the Stream(s) will start up with the otel java agent attached.
+Just like we did in `data-demo`, we now need to enable tracing **in the stream-processing-workshop** repository.
+
+In the [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2) file of the **stream-processing-workshop project**, update the `tracingEnabled` flag to `true`.  [When true](https://github.com/schroedermatt/stream-processing-workshop/blob/main/build.gradle#L27-L36), the Stream(s) will start up with the otel java agent attached.
 
 ```properties
 tracingEnabled=true
@@ -159,20 +189,20 @@ Run the `TopCustomerArtists` stream.
 
 ```
 # run from the root of the stream-processing-workshop
-./gradlew -Pstream=org.improving.workshop.samples.TopCustomerArtists run
+./gradlew -Pstream=org.improving.workshop.samples.TopCustomerArtists run 
 ```
 
-#### View Results in Jaeger
+## 8) View Results in Jaeger
 
-Open Jaeger (http://localhost:16686/) again and notice that `TopCustomerArtists` is now listed as a service. Select it before clicking "Find Traces".
+Open Jaeger [http://localhost:16686/](http://localhost:16686/) again and notice that `TopCustomerArtists` is now listed as a service. Select it before clicking "Find Traces".
 
 Select a trace and view the results. Notice that the trace now extends from the origin (data-demo) all the way into the consuming service and you can see the full path. **COOL!**
 
 ![jaeger](./images/jaeger-trace-2.png)
 
-### Run "Customer Stream Count" with Tracing Enabled
+## 9) Run "Customer Stream Count" with Tracing Enabled
 
-Let's take it one step further to see what happens when multiple consumers/streams process the same event. The Customer Stream Count can be found on the `solutions` branch so you'll first need to checkout that branch before running the Stream.
+Let's take it one step further to see what happens when **multiple consumers/streams** process the same event. The Customer Stream Count can be found on the `solutions` branch so you'll first need to checkout that branch before running the Stream.
 
 > Before continuing, double check that the `tracingEnabled` flag is `true` in [gradle.properties](https://github.com/schroedermatt/stream-processing-workshop/blob/main/gradle.properties#L2)
 
@@ -183,15 +213,15 @@ git checkout solutions
 ./gradlew -Pstream=org.improving.workshop.exercises.stateful.CustomerStreamCount run
 ```
 
-#### View Results in Jaeger
+## 10) View Results in Jaeger
 
-Open Jaeger (http://localhost:16686/) again and notice that CustomerStreamCount is now listed as a service. Select it before clicking "Find Traces".
+Open Jaeger [http://localhost:16686/](http://localhost:16686/) again and notice that CustomerStreamCount is now listed as a service. Select it before clicking "Find Traces".
 
 Select a trace and view the results. Notice that the trace now extends from the origin (data-demo) all the way into MULTIPLE consuming services. **SWEET!**
 
 ![jaeger](./images/jaeger-trace-3.png)
 
-### Cleanup
+## 11) Cleanup
 
 Now that your endorphins are flowing, it's time to tear down the environment (if you're done playing around).
 
@@ -201,6 +231,6 @@ Now that your endorphins are flowing, it's time to tear down the environment (if
 # tear down jaeger
 ./gradlew tracingComposeDown
 
-# tear down kafka (redpanda)
-./gradlew kafkaComposeDown
+# tear down kafka
+./gradlew kafka1ComposeDown
 ```
