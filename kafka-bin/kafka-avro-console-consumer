@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function is_running() {
+  docker ps --format "{{.Names}}" | grep "^$1$" 2>&1 >/dev/null
+}
+
+COMMAND="$(basename "$0")"
+
+CMD="$COMMAND --bootstrap-server broker-1:9092 --property schema.registry.url=http://localhost:8081 $*"
+
+#
+# add the interactive and terminal settings "-it" if this is a console command.
+#
+if [[ $COMMAND == *"-console-"* ]]; then
+ IT="-it"
+else
+ IT=""
+fi
+
+if is_running "kafka1_schema-registry"; then
+ CONTAINER=kafka1_schema-registry
+elif is_running "schema-registry"; then
+ CONTAINER=schema-registry
+else
+  echo "schema registry appear not to be running."
+  exit 1
+fi
+
+docker exec $IT "$CONTAINER" sh -c "$CMD"

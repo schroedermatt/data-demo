@@ -4,23 +4,42 @@
 
 ## Goals
 
-1. Start Environment (Kafka - Confluent Platform)
-2. Register Schema(s)
-3. Produce & Consume Data
+* Start Environment (Kafka + Schema Registry)
+* Register Schema(s) & Explore Schema Registry API
+* Produce & Consume Avro Data
+* Examine Compatibility Options
 
+## 1) Start Local Kafka Cluster
 
-### Start Kafka Cluster
+We'll start by firing up the single node Kafka cluster.
 
-The data-demo project has a [kafka environment](https://github.com/schroedermatt/data-demo/blob/main/kafka/local/cluster/docker-compose-confluent.yml) that can be started via Docker.
+1. Start Docker (if not already started)
+2. Start [Kafka 1 Stack](https://github.com/schroedermatt/data-demo/blob/main/kafka/local/kafka-1/docker-compose.yml) - this is a simplified stack to ease the load on your machine
+    - This leverages the [`docker-compose` Gradle plugin](https://github.com/avast/gradle-docker-compose-plugin) ([configuration](https://github.com/schroedermatt/data-demo/blob/main/build.gradle#L52-L57))
 
-```bash
-# run from the root of the data-demo repository
-./gradlew kafkaComposeUp
+```bash  
+# run from root dir of data-demo    
+./gradlew kafka1ComposeUp  
+```  
+
+3. Validate Cluster Startup with `docker ps`
+
+```bash  
+docker ps  
+
+## command output (first 2 columns shown) ##    
+CONTAINER ID   IMAGE  
+25ca84ed77af   confluentinc/cp-kafka-connect:7.5.1
+8616e0532f0f   confluentinc/cp-kafka:7.5.1
+5e2078710584   confluentinc/cp-schema-registry:7.5.1
+b6da33fb1854   redis:6.2-alpine
 ```
 
-Validate that Kafka (Confluent) is up and running by navigating to [Control Center](http://localhost:9021).
+## 2) 👋 Hello, Schema Registry
 
-Oh, and we now have [Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)! Let's validate that's up as well with a couple commands.
+Oh, and we have [Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)!
+
+Schema Registry exposes a RESTful API. Let's validate that's up as well with a couple commands via your terminal.
 
 ```bash
 # see all registered subjects (schemas) -- there shouldn't be any yet
@@ -38,7 +57,7 @@ curl -X GET http://localhost:8081/config
 }
 ```
 
-### Register Schema
+## 3) Register Schema
 
 Here's a simple Avro schema with 3 required fields, fname, lname, and age.
 
@@ -57,6 +76,8 @@ Here's a simple Avro schema with 3 required fields, fname, lname, and age.
 
 Register the schema under the subject `"user-v1"`. You can think of Schema Registry as a key/value store where the "subject" is the key.
 
+**Run the `curl` below from the root of `data-demo` as it references a schema file in `/assets`.**
+
 ```bash
 # run from the root of the data-demo project
 curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
@@ -66,25 +87,27 @@ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
 { "id":1 }
 ```
 
+## 4) Explore Schema Registry API
+
 The Schema Registry API allows you to easily explore what's registered. Here are 4 common endpoints you can call to explore what's in the registry.
 
 Try each of these -
 
 ```bash
 # get all available subjects (schemas)
-> curl -X GET http://localhost:8081/subjects
+curl -X GET http://localhost:8081/subjects
 
 [ "user-v1" ]
 
 --
 # get the registered versions for a specific subject
-> curl -X GET http://localhost:8081/subjects/user-v1/versions
+curl -X GET http://localhost:8081/subjects/user-v1/versions
 
 [ 1 ]
 
 -- 
 # get a specific registered version of a subject
-> curl -X GET http://localhost:8081/subjects/user-v1/versions/1
+curl -X GET http://localhost:8081/subjects/user-v1/versions/1
 
 {
   "id": 1,
@@ -95,7 +118,7 @@ Try each of these -
 
 -- 
 # get a specific registered version's schema for a subject
-> curl -X GET http://localhost:8081/subjects/user-v1/versions/1/schema
+curl -X GET http://localhost:8081/subjects/user-v1/versions/1/schema
 
 {
   "type": "record",
@@ -105,7 +128,7 @@ Try each of these -
 }
 ```
 
-### Produce & Consume Avro
+## 5) Produce & Consume Avro
 
 Now that the schema is registered, we can produce & consume events that abide by the Avro schema. 
 
@@ -114,18 +137,18 @@ The `kafka-avro-console-producer` & `kafka-avro-console-consumer` CLIs are baked
 First, produce an Avro event with the command below. We are going to specifically target the schema that was previously registered by id (`value.schema.id=1`). You can also supply the schema when producing the event and it can be registered during the event production lifecycle.
 
 ```shell
-docker exec --interactive --tty schema-registry \
-kafka-avro-console-producer \
-    --broker-list broker:9092 \
-    --topic test.topic.avro  \
-    --property schema.registry.url=http://schema-registry:8081 \
-    --property value.schema.id=1
+./kafka-bin/kafka-avro-console-producer --topic test.topic.avro --property value.schema.id=1
 
-# copy the below sample, paste and hit enter
+# copy the below sample, paste into the terminal and hit enter
 {"fname":"john", "lname": "doe", "age": 50}
 
 # now break it by pasting json that's missing 'age'
 {"fname":"john", "lname": "doe"}
+
+## somewhere in the logs you'll see
+org.apache.kafka.common.errors.SerializationException: Error deserializing json {"fname":"john", "lname": "doe"} to Avro of schema {"type":"record","name":"User","namespace":"org.msse.mockdata","fields":[{"name":"fname","type":"string"},{"name":"lname","type":"string"},{"name":"age","type":"int"}]}
+...
+...
 ```
 
 If you provide JSON that doesn't align with the schema, the `kafka-avro-console-producer` will crash with a 1/2 useful error message (I wish it did a little better job of explaining why it crashed but 🤷‍)
@@ -133,23 +156,16 @@ If you provide JSON that doesn't align with the schema, the `kafka-avro-console-
 Now, consume the Avro event!
 
 ```shell
-docker exec --interactive --tty schema-registry \
-kafka-avro-console-consumer \
-    --topic test.topic.avro \
-    --bootstrap-server broker:9092 \
-    --property schema.registry.url=http://schema-registry:8081 \
-    --from-beginning
+./kafka-bin/kafka-avro-console-consumer --topic test.topic.avro --from-beginning
+
+## these CLIs are tied to a small java app behind the scenes, so the logs are pretty verbose
+
+{"fname":"john","lname":"doe","age":50}
+
+# Ctrl + C to exit
 ```
 
-You can also open up [Control Center](http://localhost:9021/) and find the message on the topic.
-
-- Click into the "controlcenter.cluster"
-- Select "Topics" in the left menu
-- Select "test.topic.avro"
-- Select the "Messages" tab
-- Use the "Jump to Offset" feature, enter 0 -- you'll have to try each partition to find the partition with your event
-
-### Register a Compatible Schema Change
+## 6) Register a Compatible Schema Change
 
 Whoops! Our initial schema wasn't complete. We don't need `age` and we forgot middle name (`mname`). Let's make these edits and register a new version.
 
@@ -174,6 +190,8 @@ Whoops! Our initial schema wasn't complete. We don't need `age` and we forgot mi
 
 Register the `user.v1.1.avro` schema under the same subject `"user-v1"`. This will result in a new version being created.
 
+**Once again, run the below command from the root of the `data-demo` project.**
+
 ```bash
 # run from the root of the data-demo project
 curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
@@ -186,6 +204,7 @@ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
 Now we can produce/consume data aligned to either version of the schema.
 
 ```bash
+# get available versions for the subject (schema)
 curl -X GET http://localhost:8081/subjects/user-v1/versions
 
 [ 1, 2 ]
@@ -197,15 +216,12 @@ curl -X GET http://localhost:8081/subjects/user-v1/versions/2/schema
 Produce an event tied to the latest schema (id=2).
 
 ```shell
-docker exec --interactive --tty schema-registry \
-kafka-avro-console-producer \
-    --broker-list broker:9092 \
-    --topic test.topic.avro  \
-    --property schema.registry.url=http://schema-registry:8081 \
-    --property value.schema.id=2
+./kafka-bin/kafka-avro-console-producer --topic test.topic.avro --property value.schema.id=2
 
 # copy the below sample, paste and hit enter
 {"fname":"john","lname":"doe","mname":{"string":"lee"}}
+
+# Ctrl + C to exit
 ```
 
 Wondering why `mname` in our sample was structured as `"mname":{"string":"lee"}`?
@@ -214,7 +230,7 @@ Avro's JSON encoding requires that non-null union values be tagged with their in
 This is because unions like ["bytes","string"] and ["int","long"] are ambiguous in JSON, the first
 are both encoded as JSON strings, while the second are both encoded as JSON numbers.
 
-### Register an Incompatible Schema Change
+## 7) Register an Incompatible Schema Change
 
 We forgot something else, everyone **has to** have a nickname! Let's add a new **required** field, `nickname`.
 
@@ -237,6 +253,7 @@ Our schema now looks like this -
 However, if you try to register it, you'll get back a `409` with a message explaining that the new field needs to have a default due to the `BACKWARD` compatibility type being in use.
 
 ```bash
+# run from the root of data-demo
 curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
     -d @assets/avro/user.v2.0.avro \
     http://localhost:8081/subjects/user-v1/versions
@@ -267,7 +284,7 @@ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
 }
 ```
 
-So how do we get this incompatible schema update registered? You've got a couple options.
+So how do we get this incompatible schema update registered? There are a couple options.
 
 1. Register the breaking schema under a new subject, `user-v2`. This breaks the versioning chain of the previous subject and creates an entirely new subject starting at version 1 (see image below for a visual of compatible vs incompatible changes).
 
@@ -311,10 +328,10 @@ curl -X PUT -H "Content-Type: application/vnd.schemaregistry.v1+json" \
     http://localhost:8081/config
 ```
 
-## Cleanup
+## 8) Cleanup
 
 When you're done, feel free to tear down the environment.
 
 ```bash
-./gradlew kafkaComposeDown
+./gradlew kafka1ComposeDown
 ```
