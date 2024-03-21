@@ -161,10 +161,16 @@ Let's consume the `data-demo-customers` topic and see what's hiding in the heade
   --group o11y-hands-on \
   --from-beginning \
   --property print.headers=true
-  
+
 --
 
 traceparent:00-68a2c76609a012552ebec298cd9821b7-6c5a00b30338bb49-01	{"id":"380873384","type":"PREMIUM","gender":"U","fname":"Lane","mname":"Ewa","lname":"MacGyver","fullname":"Lane Ewa MacGyver","suffix":"DDS","title":"Customer Program Technician","birthdt":"1962-03-24","joindt":"2017-07-15"}
+```
+
+Unable to run the above command (Windows friends 👀)?
+
+```bash
+docker exec -it kafka1_broker-1 kafka-console-consumer --bootstrap-server localhost:9092 --topic data-demo-customers --group o11y-hands-on --from-beginning --property print.headers=true
 ```
 
 We've told the consumer to print out the headers and that's what we're seeing before the JSON object begins. There is a single header.
@@ -195,7 +201,7 @@ Run the `TopCustomerArtists` stream.
 
 ```
 # run from the root of the stream-processing-workshop
-./gradlew -Pstream=org.improving.workshop.samples.TopCustomerArtists run 
+./gradlew -P stream=org.improving.workshop.samples.TopCustomerArtists run
 ```
 
 ## 8) View Results in Jaeger
@@ -216,7 +222,7 @@ Let's take it one step further to see what happens when **multiple consumers/str
 # run from the root of the stream-processing-workshop
 git checkout solutions
 
-./gradlew -Pstream=org.improving.workshop.exercises.stateful.CustomerStreamCount run
+./gradlew -P stream=org.improving.workshop.exercises.stateful.CustomerStreamCount run
 ```
 
 ## 10) View Results in Jaeger

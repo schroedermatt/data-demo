@@ -6,7 +6,7 @@ function is_running() {
 
 COMMAND="$(basename "$0")"
 
-CMD="$COMMAND --broker-list broker-1:9092 --property schema.registry.url=http://localhost:8081 $*"
+CMD="$COMMAND --bootstrap-server broker-1:9092 --property schema.registry.url=http://localhost:8081 $*"
 
 #
 # add the interactive and terminal settings "-it" if this is a console command.

@@ -165,6 +165,15 @@ Now, consume the Avro event!
 # Ctrl + C to exit
 ```
 
+Unable to run the kafka-bin commands? Here are the `docker exec` commands running within the helper scripts.
+
+```shell
+# kafka-avro-console-producer
+docker exec -it kafka1_schema-registry kafka-avro-console-producer --bootstrap-server broker-1:9092 --property schema.registry.url=http://localhost:8081 --topic test.topic.avro --property value.schema.id=1
+# kafka-avro-console-consumer
+docker exec -it kafka1_schema-registry kafka-avro-console-consumer --bootstrap-server broker-1:9092 --property schema.registry.url=http://localhost:8081 --topic test.topic.avro --from-beginning
+```
+
 ## 6) Register a Compatible Schema Change
 
 Whoops! Our initial schema wasn't complete. We don't need `age` and we forgot middle name (`mname`). Let's make these edits and register a new version.
