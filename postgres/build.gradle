@@ -1,7 +1,7 @@
 plugins {
-    id "io.freefair.lombok" version "8.4"
-    id 'org.springframework.boot' version '2.7.18'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id "io.freefair.lombok" version "8.11"
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 dependencies {
@@ -12,8 +12,8 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 }
 
 test {

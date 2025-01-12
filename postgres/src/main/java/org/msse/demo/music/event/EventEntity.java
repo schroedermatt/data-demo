@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.msse.demo.music.artist.ArtistEntity;
 import org.msse.demo.music.venue.VenueEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @NoArgsConstructor

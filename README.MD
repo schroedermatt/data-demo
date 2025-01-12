@@ -234,7 +234,7 @@ Ready to do something with this data? Go check out the [stream-processing-worksh
 The following error is likely the cause of not having Java 17 installed.
 
 ```bash
-> error: invalid source release: 17
+> error: invalid source release: 21
 ```
 
 ### Windows Specific

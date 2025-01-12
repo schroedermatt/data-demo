@@ -20,6 +20,7 @@ kafka:
     events: data-demo-events
     tickets: data-demo-tickets
     streams: data-demo-streams
+    advertisements: data-demo-advertisements
 
 logging:
   level:

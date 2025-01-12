@@ -1,6 +1,7 @@
 package org.msse.demo.mockdata.music;
 
 import org.msse.demo.mockdata.customer.address.Address;
+import org.msse.demo.mockdata.music.advertisement.AdSpot;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
 import org.msse.demo.mockdata.music.stream.Stream;
@@ -24,4 +25,5 @@ public interface MusicService {
     Optional<Stream> streamArtist();
     Optional<Stream> streamArtist(String artistId, String customerId);
     long streamCount();
+    Optional<AdSpot> airAdvertisement();
 }

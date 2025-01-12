@@ -1,5 +1,6 @@
 package org.msse.demo.postgres;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.msse.demo.config.InitialLoadProperties;
 import org.msse.demo.mockdata.customer.CustomerService;
@@ -9,7 +10,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component

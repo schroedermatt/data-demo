@@ -63,6 +63,7 @@ public class KafkaConfig {
             String venues,
             String events,
             String tickets,
-            String streams
+            String streams,
+            String advertisements
     ) {}
 }
