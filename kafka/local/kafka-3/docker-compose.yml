@@ -180,20 +180,20 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       KAFKA_OPTS:
 
-  kpow:
-    image: factorhouse/kpow-ce
-    container_name: kpow
-    hostname: kpow
-    ports:
-      - "3000:3000"
-    environment:
-      BOOTSTRAP: broker-1:9092,broker-2:9092,broker-3:9092
-      SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_REST_URL: http://connect-1:8083
-    depends_on:
-      broker-1:
-        condition: service_healthy
-      schema-registry:
-        condition: service_healthy
-      connect-1:
-        condition: service_healthy
+#  kpow:
+#    image: factorhouse/kpow-ce
+#    container_name: kpow
+#    hostname: kpow
+#    ports:
+#      - "3000:3000"
+#    environment:
+#      BOOTSTRAP: broker-1:9092,broker-2:9092,broker-3:9092
+#      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+#      CONNECT_REST_URL: http://connect-1:8083
+#    depends_on:
+#      broker-1:
+#        condition: service_healthy
+#      schema-registry:
+#        condition: service_healthy
+#      connect-1:
+#        condition: service_healthy
