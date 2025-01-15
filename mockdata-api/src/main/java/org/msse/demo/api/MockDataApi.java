@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.msse.demo.mockdata.customer.CustomerService;
 import org.msse.demo.mockdata.customer.FullCustomer;
 import org.msse.demo.mockdata.music.MusicService;
+import org.msse.demo.mockdata.music.advertisement.AdSpot;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
 import org.msse.demo.mockdata.music.event.EventRequest;
@@ -12,7 +13,6 @@ import org.msse.demo.mockdata.music.stream.Stream;
 import org.msse.demo.mockdata.music.stream.StreamRequest;
 import org.msse.demo.mockdata.music.ticket.Ticket;
 import org.msse.demo.mockdata.music.ticket.TicketRequest;
-import org.msse.demo.mockdata.music.venue.Venue;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,4 +61,12 @@ public class MockDataApi {
             .map(savedStream -> ResponseEntity.status(HttpStatus.CREATED).body(savedStream))
             .orElseGet(() -> ResponseEntity.badRequest().build());
   }
+
+  @PostMapping(path = "advertisements")
+  public ResponseEntity<AdSpot> airAdvertisement(@RequestBody StreamRequest stream) {
+    return musicService.airAdvertisement()
+            .map(savedAdvertisement -> ResponseEntity.status(HttpStatus.CREATED).body(savedAdvertisement))
+            .orElseGet(() -> ResponseEntity.badRequest().build());
+  }
+
 }

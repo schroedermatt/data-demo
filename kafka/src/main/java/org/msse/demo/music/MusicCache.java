@@ -5,6 +5,7 @@ import org.msse.demo.customer.CustomerCache;
 import org.msse.demo.mockdata.customer.address.Address;
 import org.msse.demo.mockdata.customer.profile.Customer;
 import org.msse.demo.mockdata.music.MusicFakerFactory;
+import org.msse.demo.mockdata.music.advertisement.AdSpot;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
 import org.msse.demo.mockdata.music.stream.Stream;
@@ -181,6 +182,12 @@ public class MusicCache {
 
         return Optional.of(stream);
     }
+
+    public Optional<AdSpot> airAdvertisement() {
+        //TODO "pool" if IPs
+        return randomArtist().map(artist -> musicFaker.advertisementFaker().generate(artist.id(), "IP"));
+    }
+
 
     public long streamCount() {
         return redis.size(CACHE_STREAM).intValue();

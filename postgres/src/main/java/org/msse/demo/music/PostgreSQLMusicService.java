@@ -10,6 +10,7 @@ import org.msse.demo.customer.profile.CustomerRepository;
 import org.msse.demo.mockdata.customer.address.Address;
 import org.msse.demo.mockdata.music.MusicFakerFactory;
 import org.msse.demo.mockdata.music.MusicService;
+import org.msse.demo.mockdata.music.advertisement.AdSpot;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
 import org.msse.demo.mockdata.music.stream.Stream;
@@ -219,6 +220,12 @@ public class PostgreSQLMusicService implements MusicService {
     @Override
     public long streamCount() {
         return streamRepository.count();
+    }
+
+    @Override
+    public Optional<AdSpot> airAdvertisement() {
+        //TODO -- working on Kafka first
+        return Optional.empty();
     }
 
     // Utilities to find a random entity in PostgreSQL

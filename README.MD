@@ -17,7 +17,7 @@ For more details on running the Data Demo, jump ahead to the [getting started se
 ## Environment Prerequisites
 
 * [git](PREREQS.MD#git)
-* [Java 17](PREREQS.MD#java-17)
+* [Java 21](PREREQS.MD#java-21)
 * [Docker](PREREQS.MD#docker)
 * [IDE](PREREQS.MD#ide)
   * [SDK Setup](PREREQS.MD#project-sdk-configuration) & [Lombok Config](PREREQS.MD#enable-annotation-processors-for-lombok)
@@ -231,10 +231,10 @@ Ready to do something with this data? Go check out the [stream-processing-worksh
 
 ### Invalid Java Version
 
-The following error is likely the cause of not having Java 17 installed.
+The following error is likely the cause of not having Java 21 installed.
 
 ```bash
-> error: invalid source release: 17
+> error: invalid source release: 21
 ```
 
 ### Windows Specific

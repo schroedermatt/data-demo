@@ -6,10 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.msse.demo.KafkaConfig;
-import org.msse.demo.customer.CustomerCache;
-import org.msse.demo.mockdata.customer.CustomerService;
 import org.msse.demo.mockdata.customer.address.Address;
 import org.msse.demo.mockdata.music.MusicService;
+import org.msse.demo.mockdata.music.advertisement.AdSpot;
 import org.msse.demo.mockdata.music.artist.Artist;
 import org.msse.demo.mockdata.music.event.Event;
 import org.msse.demo.mockdata.music.stream.Stream;
@@ -163,6 +162,20 @@ public class KafkaMusicService implements MusicService {
     @Override
     public long streamCount() {
         return musicCache.streamCount();
+    }
+
+    @Override
+    public Optional<AdSpot> airAdvertisement() {
+
+        Optional<AdSpot> stream = musicCache.airAdvertisement();
+
+        stream.ifPresent(value -> {
+            log.info("Producing Advertisement ({}) for Artist ({}) from City ({}) to Kafka", value.id(), value.artistId(), value.city() + ":" + value.state());
+            send(topics.advertisements(), value.id(), value);
+        });
+
+        return stream;
+
     }
 
     @SneakyThrows

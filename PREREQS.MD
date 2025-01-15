@@ -4,15 +4,15 @@
 
 You will need Git to clone this repository. Follow the [getting started guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to complete your installation.
 
-## Java 17
+## Java 21
 
-You can install Java 17 however you'd like, but SDKMAN is a tool that makes installing and switching between versions a breeze.
+You can install Java 21 however you'd like, but SDKMAN is a tool that makes installing and switching between versions a breeze.
 
 1) [Install SDKMAN!](https://sdkman.io/install)
-2) Install Java 17 via SDKMAN!
+2) Install Java 21 via SDKMAN!
     ```bash
-    sdk install java 17.0.2-tem
-    sdk use java 17.0.2-tem
+    sdk install java java 21.0.4-tem
+    sdk use javajava 21.0.4-tem
     ```
 
 ## Docker
@@ -34,7 +34,7 @@ https://docs.docker.com/get-docker/
 
 > Only required if you're doing development on `data-demo`
 
-Once you've opened the project in your IDE of choice, ensure the SDK is aligned with your Java 17 installation.
+Once you've opened the project in your IDE of choice, ensure the SDK is aligned with your Java 21 installation.
 
 ![project-sdk](./assets/project_sdk.png)
 

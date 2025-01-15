@@ -1,5 +1,6 @@
 package org.msse.demo.mockdata.music;
 
+import org.msse.demo.mockdata.music.advertisement.AdSpotFaker;
 import org.msse.demo.mockdata.music.artist.ArtistFaker;
 import org.msse.demo.mockdata.music.event.EventFaker;
 import org.msse.demo.mockdata.music.stream.StreamFaker;
@@ -13,4 +14,5 @@ public record MusicFakerFactory(ArtistFaker artistFaker,
                                 EventFaker eventFaker,
                                 StreamFaker streamFaker,
                                 TicketFaker ticketFaker,
-                                VenueFaker venueFaker) {}
+                                VenueFaker venueFaker,
+                                AdSpotFaker advertisementFaker) {}

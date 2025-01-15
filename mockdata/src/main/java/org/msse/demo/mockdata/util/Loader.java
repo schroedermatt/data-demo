@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.msse.demo.mockdata.customer.address.Address;
 import org.msse.demo.mockdata.load.CityData;
+import org.msse.demo.mockdata.load.CityPopulation;
 import org.msse.demo.mockdata.music.venue.Venue;
 
 import java.io.IOException;
@@ -109,4 +110,39 @@ public class Loader {
 
     return list;
   }
+
+  public static List<CityPopulation> loadCityPopulation() {
+
+    final List<CityPopulation> list = new ArrayList<>();
+
+    try {
+
+      CSVFormat format = CSVFormat.RFC4180.withHeader().withDelimiter(',');
+
+      InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("us-cities-top-200.csv");
+      InputStreamReader reader = new InputStreamReader(input);
+
+      CSVParser parser = new CSVParser(reader, format);
+
+      for (CSVRecord rec : parser) {
+        final CityPopulation cityData = new CityPopulation(
+                rec.get("city"),
+                rec.get("state_abbr"),
+                Integer.parseInt(rec.get("population"))
+//                rec.get("lat"),
+//                rec.get("long")
+        );
+
+        list.add(cityData);
+      }
+
+      parser.close();
+
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    return list;
+  }
+
 }

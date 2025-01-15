@@ -1,5 +1,6 @@
 package org.msse.demo.kafka;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.msse.demo.config.InitialLoadProperties;
 import org.msse.demo.mockdata.customer.CustomerService;
@@ -9,7 +10,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
@@ -58,6 +58,12 @@ public class KafkaDaemon {
   @Scheduled(cron = "*/20 * * * * *")
   public void createEvent() {
     musicService.createEvent();
+  }
+
+  // every 1 seconds
+  @Scheduled(cron = "*/1 * * * * *")
+  public void createAdvertisement() {
+    musicService.airAdvertisement();
   }
 
   private void loadCustomers() {
