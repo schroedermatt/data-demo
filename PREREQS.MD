@@ -9,10 +9,11 @@ You will need Git to clone this repository. Follow the [getting started guide](h
 You can install Java 21 however you'd like, but SDKMAN is a tool that makes installing and switching between versions a breeze.
 
 1) [Install SDKMAN!](https://sdkman.io/install)
+    - Tip: Add `source "$HOME/.sdkman/bin/sdkman-init.sh"` to your bash config file so that the source command is run each time the terminal starts up.
 2) Install Java 21 via SDKMAN!
     ```bash
-    sdk install java java 21.0.4-tem
-    sdk use javajava 21.0.4-tem
+    sdk install java 21.0.4-tem
+    sdk use java 21.0.4-tem
     ```
 
 ## Docker
