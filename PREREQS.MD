@@ -12,8 +12,8 @@ You can install Java 21 however you'd like, but SDKMAN is a tool that makes inst
     - Tip: Add `source "$HOME/.sdkman/bin/sdkman-init.sh"` to your bash config file so that the source command is run each time the terminal starts up.
 2) Install Java 21 via SDKMAN!
     ```bash
-    sdk install java 21.0.4-tem
-    sdk use java 21.0.4-tem
+    sdk install java 21.0.5-zulu
+    sdk use java 21.0.5-zulu
     ```
 
 ## Docker
