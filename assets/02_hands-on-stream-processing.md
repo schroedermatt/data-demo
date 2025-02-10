@@ -27,12 +27,12 @@ git clone https://github.com/schroedermatt/stream-processing-workshop.git
 
 ## Confirm Project Setup: Run Sample Test
 
-Validate your project setup by running the [`TopCustomerArtistsSpec`](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/test/groovy/org/improving/workshop/samples/TopCustomerArtistsSpec.groovy). This tests a functional Kafka Stream that aggregates and calculates each customer's top artists - [TopCustomerArtists.java](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/main/java/org/improving/workshop/samples/TopCustomerArtists.java). 
+Validate your project setup by running the [`TopCustomerArtistsTest`](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/test/java/org/improving/workshop/samples/TopCustomerArtistsTest.java). This tests a functional Kafka Stream that aggregates and calculates each customer's top artists - [TopCustomerArtists.java](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/main/java/org/improving/workshop/samples/TopCustomerArtists.java). 
 
 You can run this test via the `test` Gradle task in your Terminal or directly in your IDE. If using IntelliJ, there will be a "play" button on the left-hand side of your test class.
 
 ```bash
-./gradlew cleanTest test --tests TopCustomerArtistsSpec
+./gradlew cleanTest test --tests TopCustomerArtistsTest
 ```
 
 ### 📍 Side Quest: Topology Visualizer
@@ -96,7 +96,7 @@ Solve both of the [stateless exercises](https://github.com/schroedermatt/stream-
 For each exercise,
 
 1. Uncomment the code within the `configureTopology(final StreamsBuilder builder)` method - [Ex. AddressSortAndStringify](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/main/java/org/improving/workshop/exercises/stateless/AddressSortAndStringify.java#L42-L50)
-2. Run the tests - [Ex. AddressSortAndStringifySpec](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/test/groovy/org/improving/workshop/exercises/stateless/AddressSortAndStringifySpec.groovy#L12)
+2. Run the tests - [Ex. AddressSortAndStringifyTest](https://github.com/schroedermatt/stream-processing-workshop/blob/main/src/test/java/org/improving/workshop/exercises/stateless/AddressSortAndStringifyTest.java)
    - **THESE WILL NOT PASS AND MIGHT NOT EVEN RUN BY DEFAULT** (if lines of code are missing entirely).
 3. Develop the Stream to align with the goals/requirements/tests
 
